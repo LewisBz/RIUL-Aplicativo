@@ -1,0 +1,14 @@
+[project]
+name = "flask-backend"
+version = "0.1.0"
+description = "Backend Flask para la aplicacion RIUL"
+requires-python = ">=3.12"
+dependencies = [
+    "Flask",
+    "Flask-SQLAlchemy",
+    "Flask-Migrate",
+    "PyMySQL",
+    "python-dotenv",
+]
+
+[tool.uv]

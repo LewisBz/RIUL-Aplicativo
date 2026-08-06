@@ -14,14 +14,17 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias
-COPY requirements.txt .
+# Instalar uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Instalar dependencias
+COPY pyproject.toml uv.lock ./
+
+RUN uv sync --no-dev --frozen
 
 # Copiar el proyecto
 COPY . .
 
 EXPOSE 5000
 
-CMD ["flask", "--app", "run.py", "run", "--host=0.0.0.0", "--port=5000"]
+CMD ["uv", "run", "flask", "--app", "run.py", "run", "--host=0.0.0.0", "--port=5000"]
