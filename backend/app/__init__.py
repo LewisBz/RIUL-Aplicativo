@@ -1,4 +1,5 @@
 import os
+import posixpath
 
 import click
 from flask import Flask, jsonify, send_from_directory
@@ -39,6 +40,8 @@ def _register_static_frontend(app: Flask) -> None:
 
     @app.route("/<path:path>")
     def static_files(path):
+        if "." not in posixpath.basename(path):
+            path = path.rstrip("/") + ".html"
         return send_from_directory(FRONTEND_DIR, path)
 
 

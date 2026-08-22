@@ -1,0 +1,279 @@
+openapi: 3.0.3
+info:
+  title: RIUL API — Autenticación
+  description: >
+    API del módulo de autenticación de RIUL (Red de Investigación Universidad
+    Libre). Registro institucional con acceso inmediato, solicitud de cuenta
+    externa pendiente de aprobación y login con JWT stateless (Flask-JWT-Extended).
+  version: 0.3.0
+
+servers:
+  - url: http://localhost:5000
+
+tags:
+  - name: Auth
+    description: Registro, solicitud de cuenta, login e identidad
+  - name: Catálogo
+    description: Datos maestros públicos para formularios
+
+paths:
+  /api/auth/register:
+    post:
+      tags: [Auth]
+      summary: Registro institucional (acceso inmediato)
+      description: >
+        Crea un usuario con rol `researcher` y estado `active`. Exige correo
+        del dominio institucional (por defecto `unilibre.edu.co`) y contraseña
+        de mínimo 8 caracteres. Devuelve un JWT usable de inmediato.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstitutionalRegisterInput"
+            examples:
+              valido:
+                value:
+                  email: nuevo.usuario@unilibre.edu.co
+                  password: secreto123
+                  full_name: Ana María Torres
+                  faculty_id: 1
+                  program_id: 1
+      responses:
+        "201":
+          description: Usuario creado y activo; token emitido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/Error400"
+        "409":
+          description: El correo ya está registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /api/auth/request-account:
+    post:
+      tags: [Auth]
+      summary: Solicitud de cuenta no institucional (pendiente)
+      description: >
+        Crea un usuario con estado `pending` (sin contraseña utilizable ni
+        token). Un administrador deberá aprobarla desde el portal admin
+        (feature futuro).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountRequestInput"
+      responses:
+        "202":
+          description: Solicitud recibida, cuenta pendiente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "400":
+          $ref: "#/components/responses/Error400"
+        "409":
+          description: El correo ya está registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login con JWT
+      responses:
+        "200":
+          description: Token emitido (expira en 12 h)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Credenciales incorrectas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "403":
+          description: >
+            Cuenta pendiente ("Solicitud pendiente de aprobación") o rechazada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+
+  /api/auth/me:
+    get:
+      tags: [Auth]
+      summary: Identidad del usuario autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Usuario activo correspondiente al token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "401":
+          description: Falta el header Authorization o el token es inválido/expirado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /api/auth/catalog:
+    get:
+      tags: [Catálogo]
+      summary: Facultades y programas para los formularios
+      responses:
+        "200":
+          description: Lista de facultades con sus programas anidados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  faculties:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Faculty"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Estado de validación: Solicitud pendiente de aprobación.
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        full_name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [researcher, administrator]
+        status:
+          type: string
+          enum: [active, pending, rejected]
+        faculty_id:
+          type: integer
+          nullable: true
+        program_id:
+          type: integer
+          nullable: true
+
+    AuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        user:
+          $ref: "#/components/schemas/User"
+
+    InstitutionalRegisterInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          description: Debe terminar en el dominio institucional configurado
+        password:
+          type: string
+          format: password
+          minLength: 8
+        full_name:
+          type: string
+        faculty_id:
+          type: integer
+          nullable: true
+        program_id:
+          type: integer
+          nullable: true
+
+    AccountRequestInput:
+      type: object
+      required: [email, full_name, motivation, faculty_id, program_id]
+      properties:
+        email:
+          type: string
+          format: email
+          description: No debe ser del dominio institucional (ej. gmail)
+        full_name:
+          type: string
+        motivation:
+          type: string
+          maxLength: 500
+        faculty_id:
+          type: integer
+        program_id:
+          type: integer
+
+    Faculty:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        programs:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              faculty_id:
+                type: integer
+
+  responses:
+    Error400:
+      description: Validación fallida (dominio, contraseña corta, datos faltantes)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Message"
