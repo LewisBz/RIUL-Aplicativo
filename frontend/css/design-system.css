@@ -1,0 +1,658 @@
+/* ==========================================================================
+   RIUL Design System - Single Source of Truth
+   Feature: specs/001-design-system | Constitution v1.0.0 Principle III
+   Zero build: plain CSS served as authored. Light theme only.
+   Canonical gold accent: #ffb800 (mockup variants #FFC107/#fbbc04 dropped).
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block');
+
+/* --------------------------------------------------------------------------
+   1. Design Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* Color - Primary (Institutional Crimson) */
+  --primary: #7b001f;
+  --on-primary: #ffffff;
+  --primary-container: #9e1b32;
+  --on-primary-container: #ffb0b3;
+  --inverse-primary: #ffb3b5;
+  --primary-fixed: #ffdada;
+  --primary-fixed-dim: #ffb3b5;
+  --on-primary-fixed: #40000c;
+  --on-primary-fixed-variant: #8f0c28;
+  --surface-tint: #b02a3e;
+
+  /* Color - Secondary (Graphite) */
+  --secondary: #5f5e5e;
+  --on-secondary: #ffffff;
+  --secondary-container: #e4e2e1;
+  --on-secondary-container: #656464;
+  --secondary-fixed: #e4e2e1;
+  --secondary-fixed-dim: #c8c6c6;
+  --on-secondary-fixed: #1b1c1c;
+  --on-secondary-fixed-variant: #474747;
+
+  /* Color - Tertiary (Deep Teal) */
+  --tertiary: #00423c;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #005c53;
+  --on-tertiary-container: #8ad2c6;
+  --tertiary-fixed: #a7f0e4;
+  --tertiary-fixed-dim: #8cd4c8;
+  --on-tertiary-fixed: #00201c;
+  --on-tertiary-fixed-variant: #005048;
+
+  /* Color - Error */
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+
+  /* Color - Surfaces & Outlines */
+  --background: #f9f9f9;
+  --on-background: #1a1c1c;
+  --surface: #f9f9f9;
+  --surface-dim: #dadada;
+  --surface-bright: #f9f9f9;
+  --surface-variant: #e2e2e2;
+  --on-surface: #1a1c1c;
+  --on-surface-variant: #594141;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f3f3f3;
+  --surface-container: #eeeeee;
+  --surface-container-high: #e8e8e8;
+  --surface-container-highest: #e2e2e2;
+  --inverse-surface: #2f3131;
+  --inverse-on-surface: #f1f1f1;
+  --outline: #8c7071;
+  --outline-variant: #e0bfbf;
+
+  /* Color - Gamification Accent (reserved: XP, badges, ranking ONLY) */
+  --accent-gold: #ffb800;
+  --on-accent-gold: #1a1c1c;
+  --success: #1b5e20;
+  --on-success-container: #e8f5e9;
+
+  /* Typography */
+  --font-display: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', Arial, sans-serif;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing - 4px rhythm */
+  --space-base: 4px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --gutter: 24px;
+  --margin-mobile: 16px;
+  --container-max: 1280px;
+
+  /* Radii (controls = md 8px, large containers = lg 16px) */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-pill: 9999px;
+
+  /* Elevation */
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --shadow-gamified: 0 4px 20px rgba(255, 184, 0, 0.1);
+  --shadow-focus-ring: 0 0 0 2px var(--primary);
+
+  /* Shell metrics */
+  --topnav-height: 64px;
+  --sidebar-width: 256px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Base & Reset
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background);
+  color: var(--on-background);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--on-surface);
+  margin: 0 0 var(--space-4);
+}
+
+p {
+  margin: 0 0 var(--space-4);
+}
+
+a {
+  color: var(--primary);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Material Symbols icon host */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+}
+.material-symbols-outlined.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* --------------------------------------------------------------------------
+   3. Typography Utilities (semantic scale)
+   -------------------------------------------------------------------------- */
+.display-lg {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: var(--font-weight-bold);
+  line-height: 56px;
+  letter-spacing: -0.02em;
+}
+
+.headline-lg {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: var(--font-weight-bold);
+  line-height: 40px;
+}
+
+.headline-md {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 32px;
+}
+
+.title-lg {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 28px;
+}
+
+.body-lg {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.body-md {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.label-caps {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.numeric-xp {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  line-height: 20px;
+  color: var(--accent-gold);
+}
+
+/* --------------------------------------------------------------------------
+   4. Layout Helpers
+   -------------------------------------------------------------------------- */
+.container-main {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gutter);
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--topnav-height);
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding-inline: var(--space-6);
+  background-color: var(--surface-container-lowest);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: var(--space-6);
+  background-color: var(--surface-container-lowest);
+  border-right: 1px solid var(--outline-variant);
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding-block: var(--space-6);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--on-surface);
+  text-decoration: none;
+  margin-bottom: var(--space-1);
+}
+.nav-item:hover {
+  background-color: var(--surface-container);
+}
+.nav-item.active {
+  background-color: var(--primary-container);
+  color: var(--on-primary-container);
+  transform: translateX(1px);
+}
+
+.footer-institutional {
+  border-top: 1px solid var(--outline-variant);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  color: var(--secondary);
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .grid-12 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .sidebar {
+    display: none;
+  }
+  .container-main,
+  .main-content {
+    padding-inline: var(--margin-mobile);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter 120ms ease, background-color 120ms ease;
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus-ring);
+}
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+.btn-primary:hover {
+  filter: brightness(1.15);
+}
+
+.btn-secondary {
+  background-color: var(--surface-container);
+  color: var(--secondary);
+  border-color: var(--outline);
+}
+.btn-secondary:hover {
+  background-color: var(--surface-container-high);
+}
+
+.btn-gold {
+  background-color: var(--accent-gold);
+  color: var(--on-accent-gold);
+  box-shadow: var(--shadow-gamified);
+}
+.btn-gold:hover {
+  filter: brightness(1.05);
+}
+
+.btn-teal {
+  background-color: var(--tertiary);
+  color: var(--on-tertiary);
+}
+.btn-teal:hover {
+  background-color: var(--tertiary-container);
+}
+
+/* --------------------------------------------------------------------------
+   6. Inputs & Selection
+   -------------------------------------------------------------------------- */
+.input-base,
+select.input-base,
+textarea.input-base {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-container-lowest);
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+.input-base::placeholder {
+  color: var(--secondary);
+}
+.input-base:focus {
+  outline: none;
+  border: 2px solid var(--primary);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--primary);
+}
+
+/* --------------------------------------------------------------------------
+   7. Cards
+   -------------------------------------------------------------------------- */
+.glass-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-6);
+}
+
+.card-research {
+  background-color: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+}
+.card-research h3 {
+  color: var(--primary);
+}
+
+.card-achievement {
+  border-left: 2px solid var(--accent-gold);
+  box-shadow: var(--shadow-gamified);
+}
+
+/* --------------------------------------------------------------------------
+   8. State Pills, Chips & Tabs
+   -------------------------------------------------------------------------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  max-width: 220px;
+  overflow-wrap: anywhere;
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+}
+.pill-active {
+  background-color: var(--tertiary-container);
+  color: var(--on-tertiary-container);
+}
+.pill-closed {
+  background-color: var(--surface-container-highest);
+  color: var(--secondary);
+}
+.pill-review {
+  background-color: var(--error-container);
+  color: var(--on-error-container);
+}
+.pill-published {
+  background-color: var(--on-success-container);
+  color: var(--success);
+}
+.pill-pending {
+  background-color: var(--primary-fixed);
+  color: var(--on-primary-fixed);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--outline);
+  background-color: var(--surface-container-lowest);
+  color: var(--on-surface);
+  font-size: 12px;
+  cursor: pointer;
+}
+.chip.active {
+  background-color: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+
+.tabs {
+  display: inline-flex;
+  gap: var(--space-1);
+  border-bottom: 2px solid var(--outline-variant);
+}
+.tab {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--secondary);
+  cursor: pointer;
+}
+.tab.active {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  margin-bottom: -2px;
+}
+
+/* --------------------------------------------------------------------------
+   9. Data Table (zebra striping)
+   -------------------------------------------------------------------------- */
+.table-data {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.table-data th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--surface-container);
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+.table-data td {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--outline-variant);
+}
+.table-data tbody tr:nth-child(even) {
+  background-color: var(--surface);
+}
+.table-data tbody tr:nth-child(odd) {
+  background-color: var(--surface-container-lowest);
+}
+
+/* --------------------------------------------------------------------------
+   10. Timeline
+   -------------------------------------------------------------------------- */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.timeline li {
+  position: relative;
+  padding-left: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-left: 2px solid var(--outline-variant);
+}
+.timeline li:last-child {
+  border-left-color: transparent;
+}
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background-color: var(--primary);
+}
+.timeline li.done::before {
+  background-color: var(--accent-gold);
+}
+
+/* --------------------------------------------------------------------------
+   11. Dropzone
+   -------------------------------------------------------------------------- */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-8);
+  border: 2px dashed var(--outline);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-container-low);
+  color: var(--secondary);
+  text-align: center;
+  cursor: pointer;
+}
+.dropzone:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* --------------------------------------------------------------------------
+   12. Gamification: XP Progress Bar
+   -------------------------------------------------------------------------- */
+.xp-bar {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-container-high);
+  overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background-color: var(--accent-gold);
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.45),
+    0 0 8px rgba(255, 184, 0, 0.35);
+}
+.xp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-pill);
+  background-color: var(--accent-gold);
+  color: var(--on-accent-gold);
+  box-shadow: var(--shadow-gamified);
+}
+.insignia {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  cursor: pointer;
+}
+.insignia.locked {
+  opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------------
+   13. Custom Scrollbar
+   -------------------------------------------------------------------------- */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--surface-container-low);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--outline-variant);
+  border-radius: var(--radius-pill);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--outline);
+}

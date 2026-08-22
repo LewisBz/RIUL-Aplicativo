@@ -1,5 +1,18 @@
 <!--
 === SYNC IMPACT REPORT ===
+Version change: 1.0.0 -> 1.1.0
+Modified principles:
+  - VII Security and Role-Based Access: session-based auth replaced by stateless
+    JWT via Flask-JWT-Extended; bcrypt fixed as mandatory hash via Flask-Bcrypt;
+    token storage policy added (Authorization Bearer + localStorage, accepted XSS
+    tradeoff documented).
+Added sections:
+  - Fixed Technology Stack rows: "Auth tokens" and "Password hashing"
+Removed sections: none
+Follow-up TODOs: none
+=== END SYNC IMPACT REPORT ===
+
+=== SYNC IMPACT REPORT (1.0.0) ===
 Version change: (none) -> 1.0.0
 Modified principles: N/A (initial ratification)
 Added sections:
@@ -98,14 +111,20 @@ Every backend module ships with automated tests using pytest.
 
 ### VII. Security and Role-Based Access
 
-Authentication and authorization are enforced server-side on every request.
+Authentication is stateless and enforced server-side on every request.
 
-- Session-based authentication; roles: `researcher`, `administrator`. Authorization
-  checks live in one place per module (decorators/guards), not scattered in views.
-- All input validated server-side regardless of client-side validation; secrets and
-  credentials come from environment variables (never committed).
-- Passwords use a modern adaptive hash (e.g., Argon2/bcrypt); no plaintext or fast
-  hashes ever. Rationale: the platform stores personal academic data of real people.
+- Stateless JWT authentication via Flask-JWT-Extended: short-lived access tokens
+  issued at login through the REST API and sent by the frontend as
+  `Authorization: Bearer` headers. Roles (`researcher`, `administrator`) are encoded
+  in token claims AND re-checked server-side on every request; authorization checks
+  live in one place per module (decorators/guards), not scattered in views.
+- Token storage: the frontend keeps tokens in localStorage and sends Bearer headers.
+  This XSS tradeoff is explicitly accepted for this project; mitigations stay
+  server-side (strict input validation, no inline user HTML).
+- Signing keys and secrets come from environment variables (never committed).
+- All input validated server-side regardless of client-side validation.
+- Passwords are hashed with bcrypt via Flask-Bcrypt; no plaintext or fast hashes
+  ever. Rationale: the platform stores personal academic data of real people.
 
 ## Fixed Technology Stack
 
@@ -119,13 +138,16 @@ The stack below is frozen for v1. Changes require a constitution amendment.
 | Migrations | Alembic via Flask-Migrate                         |
 | Database   | PostgreSQL 16+                                    |
 | DB Driver  | psycopg                                           |
+| Auth tokens | Flask-JWT-Extended                               |
+| Password hashing | Flask-Bcrypt (bcrypt)                       |
 | Runtime    | Docker Compose                                    |
 | Frontend   | Vanilla JS (ES2022 modules), HTML5, CSS3          |
 | Styling    | CSS custom properties (Stitch design tokens)      |
 | Testing    | pytest                                            |
 
 Forbidden by this constitution: ORMs other than SQLAlchemy, client frameworks or
-bundlers, alternative databases, unpinned runtimes.
+bundlers, alternative databases, unpinned runtimes, session-based authentication,
+plaintext or fast-hash password storage.
 
 ## Development Workflow
 
@@ -152,4 +174,4 @@ This constitution supersedes all other practices, conventions, and ad-hoc decisi
 - Any conflict between documentation, habit, or convenience and this document is
   resolved in favor of this document.
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-22 | **Last Amended**: 2026-08-22
+**Version**: 1.1.0 | **Ratified**: 2026-08-22 | **Last Amended**: 2026-08-22
