@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL - Gamificación y Ranking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#656464",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-fixed": "#00201c",
+                        "inverse-primary": "#ffb3b5",
+                        "background": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "surface-container": "#eeeeee",
+                        "surface-tint": "#b02a3e",
+                        "on-secondary-fixed-variant": "#474747",
+                        "primary-container": "#9e1b32",
+                        "error": "#ba1a1a",
+                        "tertiary": "#00423c",
+                        "surface-container-low": "#f3f3f3",
+                        "inverse-surface": "#2f3131",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "primary-fixed": "#ffdada",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-background": "#1a1c1c",
+                        "tertiary-container": "#005c53",
+                        "on-error": "#ffffff",
+                        "outline": "#8c7071",
+                        "secondary-container": "#e4e2e1",
+                        "on-primary-fixed": "#40000c",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-container": "#ffb0b3",
+                        "on-surface-variant": "#594141",
+                        "surface": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f1f1f1",
+                        "tertiary-fixed": "#a7f0e4",
+                        "primary": "#7b001f",
+                        "secondary-fixed": "#e4e2e1",
+                        "surface-container-high": "#e8e8e8",
+                        "on-tertiary-container": "#8ad2c6",
+                        "secondary": "#5f5e5e",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#e0bfbf",
+                        "gold-accent": "#ffb800"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-12": "48px",
+                        "base": "4px",
+                        "unit-6": "24px",
+                        "unit-4": "16px",
+                        "unit-2": "8px",
+                        "unit-8": "32px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "unit-1": "4px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "numeric-xp": ["Montserrat"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Montserrat"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .xp-glow {
+            box-shadow: inset 0 0 4px rgba(255, 184, 0, 0.5);
+        }
+        .gamified-shadow {
+            box-shadow: 0px 4px 20px rgba(255, 184, 0, 0.1);
+        }
+        .soft-shadow {
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full h-16 px-unit-6 max-w-container-max mx-auto">
+<div class="flex items-center gap-unit-6">
+<div class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+                    RIUL
+                </div>
+<nav class="hidden md:flex gap-unit-4">
+<a class="text-on-surface-variant dark:text-on-surface text-body-md font-body-md hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-md" href="#">Semilleros</a>
+<a class="text-on-surface-variant dark:text-on-surface text-body-md font-body-md hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-md" href="#">Proyectos</a>
+<a class="text-on-surface-variant dark:text-on-surface text-body-md font-body-md hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-md" href="#">Eventos</a>
+</nav>
+</div>
+<div class="flex items-center gap-unit-4">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline rounded-lg text-body-md font-body-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">person</span>
+                    Perfil
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 max-w-container-max mx-auto w-full">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col py-unit-6 px-unit-4 gap-unit-2 w-64 flex-shrink-0 bg-surface-container-low dark:bg-surface-container-lowest border-r border-outline-variant dark:border-outline min-h-[calc(100vh-64px)] sticky top-16">
+<nav class="flex flex-col gap-1 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">person</span>
+                    Perfil
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">psychology</span>
+                    Semillero
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+                    Proyectos
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">groups</span>
+                    Comunidad
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">event</span>
+                    Eventos
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary font-bold opacity-80 transition-all text-label-caps font-label-caps scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                    Gamificación
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">notifications</span>
+                    Notificaciones
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all text-label-caps font-label-caps" href="#">
+<span class="material-symbols-outlined">search</span>
+                    Exploración
+                </a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-margin-mobile md:p-gutter flex flex-col gap-unit-6">
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<h1 class="text-headline-lg font-headline-lg text-primary">GAMIFICACIÓN</h1>
+<h2 class="text-title-lg font-title-lg text-on-surface-variant hidden md:block">RANKING INSTITUCIONAL</h2>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-unit-6">
+<!-- Left Column: Profile & Badges -->
+<div class="xl:col-span-8 flex flex-col gap-unit-6">
+<!-- Perfil y Progreso -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-unit-4 soft-shadow">
+<h3 class="text-title-lg font-title-lg mb-4 text-on-surface">PERFIL Y PROGRESO</h3>
+<div class="flex flex-col md:flex-row gap-unit-6 items-center md:items-start">
+<div class="w-24 h-24 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border-2 border-primary-container">
+<span class="material-symbols-outlined text-display-lg text-on-surface-variant">person</span>
+</div>
+<div class="flex-1 w-full space-y-4">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-headline-md font-headline-md">Dra. Elena Rossi</p>
+<p class="text-body-md font-body-md text-on-surface-variant">Investigadora Senior - Nivel 15</p>
+</div>
+<div class="text-right">
+<p class="text-label-caps font-label-caps text-on-surface-variant">Estrellas (Total): 4.5</p>
+<div class="flex text-[#ffb800] mt-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star_half</span>
+<span class="ml-2 text-on-surface text-body-md font-body-md">(45)</span>
+</div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-md font-body-md mb-1">
+<span>Puntos de Experiencia (XP)</span>
+<span class="font-numeric-xp text-numeric-xp">25,600 / 30,000</span>
+</div>
+<div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-[#ffb800] xp-glow" style="width: 85%;"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Insignias y Recompensas -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-unit-4 soft-shadow">
+<h3 class="text-title-lg font-title-lg mb-4 text-on-surface">INSIGNIAS Y RECOMPENSAS</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-unit-6">
+<!-- Vitrina -->
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-3">Vitrina de Insignias Obtenidas</p>
+<div class="grid grid-cols-4 gap-2">
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant hover:border-primary cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl text-primary" style="font-variation-settings: 'FILL' 1;">trophy</span>
+</div>
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant hover:border-[#ffb800] cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-3xl text-[#ffb800]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant opacity-50">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant">star_border</span>
+</div>
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant opacity-50">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant">group</span>
+</div>
+<div class="aspect-square bg-surface-container rounded flex items-center justify-center border border-outline-variant opacity-50">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant">psychology</span>
+</div>
+</div>
+</div>
+<!-- Honor Medals -->
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-3">Medallas de Honor Recientes</p>
+<div class="flex justify-around items-center h-24 mb-4">
+<div class="text-center">
+<span class="material-symbols-outlined text-5xl text-[#ffb800]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="text-center">
+<span class="material-symbols-outlined text-5xl text-primary" style="font-variation-settings: 'FILL' 1;">social_leaderboard</span>
+</div>
+<div class="text-center opacity-50">
+<span class="material-symbols-outlined text-5xl text-on-surface-variant">workspace_premium</span>
+</div>
+</div>
+<button class="w-full py-2 bg-[#ffb800] text-on-background font-bold rounded-lg text-body-md hover:bg-yellow-500 transition-colors">
+                                    Ver Todas las Recompensas
+                                </button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Timeline -->
+<div class="xl:col-span-4">
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-unit-4 soft-shadow h-full">
+<h3 class="text-title-lg font-title-lg mb-4 text-on-surface">LOGROS (Timeline)</h3>
+<div class="space-y-4">
+<!-- Item 1 -->
+<div class="p-3 bg-background rounded border-l-2 border-[#ffb800] gamified-shadow flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex gap-2 items-center">
+<span class="material-symbols-outlined text-on-surface-variant">event</span>
+<div>
+<p class="text-body-md font-bold text-on-surface">V Simposio Internacional</p>
+<p class="text-label-caps font-label-caps text-on-surface-variant">Ponencia Principal</p>
+</div>
+</div>
+<span class="bg-[#ffb800] bg-opacity-20 text-on-background px-2 py-1 rounded text-numeric-xp font-numeric-xp border border-[#ffb800]">
+                                        XP +50
+                                    </span>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex text-[#ffb800] text-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]">star_border</span>
+</div>
+<span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-bold border border-green-200">Validado</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-3 bg-surface-bright rounded border border-outline-variant flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex gap-2 items-center">
+<span class="material-symbols-outlined text-on-surface-variant">article</span>
+<div>
+<p class="text-body-md font-bold text-on-surface">Artículo Publicado (Q1)</p>
+<p class="text-label-caps font-label-caps text-on-surface-variant">Revista Scopus</p>
+</div>
+</div>
+<span class="bg-surface-container text-on-surface-variant px-2 py-1 rounded text-numeric-xp font-numeric-xp">
+                                        XP +120
+                                    </span>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex text-on-surface-variant opacity-50 text-sm">
+                                        Pendiente Valoración
+                                    </div>
+<span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs font-bold border border-yellow-200">En Revisión</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-3 bg-background rounded border-l-2 border-primary soft-shadow flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div class="flex gap-2 items-center">
+<span class="material-symbols-outlined text-on-surface-variant">groups</span>
+<div>
+<p class="text-body-md font-bold text-on-surface">Proyecto Semillero Cerrado</p>
+<p class="text-label-caps font-label-caps text-on-surface-variant">Tutoría</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="text-label-caps font-label-caps text-on-surface-variant">
+                                        Logro Especial
+                                    </div>
+<span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-bold border border-green-200">Validado</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant text-center">
+<a class="text-primary font-bold hover:underline text-body-md font-body-md" href="#">Ver Historial Completo</a>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-dim border-t border-outline-variant dark:border-outline w-full py-unit-4 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-unit-6 w-full max-w-container-max mx-auto text-center md:text-left">
+<div class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface mb-4 md:mb-0">
+                © 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico
+            </div>
+<div class="flex gap-4">
+<a class="text-label-caps font-label-caps text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim underline transition opacity-75" href="#">Privacidad</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim underline transition opacity-75" href="#">Términos</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim underline transition opacity-75" href="#">Contacto</a>
+</div>
+</div>
+</footer>
+</body></html>

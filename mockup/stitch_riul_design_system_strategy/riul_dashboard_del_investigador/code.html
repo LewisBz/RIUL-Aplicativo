@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL - Dashboard del Investigador</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#9e1b32",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "secondary-fixed": "#e4e2e1",
+                        "outline-variant": "#e0bfbf",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "tertiary-container": "#005c53",
+                        "secondary": "#5f5e5e",
+                        "primary": "#7b001f",
+                        "on-surface-variant": "#594141",
+                        "inverse-surface": "#2f3131",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#ffdada",
+                        "surface-container-high": "#e8e8e8",
+                        "background": "#f9f9f9",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dadada",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-surface": "#1a1c1c",
+                        "on-background": "#1a1c1c",
+                        "surface-container": "#eeeeee",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#b02a3e",
+                        "inverse-primary": "#ffb3b5",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed": "#40000c",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary": "#00423c",
+                        "surface": "#f9f9f9",
+                        "surface-container-low": "#f3f3f3",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "secondary-container": "#e4e2e1",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#8ad2c6",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary-fixed": "#a7f0e4",
+                        "on-secondary-container": "#656464",
+                        "surface-variant": "#e2e2e2",
+                        "on-secondary": "#ffffff",
+                        "outline": "#8c7071",
+                        "on-primary-container": "#ffb0b3",
+                        "on-tertiary-fixed-variant": "#005048"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-6": "24px",
+                        "unit-2": "8px",
+                        "unit-1": "4px",
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "unit-12": "48px",
+                        "unit-8": "32px",
+                        "unit-4": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Montserrat"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "numeric-xp": ["Montserrat"],
+                        "display-lg": ["Montserrat"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f9f9f9; }
+        .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid #e0bfbf; }
+        .xp-glow { box-shadow: inset 0 0 4px rgba(255, 184, 0, 0.4); }
+    </style>
+</head>
+<body class="text-on-surface flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-dim border-b border-outline-variant shadow-sm w-full sticky top-0 z-50">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<div class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed">RIUL</div>
+<nav class="hidden md:flex gap-6">
+<a class="font-label-caps text-label-caps text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors py-2 px-3 rounded-md" href="#">Semilleros</a>
+<a class="font-label-caps text-label-caps text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors py-2 px-3 rounded-md" href="#">Proyectos</a>
+<a class="font-label-caps text-label-caps text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors py-2 px-3 rounded-md" href="#">Eventos</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-secondary hover:bg-surface-container-high p-2 rounded-full transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="text-secondary hover:bg-surface-container-high p-2 rounded-full transition-colors"><span class="material-symbols-outlined" data-icon="settings">settings</span></button>
+<button class="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-full px-4 py-1.5 hover:bg-surface-container-high transition-colors">
+<span class="font-label-caps text-label-caps">Perfil</span>
+<span class="material-symbols-outlined text-sm">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 max-w-container-max mx-auto w-full">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant h-[calc(100vh-80px)] w-64 sticky top-[80px] py-6">
+<nav class="flex-1 overflow-y-auto px-2 space-y-1">
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container dark:bg-primary dark:text-on-primary rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-secondary-fixed-dim hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+                    Perfil
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-secondary-fixed-dim hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+                    Semillero
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-secondary-fixed-dim hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="folder">folder</span>
+                    Proyectos
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-secondary-fixed-dim hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                    Comunidad
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-secondary-fixed-dim hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+                    Eventos
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-secondary-fixed-dim hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+                    Gamificación
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-secondary-fixed-dim hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-lg mx-2 my-1 px-4 py-3 font-label-caps text-label-caps transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                    Notificaciones
+                </a>
+</nav>
+<div class="px-4 mt-6">
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-3 rounded-lg hover:bg-surface-tint transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Nuevo Proyecto
+                 </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-unit-6 md:p-unit-8 w-full overflow-hidden">
+<h1 class="font-headline-lg md:font-headline-lg-mobile text-headline-lg md:text-headline-lg-mobile font-bold text-on-surface mb-unit-8">Hola, Investigador</h1>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-unit-6">
+<!-- Profile Snippet -->
+<div class="md:col-span-4 glass-card rounded-xl p-unit-4 flex flex-col items-center text-center shadow-[0px_4px_20px_rgba(0,0,0,0.05)] relative overflow-hidden group">
+<div class="w-24 h-24 rounded-full bg-surface-container-high mb-4 border-2 border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a diverse academic researcher in a modern laboratory or library setting. Natural lighting, sharp focus, corporate yet approachable mood. Light mode aesthetic with clean background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGCt0pkWelS8_v5_D_1cd01hIU23m5IRN_vl81_7i_q3v-UgqtOXZy0BGU4V4UAQpwt6HH13ZBCKMc2GlS6LsLRAmo5fFgmlRPFCzG0R0sfQTVWrjzRNCstUtuJU5HXLc-FkIAxQtoKOqDGHYx-MGjgQa0of-rb5kIJwBJEMS4L5X5v0bV1yCTMN82wHo3PT7P-kFiAIYyFfGw8w1UHraxvJ11J7yPN0JT-gQlHMWPM45J4IZlkjiu"/>
+</div>
+<h2 class="font-title-lg text-title-lg font-bold mb-1">Nombre Apellido</h2>
+<p class="font-body-md text-body-md text-secondary mb-4">Nivel 5 • Investigador Senior</p>
+<div class="flex gap-2 mb-6">
+<span class="material-symbols-outlined text-[#FFB800] text-2xl" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#FFB800] text-2xl" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#FFB800] text-2xl" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-2xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<button class="w-full mt-auto py-2 border border-outline-variant rounded-lg font-label-caps text-label-caps hover:bg-surface-container-high transition-colors">Ver Todo</button>
+</div>
+<!-- Projects Summary -->
+<div class="md:col-span-8 glass-card rounded-xl p-unit-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border-l-2 border-l-primary">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest">RESUMEN DE PROYECTOS</h3>
+<span class="font-numeric-xp text-numeric-xp bg-surface-container-high px-3 py-1 rounded-full">3 Activos</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 hover:bg-surface-container-low rounded-lg transition-colors border border-transparent hover:border-outline-variant">
+<div>
+<h4 class="font-title-lg text-title-lg text-sm mb-1">Proyecto A: Análisis de Datos</h4>
+<p class="font-body-md text-body-md text-xs text-secondary">Estado: En curso</p>
+</div>
+<button class="text-primary hover:bg-primary-fixed rounded p-2"><span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+<div class="flex items-center justify-between p-3 hover:bg-surface-container-low rounded-lg transition-colors border border-transparent hover:border-outline-variant">
+<div>
+<h4 class="font-title-lg text-title-lg text-sm mb-1">Proyecto B: Sustentabilidad</h4>
+<p class="font-body-md text-body-md text-xs text-secondary">Estado: Revisión</p>
+</div>
+<button class="text-primary hover:bg-primary-fixed rounded p-2"><span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+</div>
+<div class="mt-6 flex justify-end gap-3">
+<button class="px-4 py-2 border border-outline-variant rounded-lg font-label-caps text-label-caps hover:bg-surface-container-high transition-colors">Ver Todos</button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-caps text-label-caps hover:bg-surface-tint transition-colors">Crear</button>
+</div>
+</div>
+<!-- Publications -->
+<div class="md:col-span-6 glass-card rounded-xl p-unit-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest">PUBLICACIONES</h3>
+</div>
+<ul class="space-y-3 mb-6">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary mt-0.5">article</span>
+<div>
+<p class="font-body-md text-body-md font-semibold text-sm">Publicación de alto impacto reciente sobre ecología.</p>
+<p class="font-body-md text-body-md text-xs text-secondary">Nature • 2025</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary mt-0.5">article</span>
+<div>
+<p class="font-body-md text-body-md font-semibold text-sm">Estudio preliminar de algoritmos genéticos.</p>
+<p class="font-body-md text-body-md text-xs text-secondary">IEEE • 2024</p>
+</div>
+</li>
+</ul>
+<button class="w-full py-2 bg-surface-container-low border border-outline-variant rounded-lg font-label-caps text-label-caps hover:bg-surface-container-high transition-colors">Registrar</button>
+</div>
+<!-- Gamification / My Seedbed -->
+<div class="md:col-span-6 grid grid-rows-2 gap-unit-6">
+<div class="glass-card rounded-xl p-unit-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border-l-2 border-l-[#FFB800] relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-[#FFB800] opacity-5 rounded-bl-full"></div>
+<h3 class="font-label-caps text-label-caps text-[#b38100] tracking-widest mb-4">MI SEMILLERO</h3>
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 bg-surface-container-high rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="font-headline-md text-headline-md font-bold text-secondary">RIUL</span>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg text-sm font-bold">Semillero Alpha</h4>
+<p class="font-body-md text-body-md text-xs text-secondary mb-1">20 Miembros activos</p>
+<p class="font-body-md text-body-md text-xs text-primary font-semibold">3 Actividades este mes</p>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-xl p-unit-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] flex flex-col justify-between">
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest mb-2">NOTIFICACIONES RECIENTES</h3>
+<ul class="space-y-2 flex-1">
+<li class="flex items-center gap-2 text-sm font-body-md text-body-md p-2 hover:bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-tertiary-container text-lg">check_circle</span>
+                                 Aprobación de logros
+                             </li>
+<li class="flex items-center gap-2 text-sm font-body-md text-body-md p-2 hover:bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-secondary text-lg">mail</span>
+                                 Mensaje de Docente Guía
+                             </li>
+</ul>
+<button class="w-full py-1.5 border border-outline-variant rounded-lg font-label-caps text-label-caps hover:bg-surface-container-high transition-colors mt-2 text-xs">Ver Todas</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface border-t border-outline-variant w-full mt-auto">
+<div class="w-full py-8 px-6 flex flex-col md:flex-row justify-between items-center text-center max-w-container-max mx-auto gap-4">
+<div class="font-title-lg text-title-lg font-bold text-on-surface">RIUL</div>
+<div class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant">
+                © 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico
+            </div>
+<div class="flex gap-4">
+<a class="font-label-caps text-label-caps text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Privacidad</a>
+<a class="font-label-caps text-label-caps text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Términos</a>
+<a class="font-label-caps text-label-caps text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Contacto</a>
+</div>
+</div>
+</footer>
+</body></html>

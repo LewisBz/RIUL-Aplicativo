@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL - Crear Publicación</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f9f9f9",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-bright": "#f9f9f9",
+                        "on-tertiary-container": "#8ad2c6",
+                        "surface-dim": "#dadada",
+                        "on-tertiary-fixed": "#00201c",
+                        "primary": "#7b001f",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#40000c",
+                        "inverse-surface": "#2f3131",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#594141",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#00423c",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "surface-container": "#eeeeee",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-primary-container": "#ffb0b3",
+                        "tertiary-container": "#005c53",
+                        "on-error": "#ffffff",
+                        "primary-container": "#9e1b32",
+                        "surface-tint": "#b02a3e",
+                        "tertiary-fixed": "#a7f0e4",
+                        "primary-fixed": "#ffdada",
+                        "on-surface": "#1a1c1c",
+                        "outline": "#8c7071",
+                        "surface": "#f9f9f9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "secondary": "#5f5e5e",
+                        "inverse-primary": "#ffb3b5",
+                        "on-secondary-container": "#656464",
+                        "surface-container-low": "#f3f3f3",
+                        "outline-variant": "#e0bfbf",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "secondary-container": "#e4e2e1",
+                        "secondary-fixed": "#e4e2e1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-6": "24px",
+                        "container-max": "1280px",
+                        "unit-1": "4px",
+                        "base": "4px",
+                        "unit-4": "16px",
+                        "unit-2": "8px",
+                        "gutter": "24px",
+                        "unit-12": "48px",
+                        "margin-mobile": "16px",
+                        "unit-8": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Montserrat", "sans-serif"],
+                        "numeric-xp": ["Montserrat", "sans-serif"],
+                        "headline-lg": ["Montserrat", "sans-serif"],
+                        "headline-lg-mobile": ["Montserrat", "sans-serif"],
+                        "label-caps": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "display-lg": ["Montserrat", "sans-serif"],
+                        "title-lg": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { background-color: theme('colors.background'); }
+        .shadow-ambient { box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest docked full-width top-0 border-b border-outline-variant shadow-sm z-50">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">RIUL</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-secondary font-label-caps text-label-caps hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg" href="#">Semilleros</a>
+<a class="text-secondary font-label-caps text-label-caps hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg" href="#">Proyectos</a>
+<a class="text-secondary font-label-caps text-label-caps hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg" href="#">Eventos</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-secondary hover:bg-surface-container-high transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-secondary hover:bg-surface-container-high transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="flex items-center gap-2 px-3 py-1.5 border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="font-label-caps text-label-caps text-secondary">Perfil</span>
+<img alt="Researcher Avatar" class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of a university researcher wearing glasses and a smart casual outfit, set against a clean, light-grey studio background. High-key lighting, modern corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0iYOLHo7IYJ31S9o7WaOsBq4inB3rf_gWHe9Y4JSsXiClfk2xb1gucjbebWMxmXlW2WKrbTCZVlh_E4gmRo7skL4w5vQDv7mjjNcvr4qAhnv4TTZ3LW2WvbDtek1K7eWYWvwjvh9GhoElckCgKBLrXz6IaW2cjWNyj4gdW_471PE4fg-GA_BPYwLYxXJOiNEw9gfE2TaxUWDhMPGYvpXjm9iPh8LLtofGHyb1cyI7bKI2xUgDF3Sg"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 w-full max-w-container-max mx-auto mt-6">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low docked left h-full w-64 border-r border-outline-variant hidden md:flex flex-col py-6 shrink-0">
+<div class="px-6 mb-8 text-center flex flex-col items-center">
+<img alt="Researcher Profile" class="w-20 h-20 rounded-full object-cover mb-4 shadow-ambient border-2 border-surface-container-highest" data-alt="A detailed, modern avatar illustration of an academic researcher, clean lines, subtle shading, professional yet approachable vibe, set against a solid off-white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO1rPqCttiyt-NX_ZaNLJYkB1fraYcQOzzNk-C4al1ZtkD9ExK-mthUuh0ipIyUILVx6g5F1Ezkmj9Tn5KLNrDohBFJDuNze25XH_M-VHTMuG-dEZmaTuiUy4FzVFULUWvnVOHj4s2GefTg9dJUbqszhE4-xZe4uuYkBkAYmI2lkDqqvMR742UYInnAA_MS1Hwq8ShQYs9YjJxY_2qKS6wiEq6oRMDPfDojS7ELISuuh0tavJ38C4E"/>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Investigador</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">Nivel 5 • Magíster</p>
+<button class="mt-4 w-full bg-primary text-on-primary font-label-caps text-label-caps py-2 rounded-lg hover:bg-primary-container transition-colors shadow-ambient">Nuevo Proyecto</button>
+</div>
+<nav class="flex flex-col flex-1 px-2 gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high mx-2 my-1 rounded-lg transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high mx-2 my-1 rounded-lg transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span> Perfil
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high mx-2 my-1 rounded-lg transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span> Semillero
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high mx-2 my-1 rounded-lg transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="folder">folder</span> Proyectos
+                </a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg mx-2 my-1 font-label-caps text-label-caps shadow-sm translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group" data-weight="fill" style="font-variation-settings: 'FILL' 1;">group</span> Comunidad
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high mx-2 my-1 rounded-lg transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span> Eventos
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high mx-2 my-1 rounded-lg transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span> Gamificación
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high mx-2 my-1 rounded-lg transition-all font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span> Notificaciones
+                </a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 p-6 lg:px-10 overflow-y-auto">
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+<!-- Left Column: Editor -->
+<div class="xl:col-span-8 space-y-6">
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant shadow-ambient p-6">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 border-b border-outline-variant pb-4">EDITOR DE CONTENIDO</h2>
+<div class="space-y-5">
+<!-- Título -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="post-title">Título</label>
+<input class="w-full bg-background border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none" id="post-title" placeholder="Escribe el título de tu publicación" type="text"/>
+</div>
+<!-- Contenido -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Contenido</label>
+<div class="border border-outline-variant rounded-lg overflow-hidden flex flex-col bg-background">
+<!-- Toolbar -->
+<div class="flex items-center gap-2 border-b border-outline-variant p-2 bg-surface-container-low">
+<button class="p-1.5 rounded text-secondary hover:bg-surface-container-highest transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="format_bold">format_bold</span>
+</button>
+<button class="p-1.5 rounded text-secondary hover:bg-surface-container-highest transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="format_italic">format_italic</span>
+</button>
+<button class="p-1.5 rounded text-secondary hover:bg-surface-container-highest transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="link">link</span>
+</button>
+<div class="w-px h-5 bg-outline-variant mx-1"></div>
+<button class="p-1.5 rounded text-secondary hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-1 font-body-md text-[13px]" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="image">image</span> Imagen
+                                        </button>
+</div>
+<!-- Textarea -->
+<textarea class="w-full p-4 bg-background border-none resize-y font-body-md text-body-md text-on-surface focus:ring-0 outline-none" placeholder="Escribe tu contenido aquí..." rows="6"></textarea>
+</div>
+</div>
+<!-- Imagen o Evidencia Dropzone -->
+<div>
+<div class="border-2 border-dashed border-outline-variant rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors p-8 flex flex-col items-center justify-center cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-secondary mb-3 group-hover:text-primary transition-colors" data-icon="cloud_upload">cloud_upload</span>
+<p class="font-body-md text-body-md text-on-surface-variant text-center">Imagen o Evidencia</p>
+<p class="font-label-caps text-label-caps text-secondary text-center mt-1">(Arrastra y suelta o sube un archivo)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Settings & Actions -->
+<div class="xl:col-span-4 space-y-6">
+<!-- Categoría y Visibilidad -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant shadow-ambient p-5">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-4">CATEGORÍA Y VISIBILIDAD</h3>
+<div class="mb-5">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-3">CATEGORÍA</h4>
+<div class="space-y-2">
+<label class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container-low cursor-pointer transition-colors border border-transparent hover:border-outline-variant group has-[:checked]:bg-primary-container has-[:checked]:border-primary">
+<input class="hidden" name="categoria" type="radio"/>
+<span class="material-symbols-outlined text-secondary group-has-[:checked]:text-on-primary-container" data-icon="article">article</span>
+<span class="font-body-md text-body-md text-on-surface group-has-[:checked]:text-on-primary-container group-has-[:checked]:font-semibold">Artículo</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container-low cursor-pointer transition-colors border border-transparent hover:border-outline-variant group has-[:checked]:bg-primary-container has-[:checked]:border-primary">
+<input class="hidden" name="categoria" type="radio"/>
+<span class="material-symbols-outlined text-secondary group-has-[:checked]:text-on-primary-container" data-icon="timeline">timeline</span>
+<span class="font-body-md text-body-md text-on-surface group-has-[:checked]:text-on-primary-container group-has-[:checked]:font-semibold">Avance de Proyecto</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container-low cursor-pointer transition-colors border border-transparent hover:border-outline-variant group has-[:checked]:bg-primary-container has-[:checked]:border-primary">
+<input class="hidden" name="categoria" type="radio"/>
+<span class="material-symbols-outlined text-secondary group-has-[:checked]:text-on-primary-container" data-icon="mic">mic</span>
+<span class="font-body-md text-body-md text-on-surface group-has-[:checked]:text-on-primary-container group-has-[:checked]:font-semibold">Ponencia</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container-low cursor-pointer transition-colors border border-transparent hover:border-outline-variant group has-[:checked]:bg-primary-container has-[:checked]:border-primary">
+<input class="hidden" name="categoria" type="radio"/>
+<span class="material-symbols-outlined text-secondary group-has-[:checked]:text-on-primary-container" data-icon="event">event</span>
+<span class="font-body-md text-body-md text-on-surface group-has-[:checked]:text-on-primary-container group-has-[:checked]:font-semibold">Evento</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container-low cursor-pointer transition-colors border border-transparent hover:border-outline-variant group has-[:checked]:bg-primary-container has-[:checked]:border-primary">
+<input class="hidden" name="categoria" type="radio"/>
+<span class="material-symbols-outlined text-secondary group-has-[:checked]:text-on-primary-container" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-body-md text-body-md text-on-surface group-has-[:checked]:text-on-primary-container group-has-[:checked]:font-semibold">Comentario</span>
+</label>
+</div>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-3">VISIBILIDAD</h4>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="text-primary focus:ring-primary h-4 w-4 border-outline-variant" name="visibilidad" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface">Pública</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="text-primary focus:ring-primary h-4 w-4 border-outline-variant" name="visibilidad" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface">Solo Semillero</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="text-primary focus:ring-primary h-4 w-4 border-outline-variant" name="visibilidad" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface">Solo Institucional</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Seleccionar Destino -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant shadow-ambient p-5">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-4">SELECCIONAR DESTINO</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">[Mi Perfil]</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">[Mi Semillero 1]</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">[Proyecto X]</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">[Eventos General]</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">[Institución General]</span>
+</label>
+</div>
+</div>
+<!-- Opciones Adicionales -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant shadow-ambient p-5">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-4">OPCIONES ADICIONALES</h3>
+<div class="space-y-4">
+<select class="w-full bg-background border border-outline-variant rounded-lg px-3 py-2.5 font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+<option>Seguir Semillero asociado</option>
+<option>Semillero Alpha</option>
+<option>Semillero Beta</option>
+</select>
+<button class="w-full bg-surface-container-low border border-outline-variant text-on-surface-variant font-label-caps text-label-caps py-2.5 rounded-lg hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="attachment">attachment</span>
+                                [Adjuntar evidencias/logros recientes]
+                            </button>
+</div>
+</div>
+<!-- Confirmación -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant shadow-ambient p-5">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-4">CONFIRMACIÓN</h3>
+<div class="space-y-3">
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-3 rounded-lg hover:bg-primary-container transition-colors shadow-sm">
+                                [Publicar]
+                            </button>
+<button class="w-full bg-transparent border border-outline text-secondary font-label-caps text-label-caps py-3 rounded-lg hover:bg-surface-container transition-colors">
+                                [Guardar Borrador]
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-highest w-full py-8 px-6 mt-12 flex flex-col md:flex-row justify-between items-center text-center max-w-container-max mx-auto border-t border-outline-variant">
+<div class="font-title-lg text-title-lg font-bold text-on-surface mb-4 md:mb-0">RIUL</div>
+<div class="font-body-md text-body-md text-on-surface-variant mb-4 md:mb-0">
+            © 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico
+        </div>
+<nav class="flex gap-6">
+<a class="text-secondary font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Privacidad</a>
+<a class="text-secondary font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Términos</a>
+<a class="text-secondary font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Contacto</a>
+</nav>
+</footer>
+</body></html>

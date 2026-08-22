@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL - Eventos y Convocatorias</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#594141",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "surface": "#f9f9f9",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#2f3131",
+                        "primary-fixed": "#ffdada",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#b02a3e",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#ffb0b3",
+                        "on-secondary-fixed-variant": "#474747",
+                        "surface-bright": "#f9f9f9",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "outline": "#8c7071",
+                        "surface-container-low": "#f3f3f3",
+                        "on-background": "#1a1c1c",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "primary": "#7b001f",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dadada",
+                        "secondary-container": "#e4e2e1",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "primary-container": "#9e1b32",
+                        "inverse-on-surface": "#f1f1f1",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#e0bfbf",
+                        "on-tertiary-container": "#8ad2c6",
+                        "secondary-fixed": "#e4e2e1",
+                        "on-secondary-container": "#656464",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#a7f0e4",
+                        "inverse-primary": "#ffb3b5",
+                        "surface-container": "#eeeeee",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "on-primary-fixed": "#40000c",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary-container": "#005c53",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary": "#00423c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "secondary": "#5f5e5e",
+                        "background": "#f9f9f9",
+                        "surface-variant": "#e2e2e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-2": "8px",
+                        "unit-4": "16px",
+                        "container-max": "1280px",
+                        "base": "4px",
+                        "unit-1": "4px",
+                        "unit-8": "32px",
+                        "unit-6": "24px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "unit-12": "48px"
+                    },
+                    "fontFamily": {
+                        "numeric-xp": ["Montserrat"],
+                        "label-caps": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "headline-md": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md h-screen overflow-hidden flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest border-b border-outline-variant shadow-sm flex justify-between items-center w-full h-16 px-unit-6 z-20 shrink-0">
+<div class="flex items-center gap-unit-6">
+<h1 class="text-headline-md font-headline-md font-bold text-primary">RIUL</h1>
+<span class="text-label-caps font-label-caps text-on-surface-variant hidden md:block">Research Institution University Link</span>
+</div>
+<nav class="hidden md:flex gap-unit-6 items-center">
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors py-2 px-3 rounded" href="#">Semilleros</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors py-2 px-3 rounded" href="#">Proyectos</a>
+<a class="text-primary font-bold border-b-2 border-primary py-2 px-3 rounded" href="#">Eventos</a>
+</nav>
+<div class="flex items-center gap-unit-4">
+<button class="flex items-center gap-2 border border-outline-variant rounded px-3 py-1 hover:bg-surface-container-low transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+                Perfil
+                <span class="material-symbols-outlined text-sm">arrow_drop_down</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low h-full w-64 border-r border-outline-variant flex flex-col py-unit-6 px-unit-4 gap-unit-2 shrink-0 hidden md:flex overflow-y-auto custom-scrollbar z-10">
+<div class="flex items-center gap-3 mb-6 px-2">
+<img alt="University Logo" class="w-10 h-10 object-contain" data-alt="A small, stylized crest or academic logo serving as the university's insignia. Rendered in clean, flat vectors with a dominant crimson color, appropriate for a modern institutional portal header. Bright, professional lighting, corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjm8_iiy0nUZWl8KaR9vl7P-2q0ZqOHu5KVopAbq4eea9lNTvtpqkfTiz_6-2-QfXn9Z1dok3XzrINWUbx2BS3EFdU58W7l18RxnyptYePWrmT-AOpaD9_tqq9abgX3Le0b2GvX0p1mt1TGTLC7fZMcPMIL_l3YnIu9dgHpUtOB_xPUVk5nUOAW8z4cYmZnIgpQD8YShXZerB5qSrb7oSjrcVynUoDwDN5WKgcI3FMkmOIRe4VXmcr"/>
+<div>
+<div class="text-headline-lg font-headline-lg text-primary text-xl">RIUL</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant">Research Portal</div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+<span class="text-label-caps font-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">person</span>
+<span class="text-label-caps font-label-caps">Perfil</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">psychology</span>
+<span class="text-label-caps font-label-caps">Semillero</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">account_tree</span>
+<span class="text-label-caps font-label-caps">Proyectos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">groups</span>
+<span class="text-label-caps font-label-caps">Comunidad</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-lg font-bold transition-transform transform scale-95 opacity-80" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="text-label-caps font-label-caps">Eventos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">military_tech</span>
+<span class="text-label-caps font-label-caps">Gamificación</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">notifications</span>
+<span class="text-label-caps font-label-caps">Notificaciones</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">search</span>
+<span class="text-label-caps font-label-caps">Exploración</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto custom-scrollbar p-unit-6 md:p-unit-8 bg-surface w-full max-w-container-max mx-auto flex flex-col gap-unit-6">
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant w-full">
+<button class="flex-1 text-center py-3 text-primary font-bold border-b-2 border-primary bg-surface-container-lowest">
+                    [ EVENTOS ]
+                </button>
+<button class="flex-1 text-center py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors bg-surface-container">
+                    [ CONVOCATORIAS ]
+                </button>
+</div>
+<!-- Search & Filters -->
+<div class="bg-surface-container-lowest p-unit-4 rounded-lg shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant flex flex-col gap-4">
+<h2 class="text-title-lg font-title-lg text-on-surface font-bold">BARRA DE BÚSQUEDA &amp; FILTROS</h2>
+<div class="flex gap-2">
+<div class="relative flex-1">
+<input class="w-full pl-3 pr-10 py-2 border border-outline-variant rounded text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-surface-bright" placeholder="Buscar eventos..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant">search</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-4">
+<div class="flex items-center gap-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant">Tipo:</label>
+<select class="border border-outline-variant rounded px-2 py-1 text-body-md bg-surface-bright focus:border-primary">
+<option>Taller</option>
+<option>Seminario</option>
+<option>Conferencia</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant">Lugar:</label>
+<select class="border border-outline-variant rounded px-2 py-1 text-body-md bg-surface-bright focus:border-primary">
+<option>Auditorio A</option>
+<option>Sala B</option>
+<option>Virtual</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant">Fecha:</label>
+<select class="border border-outline-variant rounded px-2 py-1 text-body-md bg-surface-bright focus:border-primary">
+<option>Noviembre</option>
+<option>Diciembre</option>
+<option>2027</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Results Grid -->
+<div>
+<h3 class="text-title-lg font-title-lg text-on-surface font-bold mb-4">RESULTADOS (Grid)</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-unit-6">
+<!-- Create New Card -->
+<button class="bg-surface-container-low border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center p-6 h-64 hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2 group-hover:scale-110 transition-transform">add</span>
+<span class="text-title-lg font-title-lg text-on-surface-variant font-bold text-center">Crear Nuevo<br/>Evento</span>
+</button>
+<!-- Active Event Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-unit-4 flex flex-col h-64 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0px_6px_24px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="h-24 bg-surface-container mb-3 rounded overflow-hidden flex-shrink-0 relative">
+<div class="bg-cover bg-center w-full h-full opacity-60" data-alt="A modern, abstract digital graphic representing an academic symposium or international conference. Features geometric shapes, subtle global network nodes, and a refined crimson and white color palette. Soft, diffused lighting, clean corporate presentation, high-resolution aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCLFZ9IWPrXSOti45DwUlcvjJGO2dVWEcEag17QMMBWYFMfRJYKcCdPWywfsp7p1qMk3n1irQ2mLiMKEtw9Yea68FqEJTden9u7DBYqWPLeowAbcFvFGGE2PaIEYLwnt2hEZIVoT5pTG17E4AdG3_J8xy-fq7kyLEtUHPV1iY-05gEKmK_M-8RiUUo5RU05SgaOE40z0zwcYhUQDH4ji_OYTI7srkiYcZMr-VUFL_fEBF8LJtU---NV')"></div>
+</div>
+<h4 class="text-body-md font-bold text-primary truncate">V Simposio Internacional</h4>
+<p class="text-label-caps font-label-caps text-on-surface-variant mt-1 line-clamp-2">Descripción del evento. Investigador Líder...</p>
+<div class="mt-auto pt-2 text-label-caps font-label-caps text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> 13/26/ 18:00
+                        </div>
+<button class="mt-3 w-full bg-primary text-on-primary py-2 rounded text-body-md font-bold hover:bg-primary-container transition-colors">
+                            Ver Detalle / Participar
+                        </button>
+</div>
+<!-- Active Event Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-unit-4 flex flex-col h-64 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+<div class="h-24 bg-surface-container mb-3 rounded overflow-hidden flex-shrink-0 relative">
+<div class="bg-cover bg-center w-full h-full opacity-60" data-alt="A conceptual visualization of an Artificial Intelligence algorithm working. Features glowing data streams, subtle binary code patterns, and an interconnected neural network mesh against a clean, light-mode background. Highlights of crimson red amidst neutral tones, technical and professional mood." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDKPyvdH7wB4ateIuhpBg5cToiEXsZMOTqBSqtZCxxmWMR0G7DxSgPZRLnBRQuJViFeQ_8k4WsZfZmCRi_e9egx6V9BT_wYVC8hnkXQFxI6HjfPqxzBUtlW2zVtP_0jcmcCZFdy6Tkw-Zd5oYec10-g36a0ORejSruUQPPmu6VENXpfXqZ5J07mSOgy7mNFeqHeDgH6ztDPqYnnUPwlYTLTn6wkFKYZvQgr0qNRx_IEGM5NpI8lAGFV')"></div>
+</div>
+<h4 class="text-body-md font-bold text-primary truncate">Algoritmo de IA</h4>
+<p class="text-label-caps font-label-caps text-on-surface-variant mt-1 line-clamp-2">Descripción breve. Investigador principal...</p>
+<div class="mt-auto pt-2 text-label-caps font-label-caps text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">info</span> Estado 13/25/ 18:00
+                        </div>
+<button class="mt-3 w-full bg-primary text-on-primary py-2 rounded text-body-md font-bold hover:bg-primary-container transition-colors">
+                            Ver Detalle / Participar
+                        </button>
+</div>
+<!-- Closed Event Card -->
+<div class="bg-surface-container-highest border border-outline-variant rounded-lg p-unit-4 flex flex-col h-64 opacity-75 relative overflow-hidden">
+<div class="absolute top-2 right-2 bg-surface p-1 rounded-full flex items-center justify-center shadow-sm z-10">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="h-24 bg-surface-dim mb-3 rounded flex items-center justify-center flex-shrink-0 relative">
+<span class="absolute top-2 left-2 bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-xs font-bold z-10">Cerrado</span>
+<div class="bg-cover bg-center w-full h-full opacity-30 grayscale mix-blend-multiply" data-alt="A subdued, greyscale image of an empty modern lecture hall or closed research lab doors. The lighting is dim but clean, conveying an inactive or concluded event status within an academic setting. Neutral tones, professional composition." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCiI7lu2UpuKp5z90mzIiifWJr3xzxQtzC-HD9SLATak5E0dLvkag2AqoMyYsTFn8LD07BIYrVkaYlJWIfreVtZV0E8Euo1tlqoz1IISvmF6CAkEe1nR7xac0RDO8cLAx_qMcqnhEpL3l0URnQO0yOWnLYQWFzHmaiVyfkN_lRF34P8CB690-LoLcgLfWEQqnKrKB-gemRrgIrqHCyCNL3oJsbiMdcemZFNZMkICDNzJy3i3-UuPch7')"></div>
+</div>
+<h4 class="text-body-md font-bold text-on-surface-variant truncate">Eventoso 4</h4>
+<span class="text-xs text-on-surface-variant mb-1">[Semillero]</span>
+<div class="mt-auto pt-2 text-label-caps font-label-caps text-on-surface-variant">
+                            Estado 13/2026
+                        </div>
+<button class="mt-3 w-full border border-outline-variant text-on-surface-variant py-2 rounded text-body-md bg-surface-container hover:bg-surface-container-high transition-colors cursor-not-allowed">
+                            Ver Info / Postulación Cerrada
+                        </button>
+</div>
+</div>
+</div>
+<!-- Mis Eventos List -->
+<div class="mt-4 flex-1 flex flex-col min-h-[300px]">
+<h3 class="text-title-lg font-title-lg text-on-surface font-bold mb-4">MIS EVENTOS</h3>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex-1 shadow-sm flex flex-col">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant">
+<th class="p-3 font-bold">Evento</th>
+<th class="p-3 font-bold">Status</th>
+<th class="p-3 font-bold">Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-outline-variant hover:bg-surface-container-lowest transition-colors">
+<td class="p-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container rounded overflow-hidden flex-shrink-0">
+<div class="bg-cover bg-center w-full h-full" data-alt="A tiny thumbnail graphic showing a stylized podium and microphone, representing a symposium event. Clean vectors, subtle red accents, light background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRBPM-SeQp2cN98LIoCjuif3q2FILvt3w6xkTFiiKcPtL7i1TCv74UETY3bDM1RvQHFcSdMI7PtVanMgAWh5PIrKhJfqKRDm5GzdsBO-SG_Hm5gOoQUsF83HmoBshsmr0ofUV9hdiswodv7I_GJiYas2u3JQnElcxF5peJZ6XKycrkB2yS50nMYEYjAaMdeb7hQGMaHzFBxE7wvybqT-VXgu8wuLpHFIJcm7csWHsj0IDgCPVOKdxD')"></div>
+</div>
+<span class="text-body-md font-bold text-on-surface">V Simposio Internacional</span>
+</div>
+</td>
+<td class="p-3">
+<span class="px-2 py-1 bg-tertiary-container text-on-tertiary-container rounded text-xs font-bold">Activo</span>
+</td>
+<td class="p-3">
+<button class="text-primary hover:underline text-body-md font-bold">Ver Estado</button>
+</td>
+</tr>
+<tr class="bg-surface-container-lowest border-b border-outline-variant hover:bg-surface-bright transition-colors">
+<td class="p-3">
+<div class="flex items-center gap-3 opacity-70">
+<div class="w-10 h-10 bg-surface-dim rounded flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">event_busy</span>
+</div>
+<span class="text-body-md text-on-surface-variant">Taller de Metodología</span>
+</div>
+</td>
+<td class="p-3">
+<span class="px-2 py-1 bg-surface-variant text-on-surface-variant rounded text-xs font-bold">Cerrado</span>
+</td>
+<td class="p-3">
+<button class="text-on-surface-variant hover:underline text-body-md">Ver Resultados</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full py-unit-4 mt-auto border-t border-outline-variant flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+<span class="text-label-caps font-label-caps text-on-surface-variant">© 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico</span>
+<div class="flex gap-4 mt-2 md:mt-0">
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Privacidad</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Términos</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Contacto</a>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

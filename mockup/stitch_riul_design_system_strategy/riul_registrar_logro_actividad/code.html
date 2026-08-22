@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL - Registrar Logro</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#656464",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-fixed": "#00201c",
+                        "inverse-primary": "#ffb3b5",
+                        "background": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "surface-container": "#eeeeee",
+                        "surface-tint": "#b02a3e",
+                        "on-secondary-fixed-variant": "#474747",
+                        "primary-container": "#9e1b32",
+                        "error": "#ba1a1a",
+                        "tertiary": "#00423c",
+                        "surface-container-low": "#f3f3f3",
+                        "inverse-surface": "#2f3131",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "primary-fixed": "#ffdada",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-background": "#1a1c1c",
+                        "tertiary-container": "#005c53",
+                        "on-error": "#ffffff",
+                        "outline": "#8c7071",
+                        "secondary-container": "#e4e2e1",
+                        "on-primary-fixed": "#40000c",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-container": "#ffb0b3",
+                        "on-surface-variant": "#594141",
+                        "surface": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f1f1f1",
+                        "tertiary-fixed": "#a7f0e4",
+                        "primary": "#7b001f",
+                        "secondary-fixed": "#e4e2e1",
+                        "surface-container-high": "#e8e8e8",
+                        "on-tertiary-container": "#8ad2c6",
+                        "secondary": "#5f5e5e",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#e0bfbf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-12": "48px",
+                        "base": "4px",
+                        "unit-6": "24px",
+                        "unit-4": "16px",
+                        "unit-2": "8px",
+                        "unit-8": "32px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "unit-1": "4px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "numeric-xp": ["Montserrat"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Montserrat"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Gamified inner glow for XP bar (simulated via box-shadow) */
+        .xp-glow {
+            box-shadow: inset 0 0 4px rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased h-screen overflow-hidden flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- Shared Component: SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-surface-container-lowest text-primary dark:text-primary-fixed-dim border-r border-outline-variant dark:border-outline h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-unit-6 px-unit-4 gap-unit-2 z-20 hidden md:flex">
+<!-- Header -->
+<div class="flex items-center gap-unit-2 px-unit-2 mb-unit-6">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined fill">school</span>
+</div>
+<div>
+<h1 class="text-headline-lg font-headline-lg text-primary dark:text-primary-fixed-dim leading-none">RIUL</h1>
+<p class="text-label-caps font-label-caps text-on-surface-variant">Research Portal</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-label-caps font-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">person</span>
+<span class="text-label-caps font-label-caps">Perfil</span>
+</a>
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">psychology</span>
+<span class="text-label-caps font-label-caps">Semillero</span>
+</a>
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">account_tree</span>
+<span class="text-label-caps font-label-caps">Proyectos</span>
+</a>
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">groups</span>
+<span class="text-label-caps font-label-caps">Comunidad</span>
+</a>
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">event</span>
+<span class="text-label-caps font-label-caps">Eventos</span>
+</a>
+<!-- ACTIVE STATE -->
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-lg font-bold scale-95 transition-transform shadow-sm" href="#">
+<span class="material-symbols-outlined fill">military_tech</span>
+<span class="text-label-caps font-label-caps">Gamificación</span>
+</a>
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">notifications</span>
+<span class="text-label-caps font-label-caps">Notificaciones</span>
+</a>
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-surface-variant dark:text-on-surface hover:bg-surface-container-highest dark:hover:bg-secondary-container transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">search</span>
+<span class="text-label-caps font-label-caps">Exploración</span>
+</a>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-64 flex flex-col h-screen overflow-hidden relative bg-surface">
+<!-- Shared Component: TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm flex justify-between items-center w-full h-16 px-unit-6 max-w-container-max mx-auto shrink-0 z-10 sticky top-0">
+<!-- Mobile Menu Toggle (Hidden on Desktop) -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Navigation Links (Center/Left) -->
+<nav class="hidden md:flex gap-unit-6 items-center">
+<a class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-2 py-1 rounded" href="#">Semilleros</a>
+<a class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-2 py-1 rounded" href="#">Proyectos</a>
+<a class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-2 py-1 rounded" href="#">Eventos</a>
+</nav>
+<!-- Trailing Action -->
+<div class="flex items-center gap-unit-4">
+<button class="flex items-center gap-2 bg-surface-container-low hover:bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+<span class="text-body-md font-body-md text-on-surface-variant font-medium">Perfil</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">arrow_drop_down</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<main class="flex-1 overflow-y-auto p-margin-mobile md:p-unit-6 pb-unit-12">
+<div class="max-w-[1000px] mx-auto">
+<!-- Page Header -->
+<div class="mb-unit-6 flex items-center justify-between">
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-1">Módulo : Logros y Reconocimientos</p>
+<h2 class="text-headline-lg font-headline-lg text-primary leading-tight">Registrar logro / actividad</h2>
+</div>
+</div>
+<!-- Main Form Card (Bento/Glassmorphism inspired structure) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-surface-variant overflow-hidden flex flex-col gap-unit-6 p-unit-6">
+<!-- Section 1 & 2 Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Col 1: Selector -->
+<div class="flex flex-col gap-unit-2">
+<h3 class="text-title-lg font-title-lg text-on-surface border-b border-surface-variant pb-2 mb-2 uppercase tracking-wide text-sm font-bold text-on-surface-variant">Selector de Actividad</h3>
+<label class="text-body-md font-body-md text-on-surface-variant">Seleccionar actividad / Tipo de Logro <span class="text-error">*</span></label>
+<div class="relative">
+<select class="w-full bg-surface-bright border border-outline-variant text-on-surface text-body-md font-body-md rounded-lg focus:ring-primary focus:border-primary block p-2.5 appearance-none">
+<option disabled="" selected="" value="">Seleccione una opción...</option>
+<option value="ponencia">Ponencia Validada</option>
+<option value="articulo">Artículo Publicado</option>
+<option value="participacion">Participación en Evento</option>
+<option value="patente">Patente Registrada</option>
+<option value="proyecto">Proyecto Finalizado</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Col 2: Description -->
+<div class="flex flex-col gap-unit-2">
+<h3 class="text-title-lg font-title-lg text-on-surface border-b border-surface-variant pb-2 mb-2 uppercase tracking-wide text-sm font-bold text-on-surface-variant">Descripción</h3>
+<label class="text-body-md font-body-md text-on-surface-variant">Descripción y metadatos del logro</label>
+<textarea class="block p-2.5 w-full text-body-md font-body-md text-on-surface bg-surface-bright rounded-lg border border-outline-variant focus:ring-primary focus:border-primary resize-none placeholder-on-surface-variant/50" placeholder="Título del Logro
+Fecha
+Institución / Venue
+Rol" rows="4"></textarea>
+</div>
+</div>
+<!-- Section 3: Evidencia (Drag & Drop) -->
+<div class="flex flex-col gap-unit-2 mt-unit-2">
+<h3 class="text-title-lg font-title-lg text-on-surface border-b border-surface-variant pb-2 mb-2 uppercase tracking-wide text-sm font-bold text-on-surface-variant">Evidencia</h3>
+<div class="flex items-center justify-center w-full">
+<label class="flex flex-col items-center justify-center w-full h-32 border-2 border-outline-variant border-dashed rounded-lg cursor-pointer bg-surface-container-low hover:bg-surface-container transition-colors duration-200 group" for="dropzone-file">
+<div class="flex flex-col items-center justify-center pt-5 pb-6">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-3xl mb-2">cloud_upload</span>
+<p class="mb-1 text-body-md font-body-md text-on-surface-variant"><span class="font-bold text-on-surface">Arrastra y suelta evidencia</span> o Seleccionar archivo</p>
+<p class="text-xs text-on-surface-variant/70 font-body-md">(PDF, PNG, JPG, ZIP)</p>
+</div>
+<input class="hidden" id="dropzone-file" type="file"/>
+</label>
+</div>
+<div class="flex items-center mt-2">
+<input class="w-4 h-4 text-primary bg-surface-bright border-outline-variant rounded focus:ring-primary focus:ring-2" id="link-checkbox" type="checkbox" value=""/>
+<label class="ml-2 text-body-md font-body-md text-on-surface-variant" for="link-checkbox">Adjuntar registros/logros recientes de mi perfil</label>
+</div>
+</div>
+<!-- Section 4: Gamification & Targets (Tactile UI) -->
+<div class="bg-surface-container rounded-xl p-unit-4 border border-surface-variant mt-unit-4 relative overflow-hidden">
+<!-- Decorative ambient shadow for gamification focus -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+<h3 class="text-title-lg font-title-lg text-on-surface border-b border-surface-variant pb-2 mb-4 uppercase tracking-wide text-sm font-bold text-on-surface-variant">Seleccionar Destino &amp; Recompensas</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-unit-6 relative z-10">
+<!-- Targets -->
+<div class="flex flex-col gap-3">
+<p class="text-body-md font-body-md font-semibold text-on-surface mb-1">Seleccionar de Target:</p>
+<label class="flex items-center p-2 rounded hover:bg-surface-container-highest transition-colors cursor-pointer border border-transparent hover:border-outline-variant">
+<input checked="" class="w-4 h-4 text-primary bg-surface-bright border-outline-variant rounded focus:ring-primary" type="checkbox"/>
+<span class="ml-2 text-body-md font-body-md text-on-surface">[Mi Perfil]</span>
+</label>
+<label class="flex items-center p-2 rounded hover:bg-surface-container-highest transition-colors cursor-pointer border border-transparent hover:border-outline-variant">
+<input class="w-4 h-4 text-primary bg-surface-bright border-outline-variant rounded focus:ring-primary" type="checkbox"/>
+<span class="ml-2 text-body-md font-body-md text-on-surface">[Mi Semillero 1]</span>
+</label>
+<label class="flex items-center p-2 rounded hover:bg-surface-container-highest transition-colors cursor-pointer border border-transparent hover:border-outline-variant">
+<input class="w-4 h-4 text-primary bg-surface-bright border-outline-variant rounded focus:ring-primary" type="checkbox"/>
+<span class="ml-2 text-body-md font-body-md text-on-surface">[Proyecto X]</span>
+</label>
+</div>
+<!-- Rewards Preview (Tactile Cards) -->
+<div class="flex flex-col gap-3">
+<p class="text-body-md font-body-md font-semibold text-on-surface mb-1">Recompensas Estimadas:</p>
+<div class="flex items-center gap-3 bg-surface-container-lowest p-3 rounded-lg border border-surface-variant shadow-sm">
+<div class="w-8 h-8 rounded bg-surface-tint flex items-center justify-center shadow-inner">
+<span class="text-on-primary font-numeric-xp text-xs font-bold">XP</span>
+</div>
+<span class="text-body-md font-body-md text-on-surface">Ganada (ej: <span class="font-bold text-surface-tint">+50 XP</span>)</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-lowest p-3 rounded-lg border border-surface-variant shadow-sm">
+<div class="flex gap-1">
+<span class="material-symbols-outlined fill text-surface-tint">star</span>
+<span class="material-symbols-outlined text-outline-variant">star</span>
+<span class="material-symbols-outlined text-outline-variant">star</span>
+</div>
+<span class="text-body-md font-body-md text-on-surface">Estrellas (1-5)</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-lowest p-3 rounded-lg border border-surface-variant shadow-sm">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-sm">workspace_premium</span>
+</div>
+<span class="text-body-md font-body-md text-on-surface">Insignia (ej: Ponente Validado)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row items-center justify-between mt-unit-4 pt-unit-4 border-t border-surface-variant gap-4">
+<div class="flex items-center gap-2">
+<span class="text-label-caps font-label-caps text-on-surface-variant">Estado:</span>
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant text-xs font-bold border border-outline-variant">Pendiente</span>
+</div>
+<div class="flex flex-col sm:flex-row gap-unit-4 w-full sm:w-auto">
+<button class="px-unit-6 py-unit-2 rounded-lg border border-outline text-on-surface hover:bg-surface-container-high transition-colors text-body-md font-body-md font-semibold text-center w-full sm:w-auto">
+                                Guardar Borrador
+                            </button>
+<button class="px-unit-6 py-unit-2 rounded-lg bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm text-body-md font-body-md font-bold text-center w-full sm:w-auto flex justify-center items-center gap-2">
+                                ENVIAR A VALIDACIÓN
+                                <span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Shared Component: Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-dim border-t border-outline-variant dark:border-outline w-full py-unit-4 mt-auto flex flex-col md:flex-row justify-between items-center px-unit-6 max-w-container-max mx-auto text-center md:text-left shrink-0 z-10">
+<p class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface mb-2 md:mb-0">© 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico</p>
+<div class="flex gap-unit-4">
+<a class="text-label-caps font-label-caps text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all opacity-75" href="#">Privacidad</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all opacity-75" href="#">Términos</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all opacity-75" href="#">Contacto</a>
+</div>
+</footer>
+</div>
+</body></html>

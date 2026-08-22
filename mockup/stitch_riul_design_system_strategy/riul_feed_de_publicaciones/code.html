@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL - Comunidad</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "background": "#f9f9f9",
+                "surface-container-high": "#e8e8e8",
+                "surface-bright": "#f9f9f9",
+                "on-tertiary-container": "#8ad2c6",
+                "surface-dim": "#dadada",
+                "on-tertiary-fixed": "#00201c",
+                "primary": "#7b001f",
+                "on-primary": "#ffffff",
+                "surface-container-highest": "#e2e2e2",
+                "on-primary-fixed-variant": "#8f0c28",
+                "on-background": "#1a1c1c",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed": "#40000c",
+                "inverse-surface": "#2f3131",
+                "on-error-container": "#93000a",
+                "on-surface-variant": "#594141",
+                "on-secondary-fixed": "#1b1c1c",
+                "surface-container-lowest": "#ffffff",
+                "tertiary": "#00423c",
+                "primary-fixed-dim": "#ffb3b5",
+                "surface-container": "#eeeeee",
+                "error": "#ba1a1a",
+                "error-container": "#ffdad6",
+                "tertiary-fixed-dim": "#8cd4c8",
+                "secondary-fixed-dim": "#c8c6c6",
+                "on-secondary-fixed-variant": "#474747",
+                "on-primary-container": "#ffb0b3",
+                "tertiary-container": "#005c53",
+                "on-error": "#ffffff",
+                "primary-container": "#9e1b32",
+                "surface-tint": "#b02a3e",
+                "tertiary-fixed": "#a7f0e4",
+                "primary-fixed": "#ffdada",
+                "on-surface": "#1a1c1c",
+                "outline": "#8c7071",
+                "surface": "#f9f9f9",
+                "inverse-on-surface": "#f1f1f1",
+                "secondary": "#5f5e5e",
+                "inverse-primary": "#ffb3b5",
+                "on-secondary-container": "#656464",
+                "surface-container-low": "#f3f3f3",
+                "outline-variant": "#e0bfbf",
+                "surface-variant": "#e2e2e2",
+                "on-tertiary-fixed-variant": "#005048",
+                "secondary-container": "#e4e2e1",
+                "secondary-fixed": "#e4e2e1"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "unit-6": "24px",
+                "container-max": "1280px",
+                "unit-1": "4px",
+                "base": "4px",
+                "unit-4": "16px",
+                "unit-2": "8px",
+                "gutter": "24px",
+                "unit-12": "48px",
+                "margin-mobile": "16px",
+                "unit-8": "32px"
+        },
+        "fontFamily": {
+                "body-md": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Montserrat"
+                ],
+                "numeric-xp": [
+                        "Montserrat"
+                ],
+                "headline-lg": [
+                        "Montserrat"
+                ],
+                "headline-lg-mobile": [
+                        "Montserrat"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Montserrat"
+                ],
+                "title-lg": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "numeric-xp": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "title-lg": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .montserrat { font-family: 'Montserrat', sans-serif; }
+</style>
+</head>
+<body class="bg-background text-on-surface flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest border-b border-outline-variant shadow-sm w-full sticky top-0 z-50">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center space-x-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">RIUL</h1>
+<nav class="hidden md:flex space-x-6">
+<a class="font-label-caps text-label-caps text-secondary hover:bg-surface-container-high transition-colors px-3 py-2 rounded-md" href="#">Semilleros</a>
+<a class="font-label-caps text-label-caps text-secondary hover:bg-surface-container-high transition-colors px-3 py-2 rounded-md" href="#">Proyectos</a>
+<a class="font-label-caps text-label-caps text-secondary hover:bg-surface-container-high transition-colors px-3 py-2 rounded-md" href="#">Eventos</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="flex items-center space-x-2 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant cursor-pointer hover:bg-surface-container-high transition-colors">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A small circular avatar of a professional academic researcher in a modern, well-lit studio. Bright and clear. The person is wearing business casual attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkozTv374yB-sXCS68CO-Nm_x1mTtjhfm-IIDHBzraiCp-cZFmUSS9gaaVHTCm6FGLTDh6pCh70WDzjecksQUZtCb7HUGYpsZ_rE8QCBzOOK1k2l9LcATp9WhEMgESs_bX_u60hhOtN6r5Iq0vboPiN2BQScDHUNLUp8d1ggIvc1OXxKzhrOIG9yFlW10yDctiYGTnejdrevQgZsfM471ax0oXkoD7ULcGs-XzCnRtmrHdAyE-HvJI"/>
+<span class="font-label-caps text-label-caps text-primary font-semibold">Perfil</span>
+<span class="material-symbols-outlined text-sm">arrow_drop_down</span>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 w-full max-w-container-max mx-auto">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low border-r border-outline-variant hidden md:flex flex-col h-[calc(100vh-80px)] w-64 sticky top-[80px]">
+<div class="py-6 px-4 border-b border-outline-variant flex flex-col items-center">
+<img class="w-20 h-20 rounded-full object-cover mb-4 shadow-sm" data-alt="A portrait of a male researcher in a modern library setting. Warm, natural lighting. High quality corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaJ4NyX0FDItMECK2_cXXdFO4gpQ6O_046XOzBct1TxLetKmKCpc9lFOY9r7EwDuF3PAlYCilS-PkSk7-am3EQrvUigwH9ElEI550fW4UEapesSTN2mwJ8Ri_yHvk_EZWqX6hNSL5pJtY_STCOTNyaEVP7MyTR4utEr2ASnFUcVTxQm4r2kdRi_pzKZWdCgIbBxITyyxME7KMpruahuO3QQif03f8s5Mlt7V06KWZhWiAscZoYePpL"/>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface text-center">Investigador</h2>
+<p class="font-body-md text-body-md text-secondary text-center mt-1">Nivel 5 • Magíster</p>
+</div>
+<nav class="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all mx-2 my-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all mx-2 my-1" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps">Perfil</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all mx-2 my-1" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-label-caps text-label-caps">Semillero</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all mx-2 my-1" href="#">
+<span class="material-symbols-outlined">folder</span>
+<span class="font-label-caps text-label-caps">Proyectos</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-bold mx-2 my-1 shadow-sm translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-caps text-label-caps">Comunidad</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all mx-2 my-1" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-label-caps text-label-caps">Eventos</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all mx-2 my-1" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-label-caps text-label-caps">Gamificación</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all mx-2 my-1" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-caps text-label-caps">Notificaciones</span>
+</a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<button class="w-full bg-primary hover:bg-primary-fixed-variant text-white font-label-caps text-label-caps py-3 rounded-lg transition-colors font-bold shadow-md">
+          Nuevo Proyecto
+        </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-6 md:p-8 overflow-y-auto">
+<div class="max-w-4xl mx-auto space-y-6">
+<!-- Create Post Box -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex items-start space-x-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A small circular avatar of a professional academic researcher in a modern, well-lit studio. Bright and clear. The person is wearing business casual attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5Ww-csd6C_sgrfYzpM5RG8-QCwSupzlaZ80q0M2m112MMt_ojdRNe0E5AENaQ3i9IvZyuh3HD2L33LRKb5TxM8yOSnbIchnmOkpjY8UGzQDcoJA7L7f7Oi8M1e0nhs9xfk3WU4DdJ3LMGr3RiM6faZBZjwwjabwYukivAOls1IBj6GZN7qa8BlxwhyRrTlYTZxfIV_TyruLbRKmXJ7Qox3TrHTVIyUd-TiejW5lOZlALqGNoG-dQV"/>
+<div class="flex-1 relative">
+<textarea class="w-full bg-surface-container-low border-none rounded-lg p-3 font-body-md text-body-md text-on-surface resize-none focus:ring-2 focus:ring-primary h-24" placeholder="¿Qué quieres compartir today?" rows="2"></textarea>
+<div class="absolute bottom-3 right-3 flex space-x-2">
+<button class="text-secondary hover:text-primary transition-colors p-1 bg-surface-container-lowest rounded-full shadow-sm"><span class="material-symbols-outlined text-lg">image</span></button>
+</div>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex flex-wrap gap-2 items-center pb-2">
+<span class="font-label-caps text-label-caps text-secondary font-bold mr-2">Categoría:</span>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low font-body-md text-body-md text-on-surface transition-colors shadow-sm">Artículo</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low font-body-md text-body-md text-on-surface transition-colors shadow-sm">Avance de Proyecto</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low font-body-md text-body-md text-on-surface transition-colors shadow-sm">Ponencia</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low font-body-md text-body-md text-on-surface transition-colors shadow-sm">Evento</button>
+<button class="px-4 py-1.5 rounded-full border border-primary bg-primary-container/10 font-body-md text-body-md text-primary font-semibold transition-colors shadow-sm">Comunidad</button>
+</div>
+<!-- Feed Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-[#E0E0E0] overflow-hidden flex flex-col">
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/30">
+<div class="flex items-center space-x-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A headshot of a female computer science student. Modern campus background, sunny day. High quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjPHkCYkw9Nzi8jFrLvFt6aV8GL0_OQdXHsg94KbmTqlmr_HHyAloIowJR_Rs2wGunjLek-dHTlcmGslyV1JoohCRQs7PhAW3sZ_HemOesnpvWSSeQGclqwTQ9lWcuhz2LVNAvbHtxE-sbyn90g0b0lssOP04s5TMbdD8exTM0meiafjodQbbAiIH6IaFgtEiIbUaeDxnBF7ml0sUPHXkJPg_HSyBPup3wGtLFYiv_nNcNIq-fekHA"/>
+<div>
+<h3 class="font-body-md text-body-md font-bold text-on-surface">Ana Martinez</h3>
+<p class="font-label-caps text-label-caps text-secondary">13 min</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<span class="bg-surface-container-high px-2 py-1 rounded text-xs font-semibold text-secondary">Artículo</span>
+<button class="text-secondary hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+</div>
+<div class="p-4 flex-1">
+<p class="font-body-md text-body-md text-on-surface-variant mb-3">Contento un proyecto proyecto con unn o proyecto con uniendiencia entramida.</p>
+<a class="font-body-md text-body-md text-primary hover:underline block mb-4 break-all" href="#">https://proyecto.com/altortP/A587</a>
+<div class="bg-surface-container-low rounded-lg h-40 flex items-center justify-center border border-dashed border-outline-variant">
+<span class="material-symbols-outlined text-4xl text-secondary">image</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 border-t border-outline-variant/30 flex justify-around">
+<button class="flex items-center space-x-1 text-secondary hover:text-primary transition-colors text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">thumb_up</span>
+<span>Reacciones</span>
+</button>
+<button class="flex items-center space-x-1 text-secondary hover:text-primary transition-colors text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">chat_bubble_outline</span>
+<span>Comentarios</span>
+</button>
+<button class="flex items-center space-x-1 text-secondary hover:text-primary transition-colors text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">share</span>
+<span>Compartir</span>
+</button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-[#E0E0E0] overflow-hidden flex flex-col border-l-4 border-l-[#ffb800]">
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/30">
+<div class="flex items-center space-x-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A profile picture of a young male professor in a smart casual outfit, standing in a brightly lit modern lecture hall." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrD-RxUGyWk_A7mIXDZB3StEvvW7SqKJR-F5ESckYZjhvyB_TaEAR9LbByYKgNZ0VIHgivih3jg5DK2oN2hgSzJjv_UNE6N4U1Yibx9pZTxQLqglVJNxev-5vu2_n14JFkriEeQjEtD9jAcpnBluRyKU5-whThJbWYvbJCUThjzwyCn51hB1Hd1v4ZZBlU9I4S882uldZcBZuEOGwYidhbS_fzvQio0I-a_Ybn-EH-ymW1KZVkh1ns"/>
+<div>
+<h3 class="font-body-md text-body-md font-bold text-on-surface">Carlos Gomez</h3>
+<p class="font-label-caps text-label-caps text-secondary">15 min</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<span class="bg-[#ffb800]/20 text-[#b38000] px-2 py-1 rounded text-xs font-bold">Comunidad</span>
+<button class="text-secondary hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+</div>
+<div class="p-4 flex-1">
+<p class="font-body-md text-body-md text-on-surface-variant mb-3">Anuncio de comunidad conveneriado del promonto com o evento de comunidad.</p>
+<a class="font-body-md text-body-md text-primary hover:underline block mb-4 break-all" href="#">https://www.com/evento/evento</a>
+<div class="bg-surface-container-low rounded-lg p-4 flex items-center space-x-4 border border-outline-variant">
+<div class="bg-surface-container-highest p-3 rounded-lg"><span class="material-symbols-outlined text-3xl text-secondary">description</span></div>
+<div>
+<h4 class="font-bold text-on-surface text-sm">Acta_Reunion_Semillero.pdf</h4>
+<p class="text-xs text-secondary">2.4 MB</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 border-t border-outline-variant/30 flex justify-around">
+<button class="flex items-center space-x-1 text-secondary hover:text-primary transition-colors text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">thumb_up</span>
+<span>Reacciones</span>
+</button>
+<button class="flex items-center space-x-1 text-secondary hover:text-primary transition-colors text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">chat_bubble_outline</span>
+<span>Comentarios</span>
+</button>
+<button class="flex items-center space-x-1 text-secondary hover:text-primary transition-colors text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">share</span>
+<span>Compartir</span>
+</button>
+</div>
+</article>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-highest border-t border-outline-variant w-full mt-12 py-8 px-6 text-center shadow-inner">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<h2 class="font-title-lg text-title-lg font-bold text-on-surface">RIUL</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico</p>
+<div class="flex space-x-6">
+<a class="font-label-caps text-label-caps text-secondary hover:text-primary transition-colors" href="#">Privacidad</a>
+<a class="font-label-caps text-label-caps text-secondary hover:text-primary transition-colors" href="#">Términos</a>
+<a class="font-label-caps text-label-caps text-secondary hover:text-primary transition-colors" href="#">Contacto</a>
+</div>
+</div>
+</footer>
+</body></html>

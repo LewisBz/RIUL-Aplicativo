@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Detalle del Semillero - RIUL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2f3131",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-dim": "#dadada",
+                        "surface-container-high": "#e8e8e8",
+                        "primary-fixed": "#ffdada",
+                        "inverse-on-surface": "#f1f1f1",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "inverse-primary": "#ffb3b5",
+                        "on-surface-variant": "#594141",
+                        "on-primary-container": "#ffb0b3",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#005c53",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "secondary-fixed": "#e4e2e1",
+                        "on-tertiary-container": "#8ad2c6",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "tertiary-fixed": "#a7f0e4",
+                        "on-secondary-fixed-variant": "#474747",
+                        "tertiary": "#00423c",
+                        "primary": "#7b001f",
+                        "background": "#f9f9f9",
+                        "outline-variant": "#e0bfbf",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "primary-container": "#9e1b32",
+                        "outline": "#8c7071",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "surface-container": "#eeeeee",
+                        "secondary": "#5f5e5e",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-container": "#e4e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#40000c",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-fixed": "#00201c",
+                        "surface-tint": "#b02a3e",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464",
+                        "surface": "#f9f9f9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-6": "24px",
+                        "unit-2": "8px",
+                        "unit-4": "16px",
+                        "unit-12": "48px",
+                        "gutter": "24px",
+                        "base": "4px",
+                        "unit-8": "32px",
+                        "unit-1": "4px",
+                        "container-max": "1280px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "title-lg": ["Inter"],
+                        "display-lg": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "numeric-xp": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<nav class="bg-surface border-b border-surface-variant shadow-sm w-full top-0 z-50">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-unit-12">
+<div class="flex items-center space-x-unit-6">
+<a class="font-headline-lg text-headline-lg font-bold text-primary flex items-center space-x-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">science</span>
+<span>RIUL</span>
+</a>
+<div class="hidden md:flex space-x-unit-4">
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Semilleros</a>
+<a class="text-secondary hover:text-primary-container transition-colors pb-1" href="#">Proyectos</a>
+<a class="text-secondary hover:text-primary-container transition-colors pb-1" href="#">Eventos</a>
+</div>
+</div>
+<div class="flex items-center space-x-unit-4">
+<div class="relative hidden md:block">
+<input class="bg-surface-container rounded-full pl-4 pr-10 py-1 text-sm border-none focus:ring-2 focus:ring-primary w-64" placeholder="Buscar..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1.5 text-secondary text-sm">search</span>
+</div>
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded text-sm font-semibold hover:bg-primary-container transition-colors">Investigar</button>
+<div class="flex items-center space-x-2 border border-outline-variant rounded-full pl-3 pr-1 py-1 cursor-pointer hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold text-secondary">Perfil</span>
+<img class="w-6 h-6 rounded-full object-cover" data-alt="A detailed, modern avatar placeholder image for a university researcher profile, light mode aesthetic, crisp lines, subtle professional lighting, high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdhJ9SMGvl59qqBJ5RC5djpuJTp2mCvYbUT117bGDMEqYN_BkVzrEebkvE-kll8P-nXJAZlIJ4N4e9EPHQ9nmtS31E5JEKdeQpQDOcZWygDlZLkuXsglLFhBUNVYST_A93q7pKWDKudjVt8rKg8LqcEG8bTIFX8AGQGpqSPDBmyo5NGFWyz6QJJAgEGsdp153B2HFU3QChlBryf_cP6njntH-Rdg4nycWi1EZR0z_pZsGWTfPXA8Zk"/>
+<span class="material-symbols-outlined text-sm text-secondary">arrow_drop_down</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar & Main Content Wrapper -->
+<div class="flex flex-1 max-w-container-max mx-auto w-full">
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden md:flex flex-col w-64 bg-surface-container py-unit-6 space-y-unit-2 border-r border-surface-container-low min-h-[calc(100vh-48px)] sticky top-[48px]">
+<div class="px-unit-4 mb-unit-6 flex items-center space-x-3">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary font-bold font-headline-md">UL</div>
+<div>
+<div class="font-bold text-sm text-on-surface">Investigador</div>
+<div class="text-xs text-secondary">Universidad Libre</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps">Perfil</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 bg-primary text-on-primary rounded-lg mx-2 shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-label-caps text-label-caps">Semillero</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">science</span>
+<span class="font-label-caps text-label-caps">Proyectos</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-caps text-label-caps">Comunidad</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-label-caps text-label-caps">Eventos</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined text-yellow-600">workspace_premium</span>
+<span class="font-label-caps text-label-caps">Gamificación</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-caps text-label-caps">Notificaciones</span>
+</a>
+</nav>
+<div class="px-unit-4 mt-auto space-y-1">
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Ajustes</span>
+</a>
+<a class="flex items-center space-x-3 px-unit-4 py-2 text-on-surface-variant hover:bg-surface-dim rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-caps text-label-caps">Cerrar Sesión</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-margin-mobile md:p-gutter flex flex-col space-y-unit-6 overflow-y-auto">
+<!-- Semillero Header -->
+<div class="glass-card rounded-xl p-unit-6 flex flex-col md:flex-row items-start md:items-center justify-between relative overflow-hidden">
+<div class="absolute right-0 top-0 w-64 h-full opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at right top, var(--color-primary), transparent 70%);"></div>
+<div class="flex items-center space-x-unit-4 z-10 w-full md:w-auto">
+<div class="w-20 h-20 bg-surface-container rounded-xl border border-outline-variant flex items-center justify-center shrink-0">
+<img class="w-16 h-16 object-contain" data-alt="A modern, abstract academic logo for a university research group, focusing on technology and innovation, light minimalist background, vector style aesthetic with deep crimson red accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnixJSTgZVrEi07QmJhjASO_VEz7Fhv8se285wxCX2hERu51rBNJy2RnXWf2llEHRgeFXabh3taZ7ixWDO3gsvFbhssQH8UYueQm1lrltM-PyRrGznbNxuKBMPPIM5HeDhPYD4u2mAsIlsQ2kA2Y4e9a4sC2-Yzk56VMX39R5vyYGYgzYlo4vhaadUC5SrHJGyLXMUxrbl9k0EfKMBPjz0zpdlEij6bx9PuVLxpYSZZeeSrGYOZkdk"/>
+</div>
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-primary mb-1">Innovación Tecnológica Aplicada (ITA)</h1>
+<p class="font-title-lg text-secondary">Facultad de Ingeniería - Unidad Académica de Sistemas</p>
+</div>
+</div>
+<div class="flex space-x-3 mt-4 md:mt-0 z-10 w-full md:w-auto justify-end">
+<button class="px-4 py-2 rounded-lg bg-surface border border-outline-variant text-primary font-semibold hover:bg-surface-container transition-colors flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm">favorite_border</span>
+<span>Seguir</span>
+</button>
+<!-- Dejar de seguir button would toggle state -->
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-unit-6">
+<!-- Left/Center Column -->
+<div class="lg:col-span-2 space-y-unit-6">
+<!-- Información General -->
+<section class="glass-card rounded-xl p-unit-6">
+<h2 class="font-title-lg text-primary mb-4 flex items-center border-b border-surface-variant pb-2">
+<span class="material-symbols-outlined mr-2">info</span>
+                            INFORMACIÓN GENERAL
+                        </h2>
+<div class="space-y-4 text-on-surface">
+<p>El semillero ITA se enfoca en el desarrollo de soluciones tecnológicas innovadoras aplicadas a problemas reales de la industria y la sociedad, fomentando la investigación activa entre los estudiantes de pregrado.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<h3 class="font-semibold text-primary mb-2 text-sm uppercase tracking-wider">Misión</h3>
+<p class="text-sm">Formar investigadores con alta capacidad técnica y crítica para liderar proyectos tecnológicos.</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<h3 class="font-semibold text-primary mb-2 text-sm uppercase tracking-wider">Visión</h3>
+<p class="text-sm">Ser referente nacional en innovación aplicada y patentes universitarias para el 2026.</p>
+</div>
+</div>
+<div>
+<h3 class="font-semibold text-primary mb-2 text-sm uppercase tracking-wider mt-4">Áreas de Interés</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary-fixed-dim text-on-primary-fixed rounded-full text-xs font-semibold">Inteligencia Artificial</span>
+<span class="px-3 py-1 bg-primary-fixed-dim text-on-primary-fixed rounded-full text-xs font-semibold">Internet de las Cosas (IoT)</span>
+<span class="px-3 py-1 bg-primary-fixed-dim text-on-primary-fixed rounded-full text-xs font-semibold">Ciberseguridad</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Equipo -->
+<section class="glass-card rounded-xl p-unit-6">
+<h2 class="font-title-lg text-primary mb-4 flex items-center border-b border-surface-variant pb-2">
+<span class="material-symbols-outlined mr-2">groups</span>
+                            EQUIPO
+                        </h2>
+<div class="mb-6">
+<h3 class="font-semibold text-secondary mb-3 text-sm uppercase tracking-wider">Docente Líder</h3>
+<div class="flex items-center space-x-4 bg-surface-container-low p-3 rounded-lg border-l-4 border-primary">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="A professional headshot of a female university professor, smiling slightly, modern glasses, neat corporate academic attire, bright natural indoor lighting, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBig2EMuARWGjHZLWsm2Nm_GZ7lCZrAtbmkaPWxOyD0Bk1U1LJLY6yq78AegBKWEyPcN-IMwD8v1pt2wmOv2yYoVeFtjD-wJk2fFCZRFOavJwpHp8sn7X968nmIbGarwx-p7In2isAx7eyiMQsuxDjaISmD0qjoqJ0dOAm1-vDwXRzYfS_-PVKd5xHX8WJhTROd21kDHzWoabGtZvnO_6l28q9n83a5n927WLJLraKJ5z797hBwCvCQ"/>
+<div>
+<p class="font-bold text-on-surface">Dra. María Antonieta Pérez</p>
+<p class="text-xs text-secondary">Ph.D. en Ciencias de la Computación</p>
+</div>
+</div>
+</div>
+<div>
+<h3 class="font-semibold text-secondary mb-3 text-sm uppercase tracking-wider">Integrantes</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+<div class="flex items-center space-x-3 bg-surface p-2 rounded border border-outline-variant hover:border-primary transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-xs">LG</div>
+<div>
+<p class="text-sm font-semibold text-on-surface">Luis Grandett</p>
+<p class="text-xs text-secondary">Estudiante Investigador</p>
+</div>
+</div>
+<div class="flex items-center space-x-3 bg-surface p-2 rounded border border-outline-variant hover:border-primary transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">HL</div>
+<div>
+<p class="text-sm font-semibold text-on-surface">Hector Leon</p>
+<p class="text-xs text-secondary">Estudiante Investigador</p>
+</div>
+</div>
+<div class="flex items-center space-x-3 bg-surface p-2 rounded border border-outline-variant hover:border-primary transition-colors">
+<div class="w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-bold text-xs">JS</div>
+<div>
+<p class="text-sm font-semibold text-on-surface">Javier Solano</p>
+<p class="text-xs text-secondary">Co-líder Estudiantil</p>
+</div>
+</div>
+</div>
+<button class="w-full py-2 text-sm font-semibold text-primary border border-outline-variant rounded-lg hover:bg-surface-container transition-colors">Ver Todos (12)</button>
+</div>
+</section>
+<!-- Investigación (Sub-groups & Projects Details) -->
+<section class="glass-card rounded-xl p-unit-6">
+<h2 class="font-title-lg text-primary mb-4 flex items-center border-b border-surface-variant pb-2">
+<span class="material-symbols-outlined mr-2">science</span>
+                            LÍNEAS &amp; PROYECTOS DE INVESTIGACIÓN
+                        </h2>
+<!-- LÍNEAS DE INVESTIGACIÓN -->
+<div class="mb-6">
+<h3 class="font-semibold text-secondary mb-3 text-sm uppercase tracking-wider">Sub-Líneas Activas</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary">memory</span>
+<div>
+<p class="text-sm font-bold">IoT para Agricultura de Precisión</p>
+<p class="text-xs text-secondary">Coordinador: Javier Solano</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-tertiary-container text-on-tertiary-container text-xs rounded-full font-bold">Activo</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary">security</span>
+<div>
+<p class="text-sm font-bold">Ciberseguridad en Redes Académicas</p>
+<p class="text-xs text-secondary">Coordinador: Luis Grandett</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-tertiary-container text-on-tertiary-container text-xs rounded-full font-bold">Activo</span>
+</div>
+</div>
+</div>
+<!-- PROYECTOS DE INVESTIGACIÓN (Detailed List) -->
+<div>
+<h3 class="font-semibold text-secondary mb-3 text-sm uppercase tracking-wider">Proyectos en Curso</h3>
+<div class="space-y-3">
+<div class="border border-outline-variant rounded-lg p-4 hover:shadow-md transition-shadow bg-surface">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-on-surface">Prototipo de Sensores de Humedad de Bajo Costo</h4>
+<span class="px-2 py-1 bg-yellow-100 text-yellow-800 border border-yellow-200 text-xs rounded font-bold">Prototipo</span>
+</div>
+<p class="text-sm text-secondary mb-2">Diseño e implementación de nodos sensores usando ESP32 para cultivos de tomate en el Atlántico.</p>
+<div class="flex items-center justify-between text-xs text-secondary">
+<span>Rol requerido: Desarrollador C++ / Hardware</span>
+<span class="text-primary font-semibold">En Desarrollo</span>
+</div>
+</div>
+<div class="border border-outline-variant rounded-lg p-4 hover:shadow-md transition-shadow bg-surface">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-on-surface">Algoritmo de Detección de Anomalías de Red</h4>
+<span class="px-2 py-1 bg-blue-100 text-blue-800 border border-blue-200 text-xs rounded font-bold">Artículo</span>
+</div>
+<p class="text-sm text-secondary mb-2">Estudio de modelos de Machine Learning aplicados al tráfico de red universitario.</p>
+<div class="flex items-center justify-between text-xs text-secondary">
+<span>Rol requerido: Data Scientist (Python)</span>
+<span class="text-primary font-semibold">Fase de Pruebas</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (Sidebar for details) -->
+<div class="space-y-unit-6">
+<!-- PUBLICACIONES DESTACADAS -->
+<div class="glass-card rounded-xl p-unit-4">
+<h3 class="font-title-lg text-primary mb-3 flex items-center border-b border-surface-variant pb-2 text-lg">
+<span class="material-symbols-outlined mr-2 text-lg">menu_book</span>
+                            PUBLICACIONES
+                        </h3>
+<ul class="space-y-3">
+<li class="border-l-2 border-primary pl-3">
+<p class="text-sm font-bold text-on-surface">Low-cost IoT Sensors for Tomato Crops</p>
+<p class="text-xs text-secondary italic">IEEE Latin America Transactions</p>
+<div class="flex justify-between items-center mt-1">
+<span class="text-[10px] text-secondary">Oct 2023</span>
+<span class="text-[10px] bg-surface-container text-on-surface px-1.5 py-0.5 rounded border border-outline-variant">Publicado</span>
+</div>
+</li>
+<li class="border-l-2 border-surface-variant pl-3">
+<p class="text-sm font-bold text-on-surface">ML-based Intrusion Detection in SDN</p>
+<p class="text-xs text-secondary italic">Congreso Colombiano de Computación</p>
+<div class="flex justify-between items-center mt-1">
+<span class="text-[10px] text-secondary">Nov 2023</span>
+<span class="text-[10px] bg-yellow-50 text-yellow-700 px-1.5 py-0.5 rounded border border-yellow-200">En Revisión</span>
+</div>
+</li>
+</ul>
+</div>
+<!-- ACTIVIDADES & EVENTOS -->
+<div class="glass-card rounded-xl p-unit-4">
+<h3 class="font-title-lg text-primary mb-3 flex items-center border-b border-surface-variant pb-2 text-lg">
+<span class="material-symbols-outlined mr-2 text-lg">event</span>
+                            ACTIVIDADES
+                        </h3>
+<div class="relative border-l border-outline-variant ml-2 space-y-4">
+<div class="relative pl-4">
+<div class="absolute w-2.5 h-2.5 bg-primary rounded-full -left-[5px] top-1"></div>
+<p class="text-xs font-bold text-primary">01 Junio</p>
+<p class="text-sm font-semibold text-on-surface">Ponencia Validada</p>
+<p class="text-xs text-secondary">Simposio Nacional de Investigación</p>
+</div>
+<div class="relative pl-4">
+<div class="absolute w-2.5 h-2.5 bg-primary rounded-full -left-[5px] top-1"></div>
+<p class="text-xs font-bold text-primary">15 Mayo</p>
+<p class="text-sm font-semibold text-on-surface">Taller de Redacción Científica</p>
+<p class="text-xs text-secondary">Participación en Evento Interno</p>
+</div>
+</div>
+</div>
+<!-- PARTICIPACIÓN / SOLICITUD DE VINCULACIÓN -->
+<div class="bg-surface-container-low rounded-xl p-unit-4 border border-primary-fixed-dim relative overflow-hidden">
+<!-- Decorative tag -->
+<div class="absolute top-0 right-0 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-bl-lg uppercase tracking-widest">
+                            Estado: No Vinculado
+                        </div>
+<h3 class="font-title-lg text-primary mb-3 mt-2 flex items-center text-lg">
+<span class="material-symbols-outlined mr-2 text-lg">handshake</span>
+                            VINCULACIÓN
+                        </h3>
+<p class="text-sm text-secondary mb-3">Únete al semillero y participa activamente en proyectos de investigación.</p>
+<form class="space-y-3">
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">Motivación</label>
+<textarea class="w-full rounded-lg border-outline-variant bg-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary h-24 p-2 resize-none" placeholder="Escribe aquí por qué deseas unirte, tus habilidades y áreas de interés..."></textarea>
+</div>
+<button class="w-full bg-primary text-on-primary py-2 rounded-lg font-bold hover:bg-primary-container transition-colors shadow-sm active:scale-95 duration-200" type="button">
+                                Solicitar Vinculación
+                            </button>
+<p class="text-center text-[10px] text-secondary mt-2">La solicitud será revisada por el líder del semillero.</p>
+</form>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-highest w-full py-unit-8 border-t border-outline-variant mt-auto">
+<div class="flex flex-col items-center justify-center space-y-unit-4 px-margin-mobile md:px-gutter w-full">
+<div class="font-title-lg text-title-lg font-bold text-primary text-center">
+                RIUL
+            </div>
+<div class="text-secondary text-sm text-center">
+                © 2024 Universidad Libre - Red de Investigación RIUL. Todos los derechos reservados.
+            </div>
+<div class="flex space-x-6 text-sm">
+<a class="text-on-surface hover:underline decoration-primary opacity-90 hover:opacity-100 transition-opacity" href="#">Política de Privacidad</a>
+<a class="text-on-surface hover:underline decoration-primary opacity-90 hover:opacity-100 transition-opacity" href="#">Términos de Uso</a>
+<a class="text-on-surface hover:underline decoration-primary opacity-90 hover:opacity-100 transition-opacity" href="#">Contacto Académico</a>
+</div>
+</div>
+</footer>
+</body></html>
