@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-riul}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-riul}
+      POSTGRES_DB: ${POSTGRES_DB:-riul}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-riul}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  app:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-riul}:${POSTGRES_PASSWORD:-riul}@db:5432/${POSTGRES_DB:-riul}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-only-jwt-secret}
+      SECRET_KEY: ${SECRET_KEY:-dev-only-secret-key}
+      INSTITUTIONAL_EMAIL_DOMAIN: ${INSTITUTIONAL_EMAIL_DOMAIN:-unilibre.edu.co}
+      FLASK_APP: wsgi.py
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

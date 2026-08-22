@@ -1,0 +1,83 @@
+import click
+from flask import Flask, jsonify
+
+from .config import config_by_name
+from .extensions import bcrypt, db, jwt, migrate
+
+
+def create_app(config_name: str = "dev") -> Flask:
+    app = Flask(__name__)
+    app.config.from_object(config_by_name[config_name])
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+    jwt.init_app(app)
+    bcrypt.init_app(app)
+
+    from .modules.auth.routes import auth_bp
+
+    app.register_blueprint(auth_bp)
+
+    _register_jwt_error_handlers()
+    _register_cors(app)
+    _register_seed_cli(app)
+
+    return app
+
+
+def _register_jwt_error_handlers() -> None:
+    @jwt.expired_token_loader
+    def expired_token(jwt_header, jwt_payload):
+        return jsonify(message="El token ha expirado."), 401
+
+    @jwt.invalid_token_loader
+    def invalid_token(reason):
+        return jsonify(message="Token inválido."), 401
+
+    @jwt.unauthorized_loader
+    def missing_token(reason):
+        return jsonify(message="Se requiere el encabezado Authorization: Bearer <token>."), 401
+
+
+def _register_cors(app: Flask) -> None:
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers.setdefault("Access-Control-Allow-Origin", "*")
+        response.headers.setdefault(
+            "Access-Control-Allow-Headers", "Content-Type, Authorization"
+        )
+        response.headers.setdefault(
+            "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        )
+        return response
+
+
+SEED_FACULTIES = {
+    "Ingeniería": ["Ingeniería de Sistemas", "Ingeniería Industrial"],
+    "Ciencias Básicas": [],
+}
+
+
+def _register_seed_cli(app: Flask) -> None:
+    @app.cli.command("seed-db")
+    def seed_db():
+        """Seed faculties and programs from the mockups (idempotent)."""
+        from .modules.auth.models import Faculty, Program
+
+        created = 0
+        for faculty_name, program_names in SEED_FACULTIES.items():
+            faculty = Faculty.query.filter_by(name=faculty_name).first()
+            if faculty is None:
+                faculty = Faculty(name=faculty_name)
+                db.session.add(faculty)
+                db.session.flush()
+                created += 1
+            for program_name in program_names:
+                exists = Program.query.filter_by(
+                    name=program_name, faculty_id=faculty.id
+                ).first()
+                if exists is None:
+                    db.session.add(Program(name=program_name, faculty_id=faculty.id))
+                    created += 1
+        db.session.commit()
+        click.echo(f"Seed completo ({created} registros creados).")

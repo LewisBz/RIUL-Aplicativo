@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RIUL - Iniciar Sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/design-system.css" />
+</head>
+<body style="margin:0;background:var(--surface);color:var(--on-surface);">
+  <!-- Top Navigation y Footer omitidos según la regla de intención transaccional -->
+  <main class="auth-shell">
+    <div class="auth-bg"></div>
+    <div class="auth-content">
+      <!-- Encabezado de marca -->
+      <header style="text-align:center;margin-bottom:var(--space-8);">
+        <h1 class="auth-brand">RIUL</h1>
+        <p class="title-lg" style="color:var(--on-surface-variant);margin:0;">Acceso y autenticación</p>
+      </header>
+
+      <!-- Alerta de validación (dinámica) -->
+      <div id="authAlert" class="alert-banner gamified-shadow hidden" role="alert"
+           style="max-width:896px;margin:0 auto var(--space-6);">
+        <span class="material-symbols-outlined" id="authAlertIcon">error</span>
+        <p id="authAlertText" class="body-md" style="font-weight:600;color:var(--on-error-container);margin:0;"></p>
+      </div>
+
+      <!-- Columna de login -->
+      <div style="max-width:576px;margin:0 auto;">
+        <section class="glass-card auth-card">
+          <div style="margin-bottom:var(--space-8);">
+            <h2 class="headline-lg" style="display:flex;align-items:center;gap:12px;">
+              <span class="material-symbols-outlined" style="color:var(--primary);font-variation-settings:'FILL' 1;display:inline-flex;">login</span>
+              Inicio de sesión
+            </h2>
+            <p class="body-md" style="margin-top:var(--space-2);color:var(--on-surface-variant);">Accede con tu cuenta institucional.</p>
+          </div>
+
+          <form id="loginForm" class="stack-4" novalidate>
+            <div>
+              <label class="label-base" for="login-email">Correo institucional</label>
+              <input class="input-base" id="login-email" name="email"
+                     placeholder="ejemplo@unilibre.edu.co" required type="email" />
+            </div>
+            <div>
+              <label class="label-base" for="login-password">Contraseña</label>
+              <input class="input-base" id="login-password" name="password"
+                     placeholder="••••••••" required type="password" minlength="8" />
+            </div>
+            <div style="padding-top:var(--space-6);">
+              <button class="btn btn-primary btn-block title-lg" type="submit">Iniciar Sesión</button>
+            </div>
+          </form>
+
+          <div class="auth-footer-note">
+            <p class="body-md" style="margin:0 0 var(--space-2);color:var(--on-surface-variant);">¿Aún no tienes una cuenta?</p>
+            <a class="title-lg"
+               style="color:var(--primary);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"
+               href="register.html">
+              Regístrate aquí
+              <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>

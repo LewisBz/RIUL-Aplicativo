@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RIUL - Registro / Solicitud de cuenta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/design-system.css" />
+</head>
+<body style="margin:0;background:var(--surface);color:var(--on-surface);">
+  <!-- Top Navigation y Footer omitidos según la regla de intención transaccional -->
+  <main class="auth-shell">
+    <div class="auth-bg"></div>
+    <div class="auth-content">
+      <!-- Encabezado de marca -->
+      <header style="text-align:center;margin-bottom:var(--space-8);">
+        <h1 class="auth-brand">RIUL</h1>
+        <p class="title-lg" style="color:var(--on-surface-variant);margin:0;">Acceso y autenticación</p>
+      </header>
+
+      <!-- Alerta de validación (dinámica) -->
+      <div id="authAlert" class="alert-banner gamified-shadow hidden" role="alert"
+           style="max-width:896px;margin:0 auto var(--space-6);">
+        <span class="material-symbols-outlined" id="authAlertIcon">error</span>
+        <p id="authAlertText" class="body-md" style="font-weight:600;color:var(--on-error-container);margin:0;"></p>
+      </div>
+
+      <!-- Tarjeta de registro dual -->
+      <div style="max-width:896px;margin:0 auto;">
+        <section class="glass-card auth-card">
+          <div style="margin-bottom:var(--space-6);">
+            <h2 class="headline-lg" style="color:var(--primary);display:flex;align-items:center;gap:12px;">
+              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;display:inline-flex;">person_add</span>
+              Registro / Solicitud de cuenta
+            </h2>
+          </div>
+
+          <!-- Pestañas (Solicitud activa por defecto, como el mockup) -->
+          <div class="auth-tabs hide-scrollbar" role="tablist">
+            <button type="button" id="tabRequest" class="tab active" data-panel="panelRequest">[ Solicitud (No Institucional) ]</button>
+            <button type="button" id="tabRegister" class="tab" data-panel="panelRegister">[ Registro (Institucional) ]</button>
+          </div>
+
+          <!-- Formulario: Solicitud externa -->
+          <form id="panelRequest" class="stack-4" novalidate>
+            <div>
+              <label class="label-base" for="req-name">Nombre Completo</label>
+              <input class="input-base" id="req-name" name="full_name" placeholder="Nombres y Apellidos" required type="text" />
+            </div>
+            <div>
+              <label class="label-base" for="req-email">Correo No Institucional (Ej. Gmail)</label>
+              <input class="input-base" id="req-email" name="email" placeholder="correo@gmail.com" required type="email" />
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-4);">
+              <div>
+                <label class="label-base" for="req-faculty">Facultad</label>
+                <select class="input-base" id="req-faculty" name="faculty_id" data-programs-target="req-program" required>
+                  <option value="" disabled selected>Seleccione...</option>
+                </select>
+              </div>
+              <div>
+                <label class="label-base" for="req-program">Programa</label>
+                <select class="input-base" id="req-program" name="program_id" required>
+                  <option value="" disabled selected>Seleccione...</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="label-base" for="req-reason">Motivo de solicitud</label>
+              <textarea class="input-base" id="req-reason" name="motivation"
+                        placeholder="Describa brevemente su interés en la plataforma..."
+                        required style="height:96px;resize:none;"></textarea>
+            </div>
+            <div style="padding-top:var(--space-6);">
+              <button class="btn btn-teal btn-block title-lg" type="submit">
+                Solicitar Cuenta
+                <span class="material-symbols-outlined" style="font-size:18px;">send</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Formulario: Registro institucional -->
+          <form id="panelRegister" class="stack-4 hidden" novalidate>
+            <div>
+              <label class="label-base" for="reg-name">Nombre Completo</label>
+              <input class="input-base" id="reg-name" name="full_name" placeholder="Nombres y Apellidos" required type="text" />
+            </div>
+            <div>
+              <label class="label-base" for="reg-email">Correo institucional</label>
+              <input class="input-base" id="reg-email" name="email"
+                     placeholder="ejemplo@unilibre.edu.co" required type="email" />
+            </div>
+            <div>
+              <label class="label-base" for="reg-password">Contraseña</label>
+              <input class="input-base" id="reg-password" name="password"
+                     placeholder="Mínimo 8 caracteres" required type="password" minlength="8" />
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-4);">
+              <div>
+                <label class="label-base" for="reg-faculty">Facultad</label>
+                <select class="input-base" id="reg-faculty" name="faculty_id" data-programs-target="reg-program">
+                  <option value="" disabled selected>Seleccione...</option>
+                </select>
+              </div>
+              <div>
+                <label class="label-base" for="reg-program">Programa</label>
+                <select class="input-base" id="reg-program" name="program_id">
+                  <option value="" disabled selected>Seleccione...</option>
+                </select>
+              </div>
+            </div>
+            <div style="padding-top:var(--space-6);">
+              <button class="btn btn-primary btn-block title-lg" type="submit">Registrarme</button>
+            </div>
+          </form>
+
+          <div class="auth-footer-note">
+            <p class="body-md" style="margin:0 0 var(--space-2);color:var(--on-surface-variant);">¿Ya tienes cuenta institucional?</p>
+            <a class="title-lg"
+               style="color:var(--primary);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"
+               href="login.html">
+              Inicia sesión
+              <span class="material-symbols-outlined" style="font-size:18px;">login</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>
