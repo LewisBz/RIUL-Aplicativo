@@ -1,9 +1,12 @@
 import os
 from datetime import timedelta
+from pathlib import Path
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+_BACKEND_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _database_url() -> str:
@@ -27,6 +30,8 @@ class Config:
     INSTITUTIONAL_EMAIL_DOMAIN = os.environ.get(
         "INSTITUTIONAL_EMAIL_DOMAIN", "unilibre.edu.co"
     )
+    UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER", str(_BACKEND_ROOT / "uploads"))
+    MAX_CONTENT_LENGTH = 10 * 1024 * 1024
 
 
 class DevConfig(Config):

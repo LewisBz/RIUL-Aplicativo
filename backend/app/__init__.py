@@ -15,8 +15,10 @@ def create_app(config_name: str = "dev") -> Flask:
     bcrypt.init_app(app)
 
     from .modules.auth.routes import auth_bp
+    from .modules.posts.routes import posts_bp
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(posts_bp)
 
     _register_jwt_error_handlers()
     _register_cors(app)
