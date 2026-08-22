@@ -38,6 +38,12 @@ def _register_static_frontend(app: Flask) -> None:
     def index():
         return send_from_directory(FRONTEND_DIR, "index.html")
 
+    @app.route("/openapi.yaml")
+    def openapi_spec():
+        return send_from_directory(
+            FRONTEND_DIR, "openapi.yaml", mimetype="application/yaml"
+        )
+
     @app.route("/<path:path>")
     def static_files(path):
         if "." not in posixpath.basename(path):

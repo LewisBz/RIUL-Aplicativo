@@ -177,7 +177,7 @@ components:
       properties:
         message:
           type: string
-          example: Estado de validación: Solicitud pendiente de aprobación.
+          example: "Estado de validación: Solicitud pendiente de aprobación."
 
     User:
       type: object
