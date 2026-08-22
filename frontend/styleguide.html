@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL Design System - Styleguide</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body>
+
+  <header class="topnav">
+    <span class="material-symbols-outlined filled" style="color: var(--primary);">science</span>
+    <strong>RIUL Design System</strong>
+    <span class="label-caps" style="color: var(--secondary);">Styleguide &middot; specs/001-design-system</span>
+  </header>
+
+  <div class="container-main custom-scrollbar" style="padding-block: 32px;">
+
+    <!-- ============ COLORS ============ -->
+    <section>
+      <h1 class="headline-lg">1. Color Tokens</h1>
+      <p class="body-lg">Material 3 palette from DESIGN.md. Gold accent reserved for gamification only.</p>
+
+      <h2 class="title-lg">Primary (Institutional Crimson)</h2>
+      <div class="grid-12">
+        <div><div style="height:64px;background:var(--primary);border-radius:var(--radius-md);"></div><code>--primary #7b001f</code></div>
+        <div><div style="height:64px;background:var(--primary-container);border-radius:var(--radius-md);"></div><code>--primary-container</code></div>
+        <div><div style="height:64px;background:var(--primary-fixed);border-radius:var(--radius-md);"></div><code>--primary-fixed</code></div>
+        <div><div style="height:64px;background:var(--surface-tint);border-radius:var(--radius-md);"></div><code>--surface-tint</code></div>
+        <div><div style="height:64px;background:var(--inverse-primary);border-radius:var(--radius-md);"></div><code>--inverse-primary</code></div>
+      </div>
+
+      <h2 class="title-lg">Secondary / Tertiary / Error</h2>
+      <div class="grid-12">
+        <div><div style="height:64px;background:var(--secondary);border-radius:var(--radius-md);"></div><code>--secondary</code></div>
+        <div><div style="height:64px;background:var(--tertiary);border-radius:var(--radius-md);"></div><code>--tertiary</code></div>
+        <div><div style="height:64px;background:var(--tertiary-container);border-radius:var(--radius-md);"></div><code>--tertiary-container</code></div>
+        <div><div style="height:64px;background:var(--error);border-radius:var(--radius-md);"></div><code>--error</code></div>
+        <div><div style="height:64px;background:var(--error-container);border-radius:var(--radius-md);"></div><code>--error-container</code></div>
+        <div><div style="height:64px;background:var(--accent-gold);border-radius:var(--radius-md);box-shadow:var(--shadow-gamified);"></div><code>--accent-gold</code></div>
+      </div>
+
+      <h2 class="title-lg">Surfaces &amp; Outlines</h2>
+      <div class="grid-12">
+        <div><div style="height:48px;background:var(--background);border:1px solid var(--outline-variant);border-radius:var(--radius-md);"></div><code>--background</code></div>
+        <div><div style="height:48px;background:var(--surface-container-lowest);border:1px solid var(--outline-variant);border-radius:var(--radius-md);"></div><code>--surface-lowest</code></div>
+        <div><div style="height:48px;background:var(--surface-container-low);border-radius:var(--radius-md);"></div><code>--surface-low</code></div>
+        <div><div style="height:48px;background:var(--surface-container);border-radius:var(--radius-md);"></div><code>--surface-container</code></div>
+        <div><div style="height:48px;background:var(--surface-container-high);border-radius:var(--radius-md);"></div><code>--surface-high</code></div>
+        <div><div style="height:48px;background:var(--surface-container-highest);border-radius:var(--radius-md);"></div><code>--surface-highest</code></div>
+        <div><div style="height:48px;background:var(--surface-dim);border-radius:var(--radius-md);"></div><code>--surface-dim</code></div>
+        <div><div style="height:48px;background:var(--outline-variant);border-radius:var(--radius-md);"></div><code>--outline-variant</code></div>
+        <div><div style="height:48px;background:var(--outline);border-radius:var(--radius-md);"></div><code>--outline</code></div>
+      </div>
+    </section>
+
+    <!-- ============ TYPOGRAPHY ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">2. Typography Scale</h1>
+      <p class="display-lg">Display LG - Montserrat 700</p>
+      <p class="headline-lg">Headline LG - Montserrat 700</p>
+      <p class="headline-md">Headline MD - Montserrat 600</p>
+      <p class="title-lg">Title LG - Inter 600</p>
+      <p class="body-lg">Body LG - Inter 400. Research abstracts and dense data tables stay legible thanks to the high x-height.</p>
+      <p class="body-md">Body MD - Inter 400. Standard functional text for cards and lists.</p>
+      <p class="label-caps">Label Caps - section eyebrows and table headers</p>
+      <p><span class="numeric-xp">+120 XP</span> <span class="numeric-xp">25,600 / 30,000</span> Numeric XP - gamification figures only</p>
+    </section>
+
+    <!-- ============ SPACING / RADII / SHADOWS ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">3. Spacing, Radii &amp; Elevation</h1>
+      <div class="grid-12">
+        <div class="card-research">
+          <h3>Spacing (4px rhythm)</h3>
+          <div style="height:4px;width:4px;background:var(--primary);margin-bottom:4px;"></div>
+          <div style="height:8px;width:8px;background:var(--primary);margin-bottom:4px;"></div>
+          <div style="height:16px;width:16px;background:var(--primary);margin-bottom:4px;"></div>
+          <div style="height:24px;width:24px;background:var(--primary);margin-bottom:4px;"></div>
+          <div style="height:32px;width:32px;background:var(--primary);margin-bottom:4px;"></div>
+          <div style="height:48px;width:48px;background:var(--primary);"></div>
+          <p class="body-md">space-1 &rarr; space-12 (4 to 48px)</p>
+        </div>
+        <div class="card-research">
+          <h3>Radii</h3>
+          <div style="display:flex;gap:8px;align-items:flex-end;">
+            <div style="width:56px;height:56px;background:var(--surface-container-high);border-radius:var(--radius-sm);"></div>
+            <div style="width:56px;height:56px;background:var(--surface-container-high);border-radius:var(--radius-md);"></div>
+            <div style="width:56px;height:56px;background:var(--surface-container-high);border-radius:var(--radius-lg);"></div>
+            <div style="width:56px;height:28px;background:var(--surface-container-high);border-radius:var(--radius-pill);align-self:center;"></div>
+          </div>
+          <p class="body-md">sm 4 &middot; md 8 (controls) &middot; lg 16 (containers) &middot; pill</p>
+        </div>
+        <div class="card-research">
+          <h3>Elevation</h3>
+          <div style="padding:16px;border-radius:var(--radius-md);background:#fff;box-shadow:var(--shadow-card);margin-bottom:16px;">--shadow-card</div>
+          <div style="padding:16px;border-radius:var(--radius-md);background:#fff;box-shadow:var(--shadow-gamified);">--shadow-gamified (amber)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BUTTONS ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">4. Buttons</h1>
+      <p style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+        <button class="btn btn-primary"><span class="material-symbols-outlined">send</span>Primary Action</button>
+        <button class="btn btn-secondary">Secondary</button>
+        <button class="btn btn-gold"><span class="material-symbols-outlined">emoji_events</span>Claim Reward</button>
+        <button class="btn btn-teal"><span class="material-symbols-outlined">forward_to_inbox</span>Solicitar Cuenta</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+      </p>
+    </section>
+
+    <!-- ============ INPUTS ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">5. Inputs &amp; Selection</h1>
+      <div class="grid-12">
+        <div style="grid-column: span 4;">
+          <label class="label-caps">Email institucional</label>
+          <input class="input-base" type="email" placeholder="usuario@unilibre.edu.co">
+        </div>
+        <div style="grid-column: span 4;">
+          <label class="label-caps">Facultad</label>
+          <select class="input-base">
+            <option>Ingenier&iacute;a</option>
+            <option>Ciencias B&aacute;sicas</option>
+          </select>
+        </div>
+        <div style="grid-column: span 4;">
+          <label class="label-caps">Programa</label>
+          <input class="input-base" list="programs" placeholder="Ing. de Sistemas">
+          <datalist id="programs"><option value="Ingenieria de Sistemas"></datalist>
+        </div>
+        <div style="grid-column: span 12;">
+          <label class="label-caps">Motivo de vinculaci&oacute;n</label>
+          <textarea class="input-base" rows="2" placeholder="Reviewed by the seedbed leader..."></textarea>
+        </div>
+        <div style="grid-column: span 12;display:flex;gap:24px;">
+          <label class="body-md"><input type="checkbox" checked> Mi Perfil</label>
+          <label class="body-md"><input type="checkbox"> Mi Semillero</label>
+          <label class="body-md"><input type="radio" name="vis" checked> P&uacute;blica</label>
+          <label class="body-md"><input type="radio" name="vis"> Solo Semillero</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PILLS / CHIPS / TABS ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">6. Pills, Chips &amp; Tabs</h1>
+      <p style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="pill pill-active">Activo</span>
+        <span class="pill pill-closed">Cerrado</span>
+        <span class="pill pill-review">En evaluaci&oacute;n</span>
+        <span class="pill pill-published">Publicado</span>
+        <span class="pill pill-pending">Pendiente validaci&oacute;n</span>
+      </p>
+      <p style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+        <button class="chip">Art&iacute;culo</button>
+        <button class="chip active">Avance de Proyecto</button>
+        <button class="chip">Ponencia</button>
+        <button class="chip">Evento</button>
+        <button class="chip">Comunidad</button>
+      </p>
+      <div class="tabs" style="margin-top:16px;">
+        <button class="tab active">Eventos</button>
+        <button class="tab">Convocatorias</button>
+      </div>
+    </section>
+
+    <!-- ============ CARDS ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">7. Cards</h1>
+      <div class="grid-12">
+        <div class="card-research" style="grid-column: span 4;">
+          <span class="pill pill-active">Prototipo</span>
+          <h3>Detecci&oacute;n temprana con IoT</h3>
+          <p class="body-md">Semillero ITA &middot; Fase de desarrollo &middot; Rol requerido: Backend.</p>
+        </div>
+        <div class="card-research card-achievement" style="grid-column: span 4;">
+          <span class="xp-badge"><span class="material-symbols-outlined" style="font-size:14px;">military_tech</span>Logro Especial</span>
+          <h3>Art&iacute;culo Q1 Scopus</h3>
+          <p class="body-md">Validado &middot; +120 XP otorgados tras revisi&oacute;n del comit&eacute;.</p>
+        </div>
+        <div class="glass-card" style="grid-column: span 4;">
+          <span class="label-caps">Glass Card</span>
+          <p class="body-md">Blur + translucency over the abstract background, used on semillero headers and auth screens.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GAMIFICATION ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">8. Gamification Components</h1>
+      <div class="grid-12">
+        <div class="card-research" style="grid-column: span 6;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong>Nivel 15 &middot; Investigadora Senior</strong>
+            <span class="numeric-xp">25,600 / 30,000 XP</span>
+          </div>
+          <div class="xp-bar" style="margin-top:8px;"><div class="xp-fill" style="width:85%;"></div></div>
+          <p class="body-md" style="margin-top:8px;">XP bar with inner glow &middot; amber fill on neutral track</p>
+        </div>
+        <div class="card-research" style="grid-column: span 6;display:flex;gap:16px;align-items:center;">
+          <div class="insignia">
+            <span class="material-symbols-outlined filled" style="color:var(--accent-gold);font-size:32px;">workspace_premium</span>
+            <span class="body-md">Ponente Validado</span>
+          </div>
+          <div class="insignia locked">
+            <span class="material-symbols-outlined" style="font-size:32px;">lock</span>
+            <span class="body-md">L&iacute;der Semillero</span>
+          </div>
+          <div class="insignia locked">
+            <span class="material-symbols-outlined" style="font-size:32px;">lock</span>
+            <span class="body-md">Publicador Destacado</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TABLE / TIMELINE / DROPZONE ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">9. Table, Timeline &amp; Dropzone</h1>
+      <div class="grid-12">
+        <table class="table-data" style="grid-column: span 7;">
+          <thead>
+            <tr><th>Producto</th><th>Categor&iacute;a</th><th>Fecha</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Framework de gesti&oacute;n</td><td>Art&iacute;culo Cient&iacute;fico</td><td>2026-03</td><td><span class="pill pill-published">Validado</span></td></tr>
+            <tr><td>Sensor hub firmware</td><td>Software</td><td>2026-05</td><td><span class="pill pill-review">En revisi&oacute;n</span></td></tr>
+            <tr><td>Ponencia RIUL 2026</td><td>Ponencia</td><td>2026-06</td><td><span class="pill pill-pending">Pendiente</span></td></tr>
+          </tbody>
+        </table>
+        <div class="card-research" style="grid-column: span 5;">
+          <ul class="timeline">
+            <li class="done"><strong>Ponencia enviada</strong><br><span class="body-md">13 May 2026 &middot; Validada &middot; +50 XP</span></li>
+            <li><strong>Art&iacute;culo en revisi&oacute;n</strong><br><span class="body-md">Comit&eacute; de validaci&oacute;n</span></li>
+            <li><strong>Evento participado</strong><br><span class="body-md">26 Nov 2026 &middot; Auditorio A</span></li>
+          </ul>
+          <div class="dropzone" style="margin-top:16px;">
+            <span class="material-symbols-outlined">upload_file</span>
+            <span class="body-md">Arrastra evidencia (PDF/PNG/JPG/ZIP)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SHELL ============ -->
+    <section style="margin-top:48px;">
+      <h1 class="headline-lg">10. App Shell Preview</h1>
+      <p class="body-md">Topnav h-64px &middot; sticky sidebar w-256px &middot; scrollable main. Active item uses --primary-container + translate-x.</p>
+      <div style="border:1px solid var(--outline-variant);border-radius:var(--radius-lg);overflow:hidden;height:280px;">
+        <div class="app-shell" style="height:100%;">
+          <aside class="sidebar" style="position:static;height:auto;">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
+              <span class="material-symbols-outlined filled" style="color:var(--primary);">science</span>
+              <strong>RIUL</strong>
+            </div>
+            <a class="nav-item" href="#"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            <a class="nav-item active" href="#"><span class="material-symbols-outlined">psychology</span>Semillero</a>
+            <a class="nav-item" href="#"><span class="material-symbols-outlined">folder</span>Proyectos</a>
+            <a class="nav-item" href="#"><span class="material-symbols-outlined">groups</span>Comunidad</a>
+            <a class="nav-item" href="#"><span class="material-symbols-outlined">event</span>Eventos</a>
+            <a class="nav-item" href="#"><span class="material-symbols-outlined">emoji_events</span>Gamificaci&oacute;n</a>
+          </aside>
+          <main class="main-content">
+            <p class="label-caps">M&oacute;dulo : Semilleros</p>
+            <h2 class="headline-md">Exploraci&oacute;n de Semilleros</h2>
+            <p class="body-md">Mostrando 1-6 de 42 resultados &middot; contenido scrolleable dentro de main-content.</p>
+          </main>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-institutional">
+      &copy; 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atl&aacute;ntico &middot;
+      Universidad Libre &middot; <a href="#">Privacidad</a> &middot; <a href="#">T&eacute;rminos</a> &middot; <a href="#">Contacto</a>
+    </footer>
+
+  </div>
+</body>
+</html>
