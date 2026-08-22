@@ -1,4 +1,7 @@
-const API = location.protocol.startsWith('http') ? '' : 'http://localhost:5000';
+const API =
+  location.protocol === 'file:' || location.port !== '5000'
+    ? 'http://localhost:5000'
+    : '';
 
 const alertEl = document.getElementById('authAlert');
 const alertIcon = document.getElementById('authAlertIcon');

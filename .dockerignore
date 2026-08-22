@@ -1,0 +1,14 @@
+.git
+.gitignore
+.opencode
+.specify
+.vscode
+.idea
+mockup
+specs
+backend/.venv
+backend/__pycache__
+**/__pycache__
+**/.pytest_cache
+*.log
+.env

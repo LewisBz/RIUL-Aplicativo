@@ -16,12 +16,15 @@ services:
       retries: 12
 
   app:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/dockerfile
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-riul}:${POSTGRES_PASSWORD:-riul}@db:5432/${POSTGRES_DB:-riul}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-only-jwt-secret}
       SECRET_KEY: ${SECRET_KEY:-dev-only-secret-key}
       INSTITUTIONAL_EMAIL_DOMAIN: ${INSTITUTIONAL_EMAIL_DOMAIN:-unilibre.edu.co}
+      FRONTEND_DIR: /app/frontend
       FLASK_APP: wsgi.py
     ports:
       - "5000:5000"
