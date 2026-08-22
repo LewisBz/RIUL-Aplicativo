@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#b02a3e",
+                        "on-secondary-container": "#656464",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "tertiary": "#00423c",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-surface-variant": "#594141",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "secondary-fixed": "#e4e2e1",
+                        "on-primary-container": "#ffb0b3",
+                        "outline": "#8c7071",
+                        "surface-container-low": "#f3f3f3",
+                        "on-primary-fixed": "#40000c",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "surface-container-high": "#e8e8e8",
+                        "outline-variant": "#e0bfbf",
+                        "primary-container": "#9e1b32",
+                        "inverse-primary": "#ffb3b5",
+                        "surface-bright": "#f9f9f9",
+                        "secondary": "#5f5e5e",
+                        "on-background": "#1a1c1c",
+                        "tertiary-fixed": "#a7f0e4",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e2e2e2",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "primary": "#7b001f",
+                        "on-tertiary-container": "#8ad2c6",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary-fixed-variant": "#474747",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#e4e2e1",
+                        "surface-container": "#eeeeee",
+                        "primary-fixed": "#ffdada",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary-container": "#005c53",
+                        "surface": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "background": "#f9f9f9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-12": "48px",
+                        "gutter": "24px",
+                        "base": "4px",
+                        "unit-4": "16px",
+                        "container-max": "1280px",
+                        "unit-1": "4px",
+                        "unit-2": "8px",
+                        "unit-6": "24px",
+                        "margin-mobile": "16px",
+                        "unit-8": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Montserrat"],
+                        "title-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "numeric-xp": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-shadow { box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); }
+        .chart-bg { background-image: radial-gradient(circle at 1px 1px, #e2e2e2 1px, transparent 0); background-size: 20px 20px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col md:flex-row">
+<!-- Mobile Top Navigation -->
+<div class="md:hidden flex justify-between items-center w-full px-unit-6 h-16 sticky top-0 z-50 bg-surface dark:bg-inverse-surface shadow-sm">
+<div class="font-display-lg text-display-lg font-bold text-primary dark:text-inverse-primary">
+            RIUL Dashboard
+        </div>
+<div class="flex gap-unit-4">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim">notifications</span>
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim">settings</span>
+</div>
+</div>
+<!-- Side Navigation (Desktop) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full flex-col py-unit-4 w-64 z-40 bg-surface-container-low dark:bg-inverse-surface border-r border-outline-variant">
+<div class="px-unit-6 mb-unit-8 flex items-center gap-unit-2">
+<span class="material-symbols-outlined text-primary text-3xl">hub</span>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">RIUL Admin</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Management Portal</p>
+</div>
+</div>
+<ul class="flex-1 space-y-unit-2">
+<li class="mx-2">
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-title-lg text-title-lg">Users</span>
+</a>
+</li>
+<li class="mx-2">
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-title-lg text-title-lg">Faculties</span>
+</a>
+</li>
+<li class="mx-2">
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-title-lg text-title-lg">Programs</span>
+</a>
+</li>
+<li class="mx-2">
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-title-lg text-title-lg">Seed Groups</span>
+</a>
+</li>
+<li class="mx-2">
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-title-lg text-title-lg">Achievements</span>
+</a>
+</li>
+<li class="mx-2">
+<a class="flex items-center gap-unit-4 px-unit-4 py-unit-2 rounded-lg bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-title-lg text-title-lg">Reports</span>
+</a>
+</li>
+</ul>
+<div class="px-unit-4 mt-auto space-y-unit-4">
+<button class="w-full bg-[#fbbc04] text-black font-title-lg text-title-lg py-unit-2 rounded-lg flex items-center justify-center gap-unit-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">download</span>
+                Export Data
+            </button>
+<ul class="space-y-unit-2 border-t border-outline-variant pt-unit-4">
+<li>
+<a class="flex items-center gap-unit-4 text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant px-unit-2 py-unit-1 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Help Center</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-unit-4 text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant px-unit-2 py-unit-1 rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-caps text-label-caps">Log Out</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="flex-1 md:ml-64 p-margin-mobile md:p-gutter max-w-container-max mx-auto w-full">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-center justify-between mb-unit-8 gap-unit-4">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Analytics</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Institutional Research Metrics Overview</p>
+</div>
+<!-- Date Picker -->
+<div class="flex items-center bg-surface-container-low rounded-lg p-unit-2 border border-outline-variant custom-shadow">
+<span class="material-symbols-outlined text-secondary mr-unit-2">calendar_month</span>
+<select class="bg-transparent border-none text-on-surface font-title-lg text-title-lg focus:ring-0 cursor-pointer">
+<option>Last 12 Months</option>
+<option>Year to Date</option>
+<option>Last Quarter</option>
+</select>
+</div>
+</header>
+<!-- KPIs Row -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-unit-8">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest rounded-lg p-unit-4 border border-outline-variant custom-shadow flex items-start justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-unit-1">Total Publications</p>
+<p class="font-headline-md text-headline-md text-primary">1,245</p>
+<p class="font-body-md text-body-md text-[#2e7d32] flex items-center mt-unit-1">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +12% yoy
+                    </p>
+</div>
+<div class="bg-primary-fixed p-unit-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">menu_book</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest rounded-lg p-unit-4 border border-outline-variant custom-shadow flex items-start justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-unit-1">Active Projects</p>
+<p class="font-headline-md text-headline-md text-primary">342</p>
+<p class="font-body-md text-body-md text-[#2e7d32] flex items-center mt-unit-1">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +5% yoy
+                    </p>
+</div>
+<div class="bg-tertiary-fixed p-unit-2 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">science</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest rounded-lg p-unit-4 border border-outline-variant custom-shadow flex items-start justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-unit-1">Research Impact (H-index)</p>
+<p class="font-headline-md text-headline-md text-primary">24.5</p>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center mt-unit-1">
+<span class="material-symbols-outlined text-sm mr-1">horizontal_rule</span> stable
+                    </p>
+</div>
+<div class="bg-error-container p-unit-2 rounded-lg">
+<span class="material-symbols-outlined text-error">bar_chart</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest rounded-lg p-unit-4 border border-outline-variant custom-shadow flex items-start justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-unit-1">Total External Funding</p>
+<p class="font-headline-md text-headline-md text-primary">$4.2M</p>
+<p class="font-body-md text-body-md text-[#2e7d32] flex items-center mt-unit-1">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +18% yoy
+                    </p>
+</div>
+<div class="bg-[#fbbc04]/20 p-unit-2 rounded-lg">
+<span class="material-symbols-outlined text-[#8a6a00]">payments</span>
+</div>
+</div>
+</section>
+<!-- Main Charts Area -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-unit-8">
+<!-- Multi-line Chart Placeholder -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-lg border border-outline-variant custom-shadow p-unit-4 flex flex-col">
+<h3 class="font-title-lg text-title-lg text-primary mb-unit-4">Research Production (Last 12 Months)</h3>
+<div class="flex-1 chart-bg rounded-lg border border-surface-variant relative flex items-end justify-between p-unit-4 h-64">
+<!-- Simulated Line Chart Visuals -->
+<div class="absolute bottom-4 left-4 right-4 h-48 border-l border-b border-outline-variant"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<p class="text-on-surface-variant font-body-md text-body-md bg-surface/80 px-2 py-1 rounded">Interactive Line Chart Component</p>
+</div>
+</div>
+<div class="flex justify-center gap-unit-6 mt-unit-4">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary"></div><span class="font-label-caps text-label-caps text-on-surface-variant">Publications</span></div>
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-tertiary"></div><span class="font-label-caps text-label-caps text-on-surface-variant">Projects</span></div>
+</div>
+</div>
+<!-- Bar Chart Placeholder -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant custom-shadow p-unit-4 flex flex-col">
+<h3 class="font-title-lg text-title-lg text-primary mb-unit-4">Seed Groups by Faculty</h3>
+<div class="flex-1 flex flex-col justify-end gap-unit-2 h-64 border-b border-l border-outline-variant pl-2 pb-2">
+<div class="flex items-end gap-2 h-full">
+<div class="w-1/4 bg-primary rounded-t-sm" style="height: 80%;"></div>
+<div class="w-1/4 bg-tertiary rounded-t-sm" style="height: 60%;"></div>
+<div class="w-1/4 bg-[#fbbc04] rounded-t-sm" style="height: 45%;"></div>
+<div class="w-1/4 bg-secondary rounded-t-sm" style="height: 30%;"></div>
+</div>
+</div>
+<div class="flex justify-between mt-unit-2 px-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant rotate-45 transform origin-left">Eng</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant rotate-45 transform origin-left">Sci</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant rotate-45 transform origin-left">Health</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant rotate-45 transform origin-left">Arts</span>
+</div>
+</div>
+</section>
+<!-- Secondary Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Top Performing Seed Groups -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-lg border border-outline-variant custom-shadow p-unit-4">
+<h3 class="font-title-lg text-title-lg text-primary mb-unit-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[#fbbc04]">military_tech</span> Top Performing Seed Groups
+                </h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="py-unit-2 px-unit-2 font-label-caps text-label-caps text-on-surface-variant">Group Name</th>
+<th class="py-unit-2 px-unit-2 font-label-caps text-label-caps text-on-surface-variant">Faculty</th>
+<th class="py-unit-2 px-unit-2 font-label-caps text-label-caps text-on-surface-variant">XP Total</th>
+<th class="py-unit-2 px-unit-2 font-label-caps text-label-caps text-on-surface-variant">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md">
+<tr class="border-b border-surface-variant bg-surface-bright">
+<td class="py-unit-2 px-unit-2 font-semibold">Quantum Computing Semillero</td>
+<td class="py-unit-2 px-unit-2 text-on-surface-variant">Engineering</td>
+<td class="py-unit-2 px-unit-2 font-numeric-xp text-numeric-xp">14,500</td>
+<td class="py-unit-2 px-unit-2"><span class="bg-[#e6f4ea] text-[#137333] px-2 py-1 rounded-full text-xs font-semibold">Elite</span></td>
+</tr>
+<tr class="border-b border-surface-variant bg-surface-container-lowest">
+<td class="py-unit-2 px-unit-2 font-semibold">BioEthics Research Hub</td>
+<td class="py-unit-2 px-unit-2 text-on-surface-variant">Health Sciences</td>
+<td class="py-unit-2 px-unit-2 font-numeric-xp text-numeric-xp">12,200</td>
+<td class="py-unit-2 px-unit-2"><span class="bg-[#e6f4ea] text-[#137333] px-2 py-1 rounded-full text-xs font-semibold">Elite</span></td>
+</tr>
+<tr class="border-b border-surface-variant bg-surface-bright">
+<td class="py-unit-2 px-unit-2 font-semibold">Sustainable Materials Group</td>
+<td class="py-unit-2 px-unit-2 text-on-surface-variant">Basic Sciences</td>
+<td class="py-unit-2 px-unit-2 font-numeric-xp text-numeric-xp">10,800</td>
+<td class="py-unit-2 px-unit-2"><span class="bg-[#e8f0fe] text-[#1967d2] px-2 py-1 rounded-full text-xs font-semibold">Advanced</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Account Status Donut Chart -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant custom-shadow p-unit-4 flex flex-col items-center justify-center">
+<h3 class="font-title-lg text-title-lg text-primary w-full text-left mb-unit-4">Account Status</h3>
+<!-- CSS Simulated Donut Chart -->
+<div class="relative w-48 h-48 rounded-full flex items-center justify-center" style="background: conic-gradient(#7b001f 0% 70%, #fbbc04 70% 85%, #8c7071 85% 100%);">
+<div class="w-32 h-32 bg-surface-container-lowest rounded-full flex flex-col items-center justify-center shadow-inner">
+<span class="font-headline-md text-headline-md text-primary">2.4k</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Total</span>
+</div>
+</div>
+<div class="mt-unit-6 w-full space-y-unit-2">
+<div class="flex justify-between items-center font-body-md text-body-md">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary"></div><span>Active</span></div>
+<span class="font-semibold">70%</span>
+</div>
+<div class="flex justify-between items-center font-body-md text-body-md">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-[#fbbc04]"></div><span>Pending</span></div>
+<span class="font-semibold">15%</span>
+</div>
+<div class="flex justify-between items-center font-body-md text-body-md">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-outline"></div><span>Suspended</span></div>
+<span class="font-semibold">15%</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Mobile Bottom Navigation (Visible only on small screens) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface dark:bg-inverse-surface border-t border-outline-variant flex justify-around py-unit-2 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center text-on-secondary-container p-2" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] mt-1 font-semibold">Home</span>
+</a>
+<a class="flex flex-col items-center text-primary p-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assessment</span>
+<span class="text-[10px] mt-1 font-bold">Analytics</span>
+</a>
+<a class="flex flex-col items-center text-on-secondary-container p-2" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] mt-1 font-semibold">Groups</span>
+</a>
+<a class="flex flex-col items-center text-on-secondary-container p-2" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] mt-1 font-semibold">Profile</span>
+</a>
+</nav>
+</body></html>

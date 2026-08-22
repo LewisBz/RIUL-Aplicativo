@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RIUL Administrative Support</title>
+<!-- Tailwind CSS & Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#b02a3e",
+                        "on-secondary-container": "#656464",
+                        "on-primary-fixed-variant": "#8f0c28",
+                        "tertiary": "#00423c",
+                        "tertiary-fixed-dim": "#8cd4c8",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-surface-variant": "#594141",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "secondary-fixed": "#e4e2e1",
+                        "on-primary-container": "#ffb0b3",
+                        "outline": "#8c7071",
+                        "surface-container-low": "#f3f3f3",
+                        "on-primary-fixed": "#40000c",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "surface-container-high": "#e8e8e8",
+                        "outline-variant": "#e0bfbf",
+                        "primary-container": "#9e1b32",
+                        "inverse-primary": "#ffb3b5",
+                        "surface-bright": "#f9f9f9",
+                        "secondary": "#5f5e5e",
+                        "on-background": "#1a1c1c",
+                        "tertiary-fixed": "#a7f0e4",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e2e2e2",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "primary": "#7b001f",
+                        "on-tertiary-container": "#8ad2c6",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary-fixed-variant": "#474747",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#e4e2e1",
+                        "surface-container": "#eeeeee",
+                        "primary-fixed": "#ffdada",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary-container": "#005c53",
+                        "surface": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "background": "#f9f9f9"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "unit-12": "48px",
+                        "gutter": "24px",
+                        "base": "4px",
+                        "unit-4": "16px",
+                        "container-max": "1280px",
+                        "unit-1": "4px",
+                        "unit-2": "8px",
+                        "unit-6": "24px",
+                        "margin-mobile": "16px",
+                        "unit-8": "32px"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Montserrat"],
+                        "title-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "numeric-xp": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Montserrat"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "numeric-xp": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    },
+                    boxShadow: {
+                        'ambient': '0px 4px 20px rgba(0, 0, 0, 0.05)',
+                        'elevated': '0px 8px 30px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f9f9f9; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-fill { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-full flex flex-col py-unit-4 w-64 z-40 bg-surface-container-low dark:bg-inverse-surface border-r border-outline-variant hidden md:flex">
+<div class="px-unit-6 mb-unit-8 flex items-center gap-unit-4">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A minimalist vector logo representing a modern institutional crest, featuring sharp geometric lines in deep crimson and bright silver tones on a clean white background, conveying academic prestige and innovation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXhDk7uBUZWj9-FyUQ2vC_H6e0vuBxqc_IJ5lGKsD4jyB-ULFsehbWraQZ_mK5BF7CG632Cqi__ReThN3YwLlALhHY7ZePQntzrNCnqXECD_NhnYrIDs2w5Q8pXQlmYZ5R-h2DKnksyQYrgh1L15HWDxKQ1Aoc9xnWJJ37W00EKAx09lXbFsRM_vV_ezVvwIFCLXFc2u14rgvGRuGFeJ_1bswAkU7QDgJLoAt3d_iAzZO6IFaKYNFy"/>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary truncate">RIUL Admin</h2>
+<p class="font-label-caps text-label-caps text-secondary mt-1">Management Portal</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto">
+<ul class="space-y-2">
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-title-lg text-title-lg text-base">Users</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-title-lg text-title-lg text-base">Faculties</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-title-lg text-title-lg text-base">Programs</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-title-lg text-title-lg text-base">Seed Groups</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-title-lg text-title-lg text-base">Achievements</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-title-lg text-title-lg text-base">Reports</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="mt-auto px-unit-2 pt-unit-4 border-t border-outline-variant/30">
+<button class="w-full flex items-center justify-center gap-2 bg-surface-variant text-on-surface-variant font-title-lg text-title-lg text-sm py-3 rounded-lg hover:bg-secondary-container transition-colors mb-4 mx-2" style="width: calc(100% - 16px);">
+<span class="material-symbols-outlined text-sm">download</span>
+                Export Data
+            </button>
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container transition-all duration-200 active:scale-98 shadow-ambient" href="#">
+<span class="material-symbols-outlined icon-fill">help</span>
+<span class="font-title-lg text-title-lg text-base">Help Center</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-unit-4 py-3 mx-2 rounded-lg text-on-secondary-container dark:text-secondary-fixed-dim hover:bg-surface-variant transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-title-lg text-title-lg text-base">Log Out</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen relative">
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-unit-6 h-16 sticky top-0 z-30 shadow-sm bg-surface dark:bg-inverse-surface">
+<div class="flex items-center gap-6 h-full">
+<span class="font-display-lg text-display-lg font-bold text-primary dark:text-inverse-primary text-xl hidden md:block">RIUL Dashboard</span>
+<nav class="hidden md:flex h-full ml-8">
+<ul class="flex gap-8 h-full items-center">
+<li class="h-full flex items-center">
+<a class="font-headline-md text-headline-md text-base text-secondary dark:text-secondary-fixed-dim hover:text-primary-container transition-colors scale-95 duration-150" href="#">Dashboard</a>
+</li>
+<li class="h-full flex items-center">
+<a class="font-headline-md text-headline-md text-base text-secondary dark:text-secondary-fixed-dim hover:text-primary-container transition-colors scale-95 duration-150" href="#">Analytics</a>
+</li>
+<li class="h-full flex items-center border-b-2 border-primary">
+<a class="font-headline-md text-headline-md text-base text-primary dark:text-inverse-primary font-bold hover:text-primary-container transition-colors scale-95 duration-150" href="#">Support</a>
+</li>
+</ul>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-secondary hover:text-primary-container transition-colors rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-secondary hover:text-primary-container transition-colors rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant bg-surface-container-high ml-2 cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a university administrator in a modern office setting, bright natural lighting, wearing smart casual attire, exuding approachability and authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxGvI0-j3kxQ0HYzWq-38WG2ipWkRWZPcaQW4vSK5c0HP-Oj9bD5LCB5vyeqw_SZw7d6mlZ0Sif43bInKR2dH7BR3yWZzN15e0krHGZRG9cb68Xks52Ip3sm_oX5V6yUqtu3E7ZGxRBDy6zGW3ifwdn3UhFEv0kBzowb2q_8_bAcxqj6YIvnmmbsrtxy_HhW0Y2egMKu2vRCqhdtnKRaQ18WRLZyt1mCf-TU1BzvmYsQ-9MXPt9bo0"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-unit-6 md:p-8 max-w-[container-max] mx-auto w-full flex-1 space-y-unit-8">
+<!-- Page Header & Search -->
+<section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-surface-container-lowest p-unit-6 rounded-xl shadow-ambient border border-surface-variant">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Support &amp; Help Center</h1>
+<p class="font-body-md text-body-md text-on-secondary-container max-w-2xl">Manage user inquiries, access platform documentation, and monitor open support tickets across the RIUL academic ecosystem.</p>
+</div>
+<div class="w-full md:w-96 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary">search</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-md text-body-md transition-shadow" placeholder="Search help articles..." type="text"/>
+</div>
+</section>
+<!-- Quick Help Bento Grid -->
+<section>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-unit-4">Quick Help Actions</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-unit-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-unit-6 rounded-xl shadow-ambient border border-surface-variant hover:shadow-elevated transition-shadow cursor-pointer group flex flex-col items-start">
+<div class="w-12 h-12 rounded-lg bg-primary-fixed text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined icon-fill text-2xl">group</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-base text-on-surface mb-1">Managing Users</h3>
+<p class="font-body-md text-body-md text-sm text-secondary">Guides on roles and permissions.</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-unit-6 rounded-xl shadow-ambient border border-surface-variant hover:shadow-elevated transition-shadow cursor-pointer group flex flex-col items-start">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed text-tertiary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined icon-fill text-2xl">summarize</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-base text-on-surface mb-1">Generating Reports</h3>
+<p class="font-body-md text-body-md text-sm text-secondary">Data export and analysis tools.</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-unit-6 rounded-xl shadow-ambient border-surface-variant hover:shadow-elevated transition-shadow cursor-pointer group flex flex-col items-start border-l-4 border-l-[#FFB800]">
+<div class="w-12 h-12 rounded-lg bg-[#FFF4D6] text-[#B28000] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined icon-fill text-2xl">verified</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-base text-on-surface mb-1">Validating Achievements</h3>
+<p class="font-body-md text-body-md text-sm text-secondary">Approve gamified milestones.</p>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-unit-6 rounded-xl shadow-ambient border border-surface-variant hover:shadow-elevated transition-shadow cursor-pointer group flex flex-col items-start">
+<div class="w-12 h-12 rounded-lg bg-surface-container text-on-surface-variant flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined icon-fill text-2xl">tune</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-base text-on-surface mb-1">System Settings</h3>
+<p class="font-body-md text-body-md text-sm text-secondary">Global configurations and limits.</p>
+</div>
+</div>
+</section>
+<!-- Main Split Content -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-unit-6">
+<!-- Support Tickets (Left, 2 cols wide) -->
+<section class="lg:col-span-2 bg-surface-container-lowest rounded-xl shadow-ambient border border-surface-variant overflow-hidden flex flex-col">
+<div class="p-unit-6 border-b border-surface-variant flex justify-between items-center">
+<h2 class="font-title-lg text-title-lg text-on-surface">Recent Support Tickets</h2>
+<button class="font-label-caps text-label-caps text-primary hover:text-primary-container">View All</button>
+</div>
+<div class="overflow-x-auto w-full flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface border-b border-surface-variant">
+<th class="p-4 font-label-caps text-label-caps text-secondary font-medium">User Name</th>
+<th class="p-4 font-label-caps text-label-caps text-secondary font-medium">Faculty</th>
+<th class="p-4 font-label-caps text-label-caps text-secondary font-medium">Category</th>
+<th class="p-4 font-label-caps text-label-caps text-secondary font-medium">Status</th>
+<th class="p-4 font-label-caps text-label-caps text-secondary font-medium text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md">
+<!-- Row 1 -->
+<tr class="border-b border-surface-variant bg-surface-container-lowest hover:bg-surface-bright transition-colors">
+<td class="p-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-xs">AM</div>
+<span class="font-medium text-on-surface">Dr. Ana Martinez</span>
+</td>
+<td class="p-4 text-on-secondary-container">Engineering</td>
+<td class="p-4 text-on-secondary-container">Feature Request</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-[#FFF4D6] text-[#996D00] text-xs font-bold font-label-caps">In Progress</span>
+</td>
+<td class="p-4 text-right">
+<button class="px-3 py-1.5 rounded-lg border border-outline text-secondary hover:text-primary hover:border-primary transition-colors text-sm font-medium">Reply</button>
+</td>
+</tr>
+<!-- Row 2 (Zebra) -->
+<tr class="border-b border-surface-variant bg-surface-bright hover:bg-surface transition-colors">
+<td class="p-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-xs">JR</div>
+<span class="font-medium text-on-surface">Javier Rojas</span>
+</td>
+<td class="p-4 text-on-secondary-container">Sciences</td>
+<td class="p-4 text-on-secondary-container">Technical Bug</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-error-container text-on-error-container text-xs font-bold font-label-caps">Open</span>
+</td>
+<td class="p-4 text-right">
+<button class="px-3 py-1.5 rounded-lg border border-outline text-secondary hover:text-primary hover:border-primary transition-colors text-sm font-medium">Reply</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-bright transition-colors">
+<td class="p-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs">LC</div>
+<span class="font-medium text-on-surface">Lucia Castro</span>
+</td>
+<td class="p-4 text-on-secondary-container">Arts &amp; Humanities</td>
+<td class="p-4 text-on-secondary-container">Account Issue</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-[#E6F4EA] text-[#137333] text-xs font-bold font-label-caps">Resolved</span>
+</td>
+<td class="p-4 text-right">
+<button class="px-3 py-1.5 rounded-lg border border-outline text-secondary hover:text-primary hover:border-primary transition-colors text-sm font-medium">Reply</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Side Info (Right, 1 col wide) -->
+<aside class="flex flex-col gap-unit-6">
+<!-- Documentation Links -->
+<div class="bg-surface-container-lowest rounded-xl shadow-ambient border border-surface-variant p-unit-6">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">menu_book</span>
+                            Documentation
+                        </h2>
+<ul class="space-y-3">
+<li>
+<a class="flex items-start gap-3 group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors text-[20px]">article</span>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface group-hover:text-primary transition-colors">Admin Onboarding Guide</p>
+<p class="text-xs text-secondary">Setup and first steps.</p>
+</div>
+</a>
+</li>
+<li class="h-px bg-surface-variant w-full"></li>
+<li>
+<a class="flex items-start gap-3 group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors text-[20px]">article</span>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface group-hover:text-primary transition-colors">API Integration Specs</p>
+<p class="text-xs text-secondary">For custom institutional tools.</p>
+</div>
+</a>
+</li>
+<li class="h-px bg-surface-variant w-full"></li>
+<li>
+<a class="flex items-start gap-3 group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors text-[20px]">article</span>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface group-hover:text-primary transition-colors">Data Privacy Policy</p>
+<p class="text-xs text-secondary">Compliance and handling.</p>
+</div>
+</a>
+</li>
+</ul>
+</div>
+<!-- Contact Developer Support -->
+<div class="bg-surface-container-lowest rounded-xl shadow-ambient border border-surface-variant p-unit-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10"></div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Need escalated help?</h2>
+<p class="font-body-md text-body-md text-on-secondary-container mb-6">Contact the core development team for critical system failures or custom configuration requests.</p>
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary font-title-lg text-title-lg text-sm py-3 rounded-lg hover:bg-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+                            Contact Developer Support
+                        </button>
+</div>
+</aside>
+</div>
+</div>
+</main>
+</body></html>
