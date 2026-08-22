@@ -7,10 +7,14 @@ ENV UV_COMPILE_BYTECODE=1 \
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock ./
+COPY backend/pyproject.toml backend/uv.lock ./
 RUN uv sync --frozen --no-install-project --no-dev
 
-COPY . .
+COPY backend/alembic.ini backend/wsgi.py ./
+COPY backend/migrations ./migrations
+COPY backend/app ./app
+COPY frontend ./frontend
+
 RUN uv sync --frozen --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
