@@ -4,17 +4,17 @@ export const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '/dashboard' },
   { id: 'profile', label: 'Perfil', icon: 'person', href: '/profile' },
   { id: 'semilleros', label: 'Semillero', icon: 'account_tree', href: '#' },
-  { id: 'proyectos', label: 'Proyectos', icon: 'folder', href: '#' },
+  { id: 'proyectos', label: 'Proyectos', icon: 'folder', href: '/projects' },
   { id: 'comunidad', label: 'Comunidad', icon: 'group', href: '/feed' },
-  { id: 'eventos', label: 'Eventos', icon: 'event', href: '#' },
+  { id: 'eventos', label: 'Eventos', icon: 'event', href: '/events' },
   { id: 'gamificacion', label: 'Gamificación', icon: 'military_tech', href: '#' },
   { id: 'notificaciones', label: 'Notificaciones', icon: 'notifications', href: '#' },
 ];
 
 const TOPNAV_LINKS = [
   { label: 'Semilleros', href: '#' },
-  { label: 'Proyectos', href: '#' },
-  { label: 'Eventos', href: '#' },
+  { label: 'Proyectos', href: '/projects' },
+  { label: 'Eventos', href: '/events' },
 ];
 
 const FOOTER_LINKS = [
