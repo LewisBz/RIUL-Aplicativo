@@ -6,15 +6,15 @@ export const NAV_ITEMS = [
   { id: 'semilleros', label: 'Semillero', icon: 'account_tree', href: '/semilleros' },
   { id: 'proyectos', label: 'Proyectos', icon: 'folder', href: '#' },
   { id: 'comunidad', label: 'Comunidad', icon: 'group', href: '/feed' },
-  { id: 'eventos', label: 'Eventos', icon: 'event', href: '#' },
-  { id: 'gamificacion', label: 'Gamificación', icon: 'military_tech', href: '#' },
-  { id: 'notificaciones', label: 'Notificaciones', icon: 'notifications', href: '#' },
+  { id: 'eventos', label: 'Eventos', icon: 'event', href: '/events' },
+  { id: 'gamificacion', label: 'Gamificación', icon: 'military_tech', href: '/gamification' },
+  { id: 'notificaciones', label: 'Notificaciones', icon: 'notifications', href: '/notifications' },
 ];
 
 const TOPNAV_LINKS = [
   { label: 'Semilleros', href: '/semilleros' },
-  { label: 'Proyectos', href: '#' },
-  { label: 'Eventos', href: '#' },
+  { label: 'Proyectos', href: '/projects' },
+  { label: 'Eventos', href: '/events' },
 ];
 
 const FOOTER_LINKS = [
@@ -34,7 +34,7 @@ function topnavHtml() {
       </div>
       <nav class="only-desktop">${links}</nav>
       <div style="display:flex;align-items:center;gap:16px;">
-        <button class="icon-action" aria-label="Notificaciones"><span class="material-symbols-outlined">notifications</span></button>
+        <a class="icon-action notification-link" href="/notifications" aria-label="Notificaciones"><span class="material-symbols-outlined">notifications</span></a>
         <button class="icon-action only-desktop" aria-label="Configuración"><span class="material-symbols-outlined">settings</span></button>
         <div class="nav-user">
           <button class="profile-chip only-desktop" type="button" id="userMenuToggle" aria-haspopup="true" aria-expanded="false" title="Perfil">

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Gamificación</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body data-nav-active="gamificacion" style="min-height:100vh;display:flex;flex-direction:column;">
+  <header id="topnavMount"></header>
+  <div class="app-shell app-shell-page">
+    <aside id="sidenavMount"></aside>
+    <main class="main-content">
+      <div class="page-heading gamification-heading">
+        <div><p class="eyebrow">Progreso académico</p><h1 class="headline-lg">Gamificación</h1><p class="body-lg page-subtitle">Reconoce tu avance y participación en la comunidad de investigación.</p></div>
+        <span class="xp-badge"><span class="material-symbols-outlined">bolt</span><span id="headerXp"></span></span>
+      </div>
+      <div class="gamification-grid">
+        <section class="glass-card gamification-summary" aria-label="Resumen de progreso">
+          <div class="gamification-level"><span class="level-emblem material-symbols-outlined">military_tech</span><div><p class="eyebrow">Tu nivel actual</p><h2 class="headline-md" id="gamLevel"></h2></div></div>
+          <div class="xp-head"><span>Progreso al siguiente nivel</span><strong id="gamXp"></strong></div>
+          <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+          <div class="gamification-stats"><div><strong id="gamStars"></strong><span>Estrellas</span></div><div><strong id="gamAchievements"></strong><span>Logros validados</span></div><div><strong id="gamPosition"></strong><span>Posición</span></div></div>
+        </section>
+        <section class="glass-card badge-showcase" aria-label="Insignias y recompensas"><div class="section-heading"><h2 class="headline-md">Insignias</h2><span class="body-md">Vitrina personal</span></div><div class="badge-grid" id="badgeGrid"></div></section>
+      </div>
+      <div class="gamification-columns">
+        <section class="glass-card" aria-label="Ranking institucional"><div class="section-heading"><h2 class="headline-md">Ranking institucional</h2><span class="body-md">XP acumulada</span></div><div class="ranking-list" id="rankingList"></div></section>
+        <section class="glass-card" aria-label="Historial de logros"><div class="section-heading"><h2 class="headline-md">Historial de logros</h2><span class="body-md">Actividad reciente</span></div><ol class="achievement-list" id="achievementList"></ol></section>
+      </div>
+    </main>
+  </div>
+  <footer id="footerMount"></footer>
+  <script type="module" src="js/gamification.js"></script>
+</body>
+</html>
