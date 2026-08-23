@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL Admin - Dashboard</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body class="admin-page">
+  <header class="admin-topbar">
+    <a class="topnav-brand" href="/admin">RIUL Admin</a>
+    <div class="admin-topbar-actions"><span class="label-caps">Panel administrativo</span><button class="icon-action" id="adminLogout" type="button" aria-label="Cerrar sesión" title="Cerrar sesión"><span class="material-symbols-outlined">logout</span></button></div>
+  </header>
+  <div class="admin-shell">
+    <aside class="admin-sidebar" aria-label="Navegación administrativa">
+      <p class="admin-sidebar-label">Gestión</p>
+      <nav class="admin-nav"><a class="admin-nav-item active" href="#overview"><span class="material-symbols-outlined">dashboard</span>Resumen</a><a class="admin-nav-item" href="#users"><span class="material-symbols-outlined">person</span>Usuarios</a><a class="admin-nav-item" href="#faculties"><span class="material-symbols-outlined">account_balance</span>Facultades</a><a class="admin-nav-item" href="#programs"><span class="material-symbols-outlined">school</span>Programas</a><a class="admin-nav-item unavailable" href="#semilleros"><span class="material-symbols-outlined">psychology</span>Semilleros</a><a class="admin-nav-item unavailable" href="#achievements"><span class="material-symbols-outlined">military_tech</span>Logros</a><a class="admin-nav-item unavailable" href="#reports"><span class="material-symbols-outlined">assessment</span>Reportes</a></nav>
+    </aside>
+    <main class="admin-main" id="adminContent" aria-live="polite"><div class="admin-loading"><span class="material-symbols-outlined">progress_activity</span><span>Verificando permisos...</span></div></main>
+  </div>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

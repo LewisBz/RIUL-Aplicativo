@@ -1,0 +1,1 @@
+pytest_plugins = ["app.modules.auth.tests.conftest"]

@@ -22,9 +22,11 @@ def create_app(config_name: str = "dev") -> Flask:
     bcrypt.init_app(app)
 
     from .modules.auth.routes import auth_bp
+    from .modules.admin.routes import admin_bp
     from .modules.posts.routes import posts_bp
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(admin_bp)
     app.register_blueprint(posts_bp)
 
     _register_static_frontend(app)
@@ -109,3 +111,24 @@ def _register_seed_cli(app: Flask) -> None:
                     created += 1
         db.session.commit()
         click.echo(f"Seed completo ({created} registros creados).")
+
+    @app.cli.command("seed-admin")
+    def seed_admin():
+        """Create the development administrator configured by environment."""
+        from .modules.auth.models import ROLE_ADMINISTRATOR, STATUS_ACTIVE, User
+
+        email = os.environ.get("ADMIN_DEMO_EMAIL", "admin.demo@unilibre.edu.co").strip().lower()
+        password = os.environ.get("ADMIN_DEMO_PASSWORD")
+        name = os.environ.get("ADMIN_DEMO_NAME", "Administrador Demo").strip()
+        if not password:
+            raise click.ClickException("ADMIN_DEMO_PASSWORD es obligatorio para seed-admin.")
+        user = User.query.filter_by(email=email).first()
+        if user is None:
+            user = User(email=email)
+            db.session.add(user)
+        user.full_name = name or "Administrador Demo"
+        user.role = ROLE_ADMINISTRATOR
+        user.status = STATUS_ACTIVE
+        user.set_password(password)
+        db.session.commit()
+        click.echo(f"Administrador demo listo: {email}")
