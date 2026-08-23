@@ -34,6 +34,7 @@ def _ensure_test_database() -> None:
 def app():
     _ensure_test_database()
     application = create_app("test")
+    application.config["UPLOAD_FOLDER"] = _UPLOAD_ROOT
     with application.app_context():
         yield application
 
