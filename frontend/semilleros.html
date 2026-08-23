@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Exploración de Semilleros</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body data-nav-active="semilleros" style="min-height:100vh;display:flex;flex-direction:column;">
+
+  <!-- Chrome compartido (topnav, menú móvil, sidebar, footer): js/layout.js -->
+  <header id="topnavMount"></header>
+
+  <div class="app-shell app-shell-page">
+
+    <aside id="sidenavMount"></aside>
+
+    <main class="main-content" style="display:flex;flex-direction:column;gap:var(--space-6);">
+
+      <header>
+        <p class="label-caps" style="margin:0 0 var(--space-1);color:var(--secondary);">Módulo &middot; Semilleros</p>
+        <h1 class="headline-lg" style="margin:0;">Exploración de Semilleros</h1>
+      </header>
+
+      <div class="dash-grid">
+
+        <!-- Panel de filtros -->
+        <aside class="glass-card dash-card col-4" aria-label="Filtros" id="filtersPanel"
+          style="align-self:start;position:sticky;top:calc(var(--topnav-height) + var(--space-4));max-height:calc(100vh - var(--topnav-height) * 2);overflow:auto;">
+          <h3 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
+            <span class="material-symbols-outlined">filter_list</span>Filtros
+          </h3>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+            <div>
+              <label class="label-caps" for="filterFaculty" style="display:block;margin-bottom:var(--space-1);color:var(--secondary);">Facultad</label>
+              <select class="input-base" id="filterFaculty"></select>
+            </div>
+            <div>
+              <label class="label-caps" for="filterProgram" style="display:block;margin-bottom:var(--space-1);color:var(--secondary);">Programa</label>
+              <select class="input-base" id="filterProgram"></select>
+            </div>
+            <div>
+              <label class="label-caps" for="filterArea" style="display:block;margin-bottom:var(--space-1);color:var(--secondary);">Área de investigación</label>
+              <select class="input-base" id="filterArea"></select>
+            </div>
+          </div>
+          <button class="btn btn-outline label-caps btn-block" type="button" id="clearFilters">Limpiar Filtros</button>
+        </aside>
+
+        <!-- Resultados -->
+        <section class="col-8" aria-label="Resultados" style="display:flex;flex-direction:column;gap:var(--space-5);min-width:0;">
+
+          <div style="max-width:560px;">
+            <label class="label-caps" for="searchInput" style="display:block;margin-bottom:var(--space-2);color:var(--secondary);">Barra de búsqueda</label>
+            <div style="display:flex;gap:var(--space-2);">
+              <input class="input-base" type="text" id="searchInput" placeholder="Buscar semilleros..." autocomplete="off">
+              <button class="btn btn-primary" type="button" id="searchBtn" aria-label="Buscar">
+                <span class="material-symbols-outlined">search</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap;">
+            <h2 class="card-label" style="margin:0;">Resultados</h2>
+            <span class="body-md" id="resultsCount" style="color:var(--secondary);"></span>
+          </div>
+
+          <div id="semillerosGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-5);"></div>
+
+          <p class="body-lg" id="emptyState" hidden style="text-align:center;color:var(--secondary);padding:var(--space-8) 0;">
+            No se encontraron semilleros con los criterios seleccionados.
+          </p>
+
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <footer id="footerMount"></footer>
+
+  <script type="module" src="js/semilleros.js"></script>
+</body>
+</html>

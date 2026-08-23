@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Detalle del Semillero</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body data-nav-active="semilleros" style="min-height:100vh;display:flex;flex-direction:column;">
+
+  <!-- Chrome compartido (topnav, menú móvil, sidebar, footer): js/layout.js -->
+  <header id="topnavMount"></header>
+
+  <div class="app-shell app-shell-page">
+
+    <aside id="sidenavMount"></aside>
+
+    <main class="main-content" style="display:flex;flex-direction:column;gap:var(--space-6);">
+
+      <a class="label-caps" href="/semilleros"
+        style="color:var(--secondary);text-decoration:none;display:inline-flex;align-items:center;gap:var(--space-1);">
+        <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>Volver a Semilleros
+      </a>
+
+      <!-- Encabezado del semillero -->
+      <section class="glass-card" aria-label="Información del semillero"
+        style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-4);position:relative;overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0;">
+          <div style="width:80px;height:80px;flex-shrink:0;border-radius:var(--radius-lg);background-color:var(--surface-container-low);border:1px solid var(--outline-variant);display:inline-flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" id="semLogoIcon" style="font-size:40px;color:var(--primary);"></span>
+          </div>
+          <div style="min-width:0;">
+            <h1 class="headline-md" id="semName" style="margin:0 0 var(--space-1);color:var(--primary);"></h1>
+            <p class="title-lg" id="semAffiliation" style="margin:0;color:var(--secondary);font-size:16px;"></p>
+          </div>
+        </div>
+        <button class="btn btn-outline label-caps" type="button" id="followBtn">
+          <span class="material-symbols-outlined" id="followIcon">favorite_border</span><span id="followLabel">Seguir</span>
+        </button>
+      </section>
+
+      <div class="dash-grid">
+
+        <!-- Columna principal -->
+        <div class="col-8" style="display:flex;flex-direction:column;gap:var(--space-6);min-width:0;">
+
+          <!-- Información general -->
+          <section class="glass-card dash-card" aria-label="Información general">
+            <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
+              <span class="material-symbols-outlined">info</span>Información General
+            </h2>
+            <p class="body-md" id="semAbout" style="margin:0;"></p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-4);">
+              <div style="background-color:var(--surface-container-low);border-radius:var(--radius-md);padding:var(--space-4);">
+                <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--primary);">Misión</h3>
+                <p class="body-md" id="semMission" style="margin:0;"></p>
+              </div>
+              <div style="background-color:var(--surface-container-low);border-radius:var(--radius-md);padding:var(--space-4);">
+                <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--primary);">Visión</h3>
+                <p class="body-md" id="semVision" style="margin:0;"></p>
+              </div>
+            </div>
+            <div>
+              <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--primary);">Áreas de interés</h3>
+              <div id="interestAreas" style="display:flex;flex-wrap:wrap;gap:var(--space-2);"></div>
+            </div>
+          </section>
+
+          <!-- Equipo -->
+          <section class="glass-card dash-card" aria-label="Equipo del semillero">
+            <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
+              <span class="material-symbols-outlined">groups</span>Equipo
+            </h2>
+            <div>
+              <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--secondary);">Docente Líder</h3>
+              <div style="display:flex;align-items:center;gap:var(--space-4);background-color:var(--surface-container-low);border-left:4px solid var(--primary);border-radius:var(--radius-md);padding:var(--space-3);">
+                <span class="nav-avatar avatar-lg" id="leaderInitials">U</span>
+                <div>
+                  <p class="body-md" id="leaderName" style="margin:0;font-weight:700;"></p>
+                  <p class="body-md" id="leaderTitle" style="margin:0;color:var(--secondary);font-size:12px;"></p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--secondary);">Integrantes</h3>
+              <div id="membersGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-3);"></div>
+              <button class="btn btn-outline label-caps btn-block" type="button" id="toggleMembers" style="margin-top:var(--space-3);"></button>
+            </div>
+          </section>
+
+          <!-- Líneas y proyectos -->
+          <section class="glass-card dash-card" aria-label="Líneas y proyectos de investigación">
+            <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
+              <span class="material-symbols-outlined">science</span>Líneas &amp; Proyectos de Investigación
+            </h2>
+            <div>
+              <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--secondary);">Sub-líneas activas</h3>
+              <div id="linesList" style="display:flex;flex-direction:column;gap:var(--space-3);"></div>
+            </div>
+            <div>
+              <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--secondary);">Proyectos en curso</h3>
+              <div id="projectsList" style="display:flex;flex-direction:column;gap:var(--space-3);"></div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="col-4" style="display:flex;flex-direction:column;gap:var(--space-6);min-width:0;">
+
+          <!-- Publicaciones -->
+          <section class="glass-card dash-card" aria-label="Publicaciones destacadas">
+            <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
+              <span class="material-symbols-outlined">menu_book</span>Publicaciones
+            </h2>
+            <ul id="pubsList" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-3);"></ul>
+          </section>
+
+          <!-- Actividades -->
+          <section class="glass-card dash-card" aria-label="Actividades y eventos">
+            <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
+              <span class="material-symbols-outlined">event</span>Actividades
+            </h2>
+            <ul class="timeline" id="activitiesList"></ul>
+          </section>
+
+          <!-- Solicitud de vinculación -->
+          <section aria-label="Solicitud de vinculación" id="vinculacion"
+            style="position:relative;overflow:hidden;background-color:var(--surface-container-low);border:1px solid var(--primary-fixed-dim);border-radius:var(--radius-lg);padding:var(--space-4);">
+            <span class="pill pill-pending" id="linkStateTag" style="position:absolute;top:var(--space-2);right:0;border-top-right-radius:0;border-bottom-right-radius:0;">Estado: No vinculado</span>
+            <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-4);border-bottom:none;padding-bottom:0;">
+              <span class="material-symbols-outlined">handshake</span>Vinculación
+            </h2>
+            <p class="body-md" style="margin:0 0 var(--space-3);color:var(--on-surface-variant);">
+              Únete al semillero y participa activamente en proyectos de investigación.
+            </p>
+            <form id="linkForm" style="display:flex;flex-direction:column;gap:var(--space-3);">
+              <div>
+                <label class="label-caps" for="motivationInput" style="display:block;margin-bottom:var(--space-1);color:var(--on-surface-variant);">Motivación</label>
+                <textarea class="input-base" id="motivationInput" rows="5" required
+                  placeholder="Escribe aquí por qué deseas unirte, tus habilidades y áreas de interés..."></textarea>
+              </div>
+              <button class="btn btn-primary label-caps btn-block" type="submit" id="submitLinkBtn">Solicitar Vinculación</button>
+              <p class="body-md" id="linkNote" style="margin:0;text-align:center;color:var(--secondary);font-size:11px;">
+                La solicitud será revisada por el líder del semillero.
+              </p>
+            </form>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <footer id="footerMount"></footer>
+
+  <script type="module" src="js/semillero-detalle.js"></script>
+</body>
+</html>

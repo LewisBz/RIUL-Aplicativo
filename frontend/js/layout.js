@@ -3,7 +3,7 @@ import { initSessionUI } from './session.js';
 export const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '/dashboard' },
   { id: 'profile', label: 'Perfil', icon: 'person', href: '/profile' },
-  { id: 'semilleros', label: 'Semillero', icon: 'account_tree', href: '#' },
+  { id: 'semilleros', label: 'Semillero', icon: 'account_tree', href: '/semilleros' },
   { id: 'proyectos', label: 'Proyectos', icon: 'folder', href: '#' },
   { id: 'comunidad', label: 'Comunidad', icon: 'group', href: '/feed' },
   { id: 'eventos', label: 'Eventos', icon: 'event', href: '#' },
@@ -12,7 +12,7 @@ export const NAV_ITEMS = [
 ];
 
 const TOPNAV_LINKS = [
-  { label: 'Semilleros', href: '#' },
+  { label: 'Semilleros', href: '/semilleros' },
   { label: 'Proyectos', href: '#' },
   { label: 'Eventos', href: '#' },
 ];
