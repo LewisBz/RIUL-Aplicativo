@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Notificaciones</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body data-nav-active="notificaciones" style="min-height:100vh;display:flex;flex-direction:column;">
+  <header id="topnavMount"></header>
+  <div class="app-shell app-shell-page">
+    <aside id="sidenavMount"></aside>
+    <main class="main-content">
+      <div class="page-heading"><div><p class="eyebrow">Centro de actividad</p><h1 class="headline-lg">Notificaciones</h1><p class="body-lg page-subtitle">Mantente al día con tu actividad académica.</p></div><span class="notification-counter" id="notificationCount" aria-live="polite"></span></div>
+      <section class="notification-toolbar glass-card" aria-label="Filtros de notificaciones"><div class="tabs" role="tablist" aria-label="Estado de notificaciones"><button class="tab active" type="button" role="tab" aria-selected="true" data-filter="all">Todas</button><button class="tab" type="button" role="tab" aria-selected="false" data-filter="unread">No leídas</button></div><label class="search-field"><span class="material-symbols-outlined">search</span><input class="input-base" id="notificationSearch" type="search" placeholder="Buscar notificaciones" aria-label="Buscar notificaciones"></label></section>
+      <section class="notification-list" id="notificationList" aria-live="polite"></section>
+    </main>
+  </div>
+  <footer id="footerMount"></footer>
+  <script type="module" src="js/notifications.js"></script>
+</body>
+</html>

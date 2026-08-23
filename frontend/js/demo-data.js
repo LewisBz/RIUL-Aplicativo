@@ -155,8 +155,10 @@ export const SEMILLERO = {
 };
 
 export const NOTIFICATIONS = [
-  { icon: 'check_circle', text: 'Aprobación de logros' },
-  { icon: 'mail', text: 'Mensaje de Docente Guía' },
+  { id: 'notification-achievement', type: 'achievement', icon: 'check_circle', title: 'Logro validado', text: 'Tu participación en el V Simposio fue validada.', createdAt: '2026-08-20T10:30:00', read: false, priority: 'high', href: '/gamification' },
+  { id: 'notification-event', type: 'event', icon: 'event', title: 'Próximo evento', text: 'El Taller de datos abiertos comienza pronto.', createdAt: '2026-08-18T14:00:00', read: false, priority: 'normal', href: '/event-detail?id=taller-datos-abiertos' },
+  { id: 'notification-message', type: 'message', icon: 'mail', title: 'Mensaje de docente guía', text: 'Tienes un nuevo mensaje sobre tu proyecto.', createdAt: '2026-08-15T09:15:00', read: true, priority: 'normal', href: '/profile' },
+  { id: 'notification-project', type: 'project', icon: 'folder', title: 'Avance de proyecto', text: 'Se registró una actualización en tu proyecto.', createdAt: '2026-08-12T16:45:00', read: true, priority: 'low', href: '/projects' },
 ];
 
 export const GAMIFICATION = {
@@ -166,6 +168,13 @@ export const GAMIFICATION = {
   stars: 4,
   totalStars: 5,
 };
+
+export const RANKING = [
+  { position: 1, name: 'Laura Mendoza', role: 'Investigadora', xp: 2140 },
+  { position: 2, name: 'Javier Torres', role: 'Investigador', xp: 1890 },
+  { position: 3, name: 'Camila Rojas', role: 'Investigadora', xp: 1760, isCurrentUser: true },
+  { position: 4, name: 'Mateo Silva', role: 'Investigador', xp: 1520 },
+];
 
 export const BADGES = [
   { icon: 'workspace_premium', title: 'Publicador Destacado', highlighted: true },
@@ -195,4 +204,10 @@ export const PRODUCTS = [
 export const ACHIEVEMENTS = [
   { text: 'Ponencia Validada – Registrado / Validado', done: true },
   { text: 'Participación en Encuentro de Semilleros', done: false },
+];
+
+export const GAMIFICATION_ACHIEVEMENTS = [
+  { id: 'achievement-simposio', icon: 'event', title: 'Participante destacado', description: 'Participación en el V Simposio Internacional', status: 'Validado', xp: 50, stars: 4, date: '2026-06-14' },
+  { id: 'achievement-publication', icon: 'article', title: 'Publicador académico', description: 'Artículo publicado en una revista indexada', status: 'En revisión', xp: 120, stars: 0, date: '2026-05-20' },
+  { id: 'achievement-seedbed', icon: 'groups', title: 'Líder de semillero', description: 'Acompañamiento a un semillero de investigación', status: 'Validado', xp: 80, stars: 5, date: '2026-03-10' },
 ];
