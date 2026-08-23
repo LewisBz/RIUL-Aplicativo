@@ -206,6 +206,36 @@ export const ACHIEVEMENTS = [
   { text: 'Participación en Encuentro de Semilleros', done: false },
 ];
 
+export const GAMIFICATION_ACHIEVEMENTS = [
+  {
+    id: 'achievement-simposio',
+    icon: 'event',
+    title: 'Participante destacado',
+    description: 'Participación en el V Simposio Internacional',
+    status: 'Validado',
+    xp: 50,
+    date: '2026-06-14',
+  },
+  {
+    id: 'achievement-publication',
+    icon: 'article',
+    title: 'Publicador académico',
+    description: 'Artículo publicado en una revista indexada',
+    status: 'En revisión',
+    xp: 120,
+    date: '2026-05-20',
+  },
+  {
+    id: 'achievement-seedbed',
+    icon: 'groups',
+    title: 'Líder de semillero',
+    description: 'Acompañamiento a un semillero de investigación',
+    status: 'Validado',
+    xp: 80,
+    date: '2026-03-10',
+  },
+];
+
 const MEMBER_TONES = {
   primary: { bg: 'var(--primary-fixed-dim)', fg: 'var(--on-primary-fixed)' },
   secondary: { bg: 'var(--secondary-container)', fg: 'var(--on-secondary-container)' },

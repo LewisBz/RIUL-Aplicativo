@@ -4,7 +4,7 @@ export const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '/dashboard' },
   { id: 'profile', label: 'Perfil', icon: 'person', href: '/profile' },
   { id: 'semilleros', label: 'Semillero', icon: 'account_tree', href: '/semilleros' },
-  { id: 'proyectos', label: 'Proyectos', icon: 'folder', href: '#' },
+  { id: 'proyectos', label: 'Proyectos', icon: 'folder', href: '/projects' },
   { id: 'comunidad', label: 'Comunidad', icon: 'group', href: '/feed' },
   { id: 'eventos', label: 'Eventos', icon: 'event', href: '/events' },
   { id: 'gamificacion', label: 'Gamificación', icon: 'military_tech', href: '/gamification' },
