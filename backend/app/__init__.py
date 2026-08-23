@@ -1,8 +1,15 @@
+import os
+import posixpath
+
 import click
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 
 from .config import config_by_name
 from .extensions import bcrypt, db, jwt, migrate
+
+FRONTEND_DIR = os.environ.get("FRONTEND_DIR") or os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "frontend")
+)
 
 
 def create_app(config_name: str = "dev") -> Flask:
@@ -20,11 +27,30 @@ def create_app(config_name: str = "dev") -> Flask:
     app.register_blueprint(auth_bp)
     app.register_blueprint(posts_bp)
 
+    _register_static_frontend(app)
     _register_jwt_error_handlers()
     _register_cors(app)
     _register_seed_cli(app)
 
     return app
+
+
+def _register_static_frontend(app: Flask) -> None:
+    @app.route("/")
+    def index():
+        return send_from_directory(FRONTEND_DIR, "index.html")
+
+    @app.route("/openapi.yaml")
+    def openapi_spec():
+        return send_from_directory(
+            FRONTEND_DIR, "openapi.yaml", mimetype="application/yaml"
+        )
+
+    @app.route("/<path:path>")
+    def static_files(path):
+        if "." not in posixpath.basename(path):
+            path = path.rstrip("/") + ".html"
+        return send_from_directory(FRONTEND_DIR, path)
 
 
 def _register_jwt_error_handlers() -> None:

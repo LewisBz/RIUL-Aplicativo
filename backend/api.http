@@ -1,0 +1,69 @@
+### RIUL API — Peticiones de prueba manual
+### Requiere la extensión "REST Client" (humao.rest-client) en VS Code.
+### Clic en "Send Request" encima de cada petición.
+
+@host = http://localhost:5000
+
+### 1. Catálogo público de facultades y programas
+GET {{host}}/api/auth/catalog
+
+### 2. Registro institucional (cuenta activa + token inmediato)
+# Cambia el correo por uno nuevo en cada ejecución, o verás 409.
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "nuevo.usuario@unilibre.edu.co",
+  "password": "secreto123",
+  "full_name": "Nuevo Investigador",
+  "faculty_id": 1,
+  "program_id": 1
+}
+
+### 3. Solicitud de cuenta externa (queda pendiente, SIN token)
+POST {{host}}/api/auth/request-account
+Content-Type: application/json
+
+{
+  "email": "externo@gmail.com",
+  "full_name": "Investigador Externo",
+  "motivation": "Colaborar en proyectos de investigación.",
+  "faculty_id": 1,
+  "program_id": 2
+}
+
+### 4. Login (guarda el token para las peticiones protegidas)
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "nuevo.usuario@unilibre.edu.co",
+  "password": "secreto123"
+}
+
+### 5. Perfil autenticado (usa el token del login automáticamente)
+GET {{host}}/api/auth/me
+Authorization: Bearer {{login.response.body.access_token}}
+
+### 6. /me sin token (debe responder 401 con mensaje JSON)
+GET {{host}}/api/auth/me
+
+### 7. Login con contraseña incorrecta (401 credenciales)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "nuevo.usuario@unilibre.edu.co",
+  "password": "incorrecta99"
+}
+
+### 8. Login de cuenta pendiente (403 con mensaje del mockup)
+# Usa el correo registrado en la petición 3.
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "externo@gmail.com",
+  "password": "lo-que-sea-123"
+}
