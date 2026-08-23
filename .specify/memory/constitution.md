@@ -149,6 +149,24 @@ Forbidden by this constitution: ORMs other than SQLAlchemy, client frameworks or
 bundlers, alternative databases, unpinned runtimes, session-based authentication,
 plaintext or fast-hash password storage.
 
+## Principle VIII: Git Workflow (Team of Three — Luis, Héctor, Javier)
+
+The repository follows a fixed branch model so the three-person team can
+collaborate without stepping on each other.
+
+1. **Branches**: `main` is production-ready and protected; `develop` is the
+   team integration branch; every Spec Kit feature gets one branch named after
+   its spec folder (`NNN-feature-name`), created ALWAYS from `develop`.
+2. **Integration**: features enter `develop` exclusively through GitHub Pull
+   Requests. Every PR requires approval from at least 1 of the other 2 team
+   members before merging.
+3. **Releases**: `develop` reaches `main` via PR only when a module is stable
+   and its tests pass; release commits are tagged `vX.Y`.
+4. **Forbidden**: direct pushes to `main`; deleting another member's branches;
+   commits without a descriptive message referencing the feature/spec number.
+5. Constitution amendments may be committed directly on `develop` as small
+   governance-only changes; they follow the amendment process above.
+
 ## Development Workflow
 
 Every feature follows the Spec Kit pipeline; no feature starts with code.
@@ -174,4 +192,13 @@ This constitution supersedes all other practices, conventions, and ad-hoc decisi
 - Any conflict between documentation, habit, or convenience and this document is
   resolved in favor of this document.
 
-**Version**: 1.1.0 | **Ratified**: 2026-08-22 | **Last Amended**: 2026-08-22
+**Version**: 1.2.0 | **Ratified**: 2026-08-22 | **Last Amended**: 2026-08-22
+
+## Sync Impact Report
+- Version change: 1.1.0 → 1.2.0 (MINOR: new principle VIII added)
+- Added: Principle VIII — Git Workflow for the three-person team
+  (branch model feature → PR(1 reviewer) → develop; releases develop → main
+  via tagged PR; direct pushes to main forbidden).
+- Unchanged: Principles I–VII and fixed stack table.
+- Follow-ups: team members must set `main` as protected branch on GitHub
+  (Settings → Branches) enforcing the no-direct-push rule.

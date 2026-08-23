@@ -1,0 +1,29 @@
+[project]
+name = "riul-backend"
+version = "0.1.0"
+description = "RIUL modular monolith backend"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "flask>=3.1,<4",
+    "flask-sqlalchemy>=3.1,<4",
+    "sqlalchemy>=2.0,<3",
+    "flask-migrate>=4.1,<5",
+    "alembic>=1.14,<2",
+    "psycopg[binary]>=3.2,<4",
+    "flask-jwt-extended>=4.7,<5",
+    "flask-bcrypt>=1.0.1,<2",
+    "python-dotenv>=1.0,<2",
+    "gunicorn>=23,<24",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["app"]
+addopts = "-q"
+
+[tool.uv]
+package = false
