@@ -1,5 +1,31 @@
 <!--
 === SYNC IMPACT REPORT ===
+Version change: 1.2.0 -> 1.3.0
+Modified principles:
+  - VIII Git Workflow: expanded items 1 and 6. Item 1: ALL spec-related work
+    (features, bugfixes, hotfixes, adjustments) MUST happen on its own branch
+    created from develop BEFORE any file is modified; working directly on
+    develop or main is forbidden except governance-only amendments (item 5).
+    Item 6 (AI agent boundaries): AI agents may only create branches; they MUST
+    verify/create the correct spec branch before starting work and never leave
+    spec-related work on develop; commit, push, pull, merge, rebase, PR merges,
+    and destructive ops are reserved exclusively for human team members.
+Added sections: none
+Removed sections: none
+Follow-up TODOs: none
+=== END SYNC IMPACT REPORT ===
+
+=== SYNC IMPACT REPORT (1.2.0) ===
+Version change: 1.1.0 -> 1.2.0 (MINOR: new principle VIII added)
+Added: Principle VIII — Git Workflow for the three-person team
+  (branch model feature -> PR(1 reviewer) -> develop; releases develop -> main
+  via tagged PR; direct pushes to main forbidden).
+Unchanged: Principles I-VII and fixed stack table.
+Follow-ups: set main as protected branch on GitHub enforcing the
+  no-direct-push rule.
+=== END SYNC IMPACT REPORT ===
+
+=== SYNC IMPACT REPORT (1.1.0) ===
 Version change: 1.0.0 -> 1.1.0
 Modified principles:
   - VII Security and Role-Based Access: session-based auth replaced by stateless
@@ -156,7 +182,12 @@ collaborate without stepping on each other.
 
 1. **Branches**: `main` is production-ready and protected; `develop` is the
    team integration branch; every Spec Kit feature gets one branch named after
-   its spec folder (`NNN-feature-name`), created ALWAYS from `develop`.
+   its spec folder (`NNN-feature-name`), created ALWAYS from `develop`. Every
+   change tied to a spec — feature, bugfix, hotfix, or adjustment — MUST happen
+   on its own branch (`NNN-feature-name`, `NNN-fix-*`) created from `develop`
+   BEFORE any file is modified. Working directly on `develop` or `main` is
+   forbidden; the only exception is governance-only constitution amendments
+   (item 5).
 2. **Integration**: features enter `develop` exclusively through GitHub Pull
    Requests. Every PR requires approval from at least 1 of the other 2 team
    members before merging.
@@ -166,6 +197,18 @@ collaborate without stepping on each other.
    commits without a descriptive message referencing the feature/spec number.
 5. Constitution amendments may be committed directly on `develop` as small
    governance-only changes; they follow the amendment process above.
+6. **AI agent boundaries**: AI agents may autonomously create branches for
+   features, bugfixes, hotfixes, and similar work following the established
+   naming style (e.g., `NNN-feature-name`, `NNN-fix-*`). Every other git
+   operation — `commit`, `push`, `pull`, `merge`, `rebase`, PR merges, and any
+   history-modifying or destructive operation (`reset --hard`, force push,
+   branch deletion) — is executed exclusively by human team members. When work
+   is complete, AI agents stop with changes in place and hand off the suggested
+   commands for a team member to review and run. Before starting any work, an AI
+   agent MUST verify it is on the correct spec branch; if it does not exist, the
+   agent creates it first from `develop`. If a session starts on `develop`, the
+   agent stops and asks before touching files; leaving spec-related work on
+   `develop` is forbidden.
 
 ## Development Workflow
 
@@ -192,13 +235,14 @@ This constitution supersedes all other practices, conventions, and ad-hoc decisi
 - Any conflict between documentation, habit, or convenience and this document is
   resolved in favor of this document.
 
-**Version**: 1.2.0 | **Ratified**: 2026-08-22 | **Last Amended**: 2026-08-22
+**Version**: 1.3.0 | **Ratified**: 2026-08-22 | **Last Amended**: 2026-08-23
 
 ## Sync Impact Report
-- Version change: 1.1.0 → 1.2.0 (MINOR: new principle VIII added)
-- Added: Principle VIII — Git Workflow for the three-person team
-  (branch model feature → PR(1 reviewer) → develop; releases develop → main
-  via tagged PR; direct pushes to main forbidden).
-- Unchanged: Principles I–VII and fixed stack table.
-- Follow-ups: team members must set `main` as protected branch on GitHub
-  (Settings → Branches) enforcing the no-direct-push rule.
+- Version change: 1.2.0 → 1.3.0 (MINOR: material expansion of Principle VIII)
+- Added: Principle VIII items 1 & 6 — one branch per spec created from `develop`
+  before ANY work starts (direct work on `develop`/`main` forbidden; sole
+  exception: governance amendments); AI agents may only create branches, must
+  verify/create the correct spec branch first, and never run `commit`, `push`,
+  `pull`, `merge`, `rebase`, PR merges, or destructive ops.
+- Unchanged: Principles I–VII, fixed stack table, items 2–5 of Principle VIII.
+- Follow-ups: none.
