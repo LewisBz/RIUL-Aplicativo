@@ -1,5 +1,5 @@
-import { requireAuth, initSessionUI } from './session.js';
-import { renderSidebar } from './sidebar.js';
+import { requireAuth } from './session.js';
+import { initLayout } from './layout.js';
 import {
   PROJECTS_SUMMARY,
   PUBLICATIONS,
@@ -8,10 +8,9 @@ import {
   GAMIFICATION,
 } from './demo-data.js';
 
-renderSidebar();
+await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
-await initSessionUI();
 
 function starRow(container, total, filled) {
   for (let i = 0; i < total; i++) {

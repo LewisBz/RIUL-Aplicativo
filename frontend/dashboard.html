@@ -8,48 +8,14 @@
 </head>
 <body data-nav-active="dashboard" style="min-height:100vh;display:flex;flex-direction:column;">
 
-  <header class="topnav">
-    <div class="container-main" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-      <div style="display:flex;align-items:center;">
-        <span class="topnav-brand">RIUL</span>
-        <span class="topnav-brand-sub">(Research Institution University Link)</span>
-      </div>
-      <nav class="only-desktop">
-        <a class="nav-link label-caps" href="#">Semilleros</a>
-        <a class="nav-link label-caps" href="#">Proyectos</a>
-        <a class="nav-link label-caps" href="#">Eventos</a>
-      </nav>
-      <div style="display:flex;align-items:center;gap:16px;">
-        <div class="nav-guest-actions hidden" data-auth="guest" style="display:flex;align-items:center;gap:16px;">
-          <a class="btn btn-outline label-caps only-desktop" href="/login">Iniciar sesión</a>
-          <a class="btn btn-primary label-caps" href="/register">Registrarse</a>
-        </div>
-        <div class="nav-user hidden" data-auth="user">
-          <button class="nav-user-btn" id="userMenuToggle" aria-haspopup="true" aria-expanded="false">
-            <span class="nav-avatar" data-slot="avatar">U</span>
-            <span class="nav-user-meta only-desktop">
-              <strong data-slot="name"></strong>
-              <small data-slot="role"></small>
-            </span>
-            <span class="material-symbols-outlined nav-user-caret">expand_more</span>
-          </button>
-          <div class="nav-dropdown hidden" id="userPanel">
-            <a class="nav-dropdown-item label-caps" href="/dashboard">Dashboard</a>
-            <a class="nav-dropdown-item label-caps" href="/profile">Mi perfil</a>
-            <button class="nav-dropdown-item as-button label-caps" type="button" data-action="logout">Cerrar sesión</button>
-          </div>
-        </div>
-        <button class="topnav-menu-btn" id="menuToggle" aria-label="Abrir menú">
-          <span class="material-symbols-outlined">menu</span>
-        </button>
-      </div>
-    </div>
-  </header>
+  <!-- Chrome compartido (topnav, menú móvil, sidebar, footer): js/layout.js -->
+  <header id="topnavMount"></header>
 
-  <div class="page-shell">
-    <aside id="sidenavMount" class="only-desktop"></aside>
+  <div class="app-shell app-shell-page">
 
-    <main class="page-main">
+    <aside id="sidenavMount"></aside>
+
+    <main class="main-content">
       <h1 class="headline-lg" style="margin-bottom:var(--space-6);">Hola, <span data-slot="name"></span></h1>
 
       <div class="dash-grid">
@@ -107,16 +73,7 @@
     </main>
   </div>
 
-  <footer class="footer-landing">
-    <div class="footer-landing-inner">
-      <p class="body-md" style="margin:0;color:var(--on-surface-variant);text-align:center;">© 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico</p>
-      <nav class="footer-links">
-        <a class="nav-link" href="#">Privacidad</a>
-        <a class="nav-link" href="#">Términos</a>
-        <a class="nav-link" href="#">Contacto</a>
-      </nav>
-    </div>
-  </footer>
+  <footer id="footerMount"></footer>
 
   <script type="module" src="js/dashboard.js"></script>
 </body>

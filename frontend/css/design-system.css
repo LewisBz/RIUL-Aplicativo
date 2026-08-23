@@ -251,6 +251,12 @@ img {
   min-height: 100vh;
 }
 
+.app-shell-page {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
 .topnav {
   position: sticky;
   top: 0;
@@ -281,6 +287,15 @@ img {
   min-width: 0;
   overflow-y: auto;
   padding-block: var(--space-6);
+  padding-inline: var(--space-6);
+}
+
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  top: var(--topnav-height);
+  height: calc(100vh - var(--topnav-height));
 }
 
 .nav-item {
@@ -666,6 +681,7 @@ input[type='radio'] {
   font-weight: 900;
   line-height: 40px;
   color: var(--primary);
+  text-decoration: none;
 }
 
 .topnav-brand-sub {
@@ -1640,6 +1656,9 @@ input[type='radio'] {
 .profile-chip .label-caps {
   color: var(--primary);
   font-weight: var(--font-weight-bold);
+}
+button.profile-chip {
+  font-family: var(--font-body);
 }
 
 .sidebar-profile {

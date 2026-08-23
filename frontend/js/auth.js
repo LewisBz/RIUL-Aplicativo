@@ -28,7 +28,7 @@ async function postJson(path, body) {
 
 function saveSession(token) {
   localStorage.setItem('riul_token', token);
-  window.location.href = 'feed.html';
+  window.location.href = 'index.html';
 }
 
 async function loadCatalog() {

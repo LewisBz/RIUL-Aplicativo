@@ -1,5 +1,5 @@
-const API = location.protocol.startsWith('http') ? '' : 'http://localhost:5000';
-const TOKEN_KEY = 'riul_token';
+import { API_BASE, requireAuth, getToken, logout } from './session.js';
+import { initLayout } from './layout.js';
 
 const CATEGORY_LABELS = {
   article: 'Artículo',
@@ -21,30 +21,18 @@ const attachPreviewName = document.getElementById('attachPreviewName');
 const attachRemove = document.getElementById('attachRemove');
 const publishBtn = document.getElementById('publishBtn');
 
-function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-function requireSession() {
-  if (!getToken()) {
-    window.location.href = 'login.html';
-    throw new Error('sin sesión');
-  }
-}
-
 async function api(path, options = {}) {
   const headers = { ...(options.headers || {}) };
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
   let response;
   try {
-    response = await fetch(API + path, { ...options, headers });
+    response = await fetch(API_BASE + path, { ...options, headers });
   } catch {
     throw new Error('No hay conexión con el backend. ¿Está corriendo docker compose?');
   }
   if (response.status === 401) {
-    localStorage.removeItem(TOKEN_KEY);
-    window.location.href = 'login.html';
+    logout();
     throw new Error('sesión expirada');
   }
   return response;
@@ -88,10 +76,10 @@ function formatSize(bytes) {
 function attachmentHtml(attachment) {
   if (!attachment) return '';
   if (attachment.kind === 'image') {
-    return `<img class="attachment-image" src="${escapeHtml(API + attachment.url)}" alt="Adjunto de la publicación">`;
+    return `<img class="attachment-image" src="${escapeHtml(API_BASE + attachment.url)}" alt="Adjunto de la publicación">`;
   }
   return `
-    <a class="attachment-file" href="${escapeHtml(API + attachment.url)}" target="_blank" rel="noopener">
+    <a class="attachment-file" href="${escapeHtml(API_BASE + attachment.url)}" target="_blank" rel="noopener">
       <div class="attachment-file-icon"><span class="material-symbols-outlined">description</span></div>
       <div>
         <h4>${escapeHtml(attachment.file_name)}</h4>
@@ -189,19 +177,6 @@ async function loadFeed({ append = false, page = 1 } = {}) {
   const payload = await response.json();
   state.total = payload.total;
   renderFeed(payload.items, { append });
-}
-
-async function loadMe() {
-  const response = await api('/api/auth/me');
-  if (!response.ok) throw new Error('No fue posible cargar tu perfil.');
-  const { user } = await response.json();
-  state.me = user;
-  const displayName = user.full_name || 'Investigador';
-  document.getElementById('sidebarUserName').textContent = displayName;
-  ['topnavAvatar', 'sidebarAvatar', 'composerAvatar'].forEach((id) => {
-    const avatar = document.getElementById(id);
-    if (avatar) avatar.textContent = initials(displayName);
-  });
 }
 
 function setActiveChip(category) {
@@ -348,17 +323,16 @@ composerForm.addEventListener('submit', async (event) => {
   }
 });
 
-const menuToggle = document.getElementById('menuToggle');
-const menuPanel = document.getElementById('menuPanel');
-menuToggle?.addEventListener('click', () => {
-  if (menuPanel.hasAttribute('data-open')) menuPanel.removeAttribute('data-open');
-  else menuPanel.setAttribute('data-open', '');
-});
-
 async function init() {
-  requireSession();
+  const user = await requireAuth();
+  if (!user) throw new Error('Sesión requerida');
+  await initLayout();
+
+  state.me = user;
+  const composerAvatar = document.getElementById('composerAvatar');
+  if (composerAvatar) composerAvatar.textContent = initials(user.full_name || 'Investigador');
+
   try {
-    await loadMe();
     await loadFeed();
     const hashPostId = location.hash.match(/^#post-(\d+)$/);
     if (hashPostId) {
