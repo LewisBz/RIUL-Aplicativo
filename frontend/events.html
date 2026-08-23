@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Eventos y Convocatorias</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body data-nav-active="eventos" style="min-height:100vh;display:flex;flex-direction:column;">
+  <header id="topnavMount"></header>
+  <div class="app-shell app-shell-page">
+    <aside id="sidenavMount"></aside>
+    <main class="main-content">
+      <div class="page-heading">
+        <div><p class="eyebrow">Comunidad académica</p><h1 class="headline-lg">Eventos y convocatorias</h1><p class="body-lg page-subtitle">Encuentra espacios para aprender, compartir y participar.</p></div>
+        <button class="btn btn-primary label-caps" type="button" disabled><span class="material-symbols-outlined">add</span>Crear publicación</button>
+      </div>
+      <div class="tabs event-tabs" role="tablist" aria-label="Contenido académico">
+        <button class="tab active" id="eventsTab" type="button" role="tab" aria-selected="true" aria-controls="eventsPanel" data-kind="event">Eventos</button>
+        <button class="tab" id="callsTab" type="button" role="tab" aria-selected="false" aria-controls="eventsPanel" data-kind="call">Convocatorias</button>
+      </div>
+      <section class="research-toolbar glass-card" aria-label="Filtros de eventos">
+        <label class="search-field"><span class="material-symbols-outlined">search</span><input class="input-base" id="eventSearch" type="search" placeholder="Buscar eventos" aria-label="Buscar eventos"></label>
+        <label><span class="sr-only">Tipo</span><select class="input-base" id="eventType"><option value="">Todos los tipos</option></select></label>
+        <label><span class="sr-only">Lugar</span><select class="input-base" id="eventLocation"><option value="">Todos los lugares</option></select></label>
+        <label><span class="sr-only">Periodo</span><select class="input-base" id="eventPeriod"><option value="">Cualquier fecha</option></select></label>
+      </section>
+      <div class="section-heading"><h2 class="headline-md" id="eventsPanel">Próximos eventos</h2><span class="body-md" id="eventCount" aria-live="polite"></span></div>
+      <section class="research-grid event-grid" id="eventsGrid" aria-live="polite"></section>
+      <section class="event-participation glass-card"><div class="section-heading"><h2 class="headline-md">Mis eventos</h2><span class="body-md">Tu actividad reciente</span></div><div class="table-scroll"><table class="table-data"><thead><tr><th>Actividad</th><th>Tipo</th><th>Participación</th></tr></thead><tbody id="myEventsTable"></tbody></table></div></section>
+    </main>
+  </div>
+  <footer id="footerMount"></footer>
+  <script type="module" src="js/events.js"></script>
+</body>
+</html>
