@@ -15,6 +15,9 @@ env/
 instance/
 .flaskenv
 
+# Archivos subidos por usuarios (posts)
+backend/uploads/
+
 # Cachés
 .pytest_cache/
 .mypy_cache/

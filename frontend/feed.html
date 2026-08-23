@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Comunidad</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body style="min-height:100vh;display:flex;flex-direction:column;">
+
+  <!-- TopNavBar -->
+  <header class="topnav">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+      <div style="display:flex;align-items:center;">
+        <span class="topnav-brand">RIUL</span>
+      </div>
+      <nav class="only-desktop">
+        <a class="nav-link label-caps" href="#">Semilleros</a>
+        <a class="nav-link label-caps" href="#">Proyectos</a>
+        <a class="nav-link label-caps" href="#">Eventos</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <button class="icon-action" aria-label="Notificaciones"><span class="material-symbols-outlined">notifications</span></button>
+        <button class="icon-action only-desktop" aria-label="Configuración"><span class="material-symbols-outlined">settings</span></button>
+        <div class="profile-chip only-desktop" title="Perfil">
+          <span class="avatar avatar-sm" id="topnavAvatar"></span>
+          <span class="label-caps">Perfil</span>
+          <span class="material-symbols-outlined" style="font-size:18px;">arrow_drop_down</span>
+        </div>
+        <button class="topnav-menu-btn" id="menuToggle" aria-label="Abrir menú">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <nav class="topnav-menu-panel" id="menuPanel">
+    <a class="nav-link label-caps" href="#">Semilleros</a>
+    <a class="nav-link label-caps" href="#">Proyectos</a>
+    <a class="nav-link label-caps" href="#">Eventos</a>
+    <a class="nav-link label-caps" href="feed.html">Comunidad</a>
+  </nav>
+
+  <div class="app-shell" style="width:100%;max-width:1280px;margin-inline:auto;">
+
+    <!-- SideNavBar -->
+    <aside class="sidebar custom-scrollbar" style="display:flex;flex-direction:column;padding:0;top:var(--topnav-height);height:calc(100vh - var(--topnav-height));">
+      <div class="sidebar-profile">
+        <span class="avatar avatar-xl" id="sidebarAvatar"></span>
+        <h2 class="headline-md" id="sidebarUserName">Investigador</h2>
+        <p class="body-md">Nivel 5 • Magíster</p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="nav-item label-caps" href="#"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+        <a class="nav-item label-caps" href="#"><span class="material-symbols-outlined">person</span>Perfil</a>
+        <a class="nav-item label-caps" href="#"><span class="material-symbols-outlined">account_tree</span>Semillero</a>
+        <a class="nav-item label-caps" href="#"><span class="material-symbols-outlined">folder</span>Proyectos</a>
+        <a class="nav-item label-caps active" href="feed.html"><span class="material-symbols-outlined">group</span>Comunidad</a>
+        <a class="nav-item label-caps" href="#"><span class="material-symbols-outlined">event</span>Eventos</a>
+        <a class="nav-item label-caps" href="#"><span class="material-symbols-outlined">military_tech</span>Gamificación</a>
+        <a class="nav-item label-caps" href="#"><span class="material-symbols-outlined">notifications</span>Notificaciones</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-primary btn-block label-caps" type="button">Nuevo Proyecto</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Canvas -->
+    <main class="main-content" style="padding-inline:var(--space-6);">
+      <div class="feed-main">
+
+        <!-- Create Post Box -->
+        <section class="create-post-box">
+          <span class="avatar avatar-lg" id="composerAvatar"></span>
+          <form class="create-post-field" id="createPostForm">
+            <textarea class="create-post-textarea" id="postContent" name="content"
+              placeholder="¿Qué quieres compartir hoy?" maxlength="5000"></textarea>
+            <div class="create-post-preview hidden" id="attachPreview">
+              <span class="material-symbols-outlined" style="font-size:18px;">description</span>
+              <span id="attachPreviewName"></span>
+              <button type="button" id="attachRemove" aria-label="Quitar adjunto">
+                <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+              </button>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+              <button class="btn btn-primary label-caps" type="submit" id="publishBtn">Publicar</button>
+            </div>
+            <input type="file" id="postFile" accept=".png,.jpg,.jpeg,.webp,.gif,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" hidden>
+          </form>
+          <button class="create-post-attach-btn" id="attachBtn" type="button" aria-label="Adjuntar archivo" title="Adjuntar imagen o documento">
+            <span class="material-symbols-outlined">image</span>
+          </button>
+        </section>
+
+        <!-- Filter Chips -->
+        <div class="feed-chips" id="categoryChips">
+          <span class="label-caps">Categoría:</span>
+          <button class="chip-outline" data-category="article" type="button">Artículo</button>
+          <button class="chip-outline" data-category="project_advance" type="button">Avance de Proyecto</button>
+          <button class="chip-outline" data-category="presentation" type="button">Ponencia</button>
+          <button class="chip-outline" data-category="event" type="button">Evento</button>
+          <button class="chip-outline active" data-category="community" type="button">Comunidad</button>
+        </div>
+
+        <!-- Feed Grid -->
+        <section class="feed-grid" id="feedGrid" aria-live="polite"></section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-institutional">
+    © 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico
+  </footer>
+
+  <script type="module" src="js/feed.js"></script>
+</body>
+</html>
