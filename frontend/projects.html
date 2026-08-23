@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Proyectos</title>
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body data-nav-active="proyectos" style="min-height:100vh;display:flex;flex-direction:column;">
+  <header id="topnavMount"></header>
+  <div class="app-shell app-shell-page">
+    <aside id="sidenavMount"></aside>
+    <main class="main-content">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">Investigación</p>
+          <h1 class="headline-lg">Proyectos</h1>
+          <p class="body-lg page-subtitle">Explora las iniciativas de investigación de la comunidad RIUL.</p>
+        </div>
+        <a class="btn btn-primary label-caps" href="/project-detail?id=new"><span class="material-symbols-outlined">add</span>Crear proyecto</a>
+      </div>
+      <section class="research-toolbar glass-card" aria-label="Filtros de proyectos">
+        <label class="search-field"><span class="material-symbols-outlined">search</span><input class="input-base" id="projectSearch" type="search" placeholder="Buscar proyectos" aria-label="Buscar proyectos"></label>
+        <label><span class="sr-only">Tipo</span><select class="input-base" id="projectType"><option value="">Todos los tipos</option></select></label>
+        <label><span class="sr-only">Estado</span><select class="input-base" id="projectStatus"><option value="">Todos los estados</option></select></label>
+        <label><span class="sr-only">Facultad</span><select class="input-base" id="projectFaculty"><option value="">Todas las facultades</option></select></label>
+      </section>
+      <div class="section-heading"><h2 class="headline-md">Proyectos de la comunidad</h2><span class="body-md" id="projectCount" aria-live="polite"></span></div>
+      <section class="research-grid" id="projectsGrid" aria-live="polite"></section>
+    </main>
+  </div>
+  <footer id="footerMount"></footer>
+  <script type="module" src="js/projects.js"></script>
+</body>
+</html>
