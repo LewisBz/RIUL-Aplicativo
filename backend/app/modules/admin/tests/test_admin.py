@@ -60,3 +60,50 @@ class TestAdminOverview:
         )
 
         assert response.status_code == 401
+
+    def test_lists_users_for_admin(self, client, make_user):
+        make_user()
+        token = admin_token()
+
+        response = client.get(
+            "/api/admin/users?status=active",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 200
+        assert response.get_json()["total"] == 2
+
+    def test_rejects_invalid_user_filter(self, client):
+        token = admin_token()
+
+        response = client.get(
+            "/api/admin/users?status=unknown",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 400
+
+    def test_admin_can_update_researcher_status(self, client, make_user):
+        _, body = make_user()
+        token = admin_token()
+
+        response = client.patch(
+            f"/api/admin/users/{body['user']['id']}",
+            json={"status": "rejected"},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 200
+        assert response.get_json()["user"]["status"] == "rejected"
+
+    def test_admin_cannot_deactivate_self(self, client):
+        token = admin_token()
+        user = User.query.filter_by(email="admin.demo@unilibre.edu.co").one()
+
+        response = client.patch(
+            f"/api/admin/users/{user.id}",
+            json={"status": "rejected"},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 403
