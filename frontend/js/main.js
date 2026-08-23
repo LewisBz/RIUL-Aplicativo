@@ -1,3 +1,5 @@
+import { initSessionUI } from './session.js';
+
 const menuToggle = document.getElementById('menuToggle');
 const menuPanel = document.getElementById('menuPanel');
 
@@ -7,6 +9,14 @@ menuToggle?.addEventListener('click', () => {
   } else {
     menuPanel.setAttribute('data-open', '');
   }
+});
+
+menuPanel?.addEventListener('click', (event) => {
+  if (event.target.closest('a')) menuPanel.removeAttribute('data-open');
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') menuPanel?.removeAttribute('data-open');
 });
 
 const track = document.getElementById('eventsTrack');
@@ -22,3 +32,5 @@ document.getElementById('eventsPrev')?.addEventListener('click', () => {
 document.getElementById('eventsNext')?.addEventListener('click', () => {
   track?.scrollBy({ left: step(), behavior: 'smooth' });
 });
+
+await initSessionUI();
