@@ -21,8 +21,24 @@
         <a class="nav-link label-caps" href="#">Eventos</a>
       </nav>
       <div style="display:flex;align-items:center;gap:16px;">
-        <a class="btn btn-outline label-caps only-desktop" href="/login">Iniciar sesión</a>
-        <a class="btn btn-primary label-caps" href="/register">Registrarse</a>
+        <div class="nav-guest-actions" data-auth="guest" style="display:flex;align-items:center;gap:16px;">
+          <a class="btn btn-outline label-caps only-desktop" href="/login">Iniciar sesión</a>
+          <a class="btn btn-primary label-caps" href="/register">Registrarse</a>
+        </div>
+        <div class="nav-user hidden" data-auth="user">
+          <button class="nav-user-btn" id="userMenuToggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-avatar" data-slot="avatar">U</span>
+            <span class="nav-user-meta only-desktop">
+              <strong data-slot="name"></strong>
+              <small data-slot="role"></small>
+            </span>
+            <span class="material-symbols-outlined nav-user-caret">expand_more</span>
+          </button>
+          <div class="nav-dropdown hidden" id="userPanel">
+            <span class="nav-dropdown-item is-disabled label-caps" title="Próximamente">Mi perfil</span>
+            <button class="nav-dropdown-item as-button label-caps" type="button" data-action="logout">Cerrar sesión</button>
+          </div>
+        </div>
         <button class="topnav-menu-btn" id="menuToggle" aria-label="Abrir menú">
           <span class="material-symbols-outlined">menu</span>
         </button>
@@ -33,7 +49,14 @@
     <a class="nav-link label-caps" href="#">Semilleros</a>
     <a class="nav-link label-caps" href="#">Proyectos</a>
     <a class="nav-link label-caps" href="#">Eventos</a>
-    <a class="nav-link label-caps" href="/login">Iniciar sesión</a>
+    <a class="nav-link label-caps" href="/login" data-auth="guest">Iniciar sesión</a>
+    <div class="hidden" data-auth="user">
+      <div class="mobile-user-head">
+        <span class="nav-avatar nav-avatar-sm" data-slot="avatar">U</span>
+        <strong data-slot="name"></strong>
+      </div>
+      <button class="nav-link as-button label-caps" type="button" data-action="logout">Cerrar sesión</button>
+    </div>
   </nav>
 
   <main style="flex-grow:1;">
