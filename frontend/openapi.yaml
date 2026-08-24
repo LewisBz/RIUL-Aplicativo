@@ -192,7 +192,7 @@ components:
           format: email
         role:
           type: string
-          enum: [researcher, administrator]
+          enum: [researcher, leader, administrator]
         status:
           type: string
           enum: [active, pending, rejected]

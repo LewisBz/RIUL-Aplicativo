@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.extensions import bcrypt, db
 
 ROLE_RESEARCHER = "researcher"
+ROLE_LEADER = "leader"
 ROLE_ADMINISTRATOR = "administrator"
 
 STATUS_ACTIVE = "active"

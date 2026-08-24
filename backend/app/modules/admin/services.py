@@ -3,6 +3,8 @@ from sqlalchemy import func, select
 from app.extensions import db
 from app.modules.auth.models import (
     ROLE_ADMINISTRATOR,
+    ROLE_LEADER,
+    ROLE_RESEARCHER,
     STATUS_ACTIVE,
     STATUS_PENDING,
     STATUS_REJECTED,
@@ -31,7 +33,7 @@ def list_users(status: str | None = None, role: str | None = None) -> list[dict]
     valid_statuses = {STATUS_ACTIVE, STATUS_PENDING, STATUS_REJECTED}
     if status and status not in valid_statuses:
         raise ValueError("Estado de usuario inválido.")
-    if role and role not in {ROLE_ADMINISTRATOR, "researcher"}:
+    if role and role not in {ROLE_ADMINISTRATOR, ROLE_LEADER, ROLE_RESEARCHER}:
         raise ValueError("Rol de usuario inválido.")
 
     stmt = select(User).order_by(User.created_at.desc(), User.id.desc())

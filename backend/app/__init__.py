@@ -87,6 +87,9 @@ SEED_FACULTIES = {
     "Ciencias Básicas": [],
 }
 
+SEED_USERS_PASSWORD_ENV = "DEMO_USERS_PASSWORD"
+SEED_USERS_DEFAULT_PASSWORD = "RiulDemo2026*"
+
 
 def _register_seed_cli(app: Flask) -> None:
     @app.cli.command("seed-db")
@@ -132,3 +135,55 @@ def _register_seed_cli(app: Flask) -> None:
         user.set_password(password)
         db.session.commit()
         click.echo(f"Administrador demo listo: {email}")
+
+    @app.cli.command("seed-users")
+    def seed_users():
+        """Seed demo users (one per role) idempotently for development."""
+        from .modules.auth.models import (
+            ROLE_ADMINISTRATOR,
+            ROLE_LEADER,
+            ROLE_RESEARCHER,
+            STATUS_ACTIVE,
+            Faculty,
+            Program,
+            User,
+        )
+
+        password = os.environ.get(
+            SEED_USERS_PASSWORD_ENV, SEED_USERS_DEFAULT_PASSWORD
+        )
+        db.session.expunge_all()
+        faculty = Faculty.query.filter_by(name="Ingeniería").first()
+        program = (
+            Program.query.filter_by(name="Ingeniería de Sistemas").first()
+            if faculty
+            else None
+        )
+        specs = [
+            ("estudiante.demo@unilibre.edu.co", "Estudiante Demo", ROLE_RESEARCHER),
+            ("docente.demo@unilibre.edu.co", "Docente Demo", ROLE_LEADER),
+            ("admin.demo@unilibre.edu.co", "Administrador Demo", ROLE_ADMINISTRATOR),
+        ]
+        created = 0
+        updated = 0
+        for email, name, role in specs:
+            user = User.query.filter_by(email=email).first()
+            if user is None:
+                user = User(email=email)
+                db.session.add(user)
+                created += 1
+            else:
+                updated += 1
+            user.full_name = name
+            user.role = role
+            user.status = STATUS_ACTIVE
+            user.motivation = None
+            if role != ROLE_ADMINISTRATOR and faculty is not None:
+                user.faculty_id = faculty.id
+                user.program_id = program.id if program else None
+            user.set_password(password)
+        db.session.commit()
+        click.echo(
+            "Usuarios demo listos: "
+            f"{created} creados, {updated} actualizados (rol/estado/contraseña normalizados)."
+        )

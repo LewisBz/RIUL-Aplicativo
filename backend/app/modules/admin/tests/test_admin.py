@@ -1,5 +1,10 @@
 from app.extensions import db
-from app.modules.auth.models import ROLE_ADMINISTRATOR, STATUS_ACTIVE, User
+from app.modules.auth.models import (
+    ROLE_ADMINISTRATOR,
+    ROLE_LEADER,
+    STATUS_ACTIVE,
+    User,
+)
 from app.modules.auth.services import create_access_token_for
 
 
@@ -14,6 +19,19 @@ def admin_token(name="Administrador Demo", email="admin.demo@unilibre.edu.co"):
     db.session.add(user)
     db.session.commit()
     return create_access_token_for(user)
+
+
+def make_leader(email="docente.demo@unilibre.edu.co"):
+    user = User(
+        full_name="Docente Demo",
+        email=email,
+        role=ROLE_LEADER,
+        status=STATUS_ACTIVE,
+    )
+    user.set_password("secreto123")
+    db.session.add(user)
+    db.session.commit()
+    return user
 
 
 class TestAdminOverview:
@@ -82,6 +100,32 @@ class TestAdminOverview:
         )
 
         assert response.status_code == 400
+
+    def test_rejects_invalid_role_filter(self, client):
+        token = admin_token()
+
+        response = client.get(
+            "/api/admin/users?role=unknown",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 400
+
+    def test_filters_users_by_leader_role(self, client, make_user):
+        make_user()
+        make_leader()
+        token = admin_token()
+
+        response = client.get(
+            "/api/admin/users?role=leader",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 200
+        body = response.get_json()
+        assert body["total"] == 1
+        assert body["items"][0]["role"] == "leader"
+        assert body["items"][0]["email"] == "docente.demo@unilibre.edu.co"
 
     def test_admin_can_update_researcher_status(self, client, make_user):
         _, body = make_user()

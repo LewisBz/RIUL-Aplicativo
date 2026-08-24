@@ -21,4 +21,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "flask db upgrade && flask seed-db && gunicorn --bind 0.0.0.0:5000 wsgi:app"]
+CMD ["sh", "-c", "flask db upgrade && flask seed-db && flask seed-users && gunicorn --bind 0.0.0.0:5000 wsgi:app"]

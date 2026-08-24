@@ -7,6 +7,7 @@ const TOKEN_KEY = 'riul_token';
 
 const ROLE_LABELS = {
   researcher: 'Investigador',
+  leader: 'Docente Líder',
   administrator: 'Administrador',
 };
 
