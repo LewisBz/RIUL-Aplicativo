@@ -54,8 +54,23 @@ POST {{host}}/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "nuevo.usuario@unilibre.edu.co",
+  "email": "laura.mendoza@unilibre.edu.co",
   "password": "incorrecta99"
+}
+
+### 7b. Login con cuentas del seed demo (flask seed-demo)
+# Todas usan la contraseña DEMO_USERS_PASSWORD (default: RiulDemo2026*).
+# activa:  laura.mendoza@unilibre.edu.co (leader) -> 200
+#          camila.rojas@unilibre.edu.co (researcher) -> 200
+#          ana.restrepo@unilibre.edu.co (administrator) -> 200
+# pending: isabela.blanco@gmail.com -> 403 "Solicitud pendiente de aprobación"
+#          tomas.restrepo@hotmail.com -> 403 "Cuenta no autorizada"
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "laura.mendoza@unilibre.edu.co",
+  "password": "RiulDemo2026*"
 }
 
 ### 8. Login de cuenta pendiente (403 con mensaje del mockup)
