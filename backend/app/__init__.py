@@ -6,6 +6,12 @@ from flask import Flask, jsonify, send_from_directory
 
 from .config import config_by_name
 from .extensions import bcrypt, db, jwt, migrate
+from .seed_data import (
+    SEED_DEMO_POSTS,
+    SEED_DEMO_REACTIONS,
+    SEED_DEMO_USERS,
+    SEED_FACULTIES,
+)
 
 FRONTEND_DIR = os.environ.get("FRONTEND_DIR") or os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "frontend")
@@ -82,39 +88,11 @@ def _register_cors(app: Flask) -> None:
         return response
 
 
-SEED_FACULTIES = {
-    "Ingeniería": ["Ingeniería de Sistemas", "Ingeniería Industrial"],
-    "Ciencias Básicas": [],
-}
-
 SEED_USERS_PASSWORD_ENV = "DEMO_USERS_PASSWORD"
 SEED_USERS_DEFAULT_PASSWORD = "RiulDemo2026*"
 
 
 def _register_seed_cli(app: Flask) -> None:
-    @app.cli.command("seed-db")
-    def seed_db():
-        """Seed faculties and programs from the mockups (idempotent)."""
-        from .modules.auth.models import Faculty, Program
-
-        created = 0
-        for faculty_name, program_names in SEED_FACULTIES.items():
-            faculty = Faculty.query.filter_by(name=faculty_name).first()
-            if faculty is None:
-                faculty = Faculty(name=faculty_name)
-                db.session.add(faculty)
-                db.session.flush()
-                created += 1
-            for program_name in program_names:
-                exists = Program.query.filter_by(
-                    name=program_name, faculty_id=faculty.id
-                ).first()
-                if exists is None:
-                    db.session.add(Program(name=program_name, faculty_id=faculty.id))
-                    created += 1
-        db.session.commit()
-        click.echo(f"Seed completo ({created} registros creados).")
-
     @app.cli.command("seed-admin")
     def seed_admin():
         """Create the development administrator configured by environment."""
@@ -136,54 +114,104 @@ def _register_seed_cli(app: Flask) -> None:
         db.session.commit()
         click.echo(f"Administrador demo listo: {email}")
 
-    @app.cli.command("seed-users")
-    def seed_users():
-        """Seed demo users (one per role) idempotently for development."""
-        from .modules.auth.models import (
-            ROLE_ADMINISTRATOR,
-            ROLE_LEADER,
-            ROLE_RESEARCHER,
-            STATUS_ACTIVE,
-            Faculty,
-            Program,
-            User,
-        )
+    @app.cli.command("seed-demo")
+    def seed_demo():
+        """Replace app data with the complete RIUL demo dataset (idempotent).
 
-        password = os.environ.get(
-            SEED_USERS_PASSWORD_ENV, SEED_USERS_DEFAULT_PASSWORD
+        Purges existing reactions, attachments, posts and users, then rebuilds
+        the full demo dataset defined in app/seed_data.py: faculties, programs,
+        15 users (administrators/leaders/researchers + pending/rejected),
+        15 posts across all 5 categories and 47 reactions among related users.
+        """
+        from sqlalchemy import text
+
+        from .modules.auth.models import Faculty, Program, User
+
+        db.session.execute(
+            text(
+                "TRUNCATE TABLE post_reactions, post_attachments, posts, users "
+                "RESTART IDENTITY CASCADE"
+            )
         )
-        db.session.expunge_all()
-        faculty = Faculty.query.filter_by(name="Ingeniería").first()
-        program = (
-            Program.query.filter_by(name="Ingeniería de Sistemas").first()
-            if faculty
-            else None
-        )
-        specs = [
-            ("estudiante.demo@unilibre.edu.co", "Estudiante Demo", ROLE_RESEARCHER),
-            ("docente.demo@unilibre.edu.co", "Docente Demo", ROLE_LEADER),
-            ("admin.demo@unilibre.edu.co", "Administrador Demo", ROLE_ADMINISTRATOR),
-        ]
-        created = 0
-        updated = 0
-        for email, name, role in specs:
-            user = User.query.filter_by(email=email).first()
-            if user is None:
-                user = User(email=email)
-                db.session.add(user)
-                created += 1
-            else:
-                updated += 1
-            user.full_name = name
-            user.role = role
-            user.status = STATUS_ACTIVE
-            user.motivation = None
-            if role != ROLE_ADMINISTRATOR and faculty is not None:
-                user.faculty_id = faculty.id
-                user.program_id = program.id if program else None
-            user.set_password(password)
         db.session.commit()
+
+        from .modules.posts.models import Post, PostReaction
+
+        created_faculties = 0
+        faculty_ids = {}
+        program_ids = {}
+        for faculty_name, program_names in SEED_FACULTIES.items():
+            faculty = Faculty.query.filter_by(name=faculty_name).first()
+            if faculty is None:
+                faculty = Faculty(name=faculty_name)
+                db.session.add(faculty)
+                db.session.flush()
+                created_faculties += 1
+            faculty_ids[faculty_name] = faculty.id
+            for program_name in program_names:
+                program = Program.query.filter_by(
+                    name=program_name, faculty_id=faculty.id
+                ).first()
+                if program is None:
+                    program = Program(name=program_name, faculty_id=faculty.id)
+                    db.session.add(program)
+                    db.session.flush()
+                program_ids[(faculty_name, program_name)] = program.id
+
+        password = os.environ.get(SEED_USERS_PASSWORD_ENV, SEED_USERS_DEFAULT_PASSWORD)
+
+        users_by_email = {}
+        for spec in SEED_DEMO_USERS:
+            user = User(
+                full_name=spec["full_name"],
+                email=spec["email"],
+                role=spec["role"],
+                status=spec["status"],
+                motivation=spec["motivation"],
+                faculty_id=faculty_ids[spec["faculty"]] if spec["faculty"] else None,
+                program_id=(
+                    program_ids[(spec["faculty"], spec["program"])]
+                    if spec["program"]
+                    else None
+                ),
+            )
+            user.set_password(password)
+            db.session.add(user)
+            users_by_email[spec["email"]] = user
+        db.session.flush()
+
+        posts = []
+        for spec in SEED_DEMO_POSTS:
+            post = Post(
+                author_id=users_by_email[spec["author"]].id,
+                category=spec["category"],
+                content=spec["content"],
+                link_url=spec["link_url"],
+                created_at=spec["created_at"],
+            )
+            db.session.add(post)
+            posts.append(post)
+        db.session.flush()
+
+        reactions = 0
+        for post, reactors in zip(posts, SEED_DEMO_REACTIONS):
+            for email in reactors:
+                db.session.add(
+                    PostReaction(post_id=post.id, user_id=users_by_email[email].id)
+                )
+                reactions += 1
+
+        db.session.commit()
+
+        counts = {
+            "facultades": len(SEED_FACULTIES),
+            "programas": sum(len(p) for p in SEED_FACULTIES.values()),
+            "usuarios": len(SEED_DEMO_USERS),
+            "posts": len(SEED_DEMO_POSTS),
+            "reacciones": reactions,
+        }
         click.echo(
-            "Usuarios demo listos: "
-            f"{created} creados, {updated} actualizados (rol/estado/contraseña normalizados)."
+            "Seed demo completo: "
+            + ", ".join(f"{k}={v}" for k, v in counts.items())
+            + f" ({created_faculties} facultades nuevas)."
         )
