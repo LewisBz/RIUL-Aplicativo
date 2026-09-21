@@ -1,31 +1,33 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: mysql:8.4
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-riul}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-riul}
-      POSTGRES_DB: ${POSTGRES_DB:-riul}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-riul}
+      MYSQL_USER: ${MYSQL_USER:-riul}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-riul}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-riulroot}
     ports:
-      - "5433:5432"
+      - "3307:3306"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-riul}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-priulroot"]
       interval: 5s
-      timeout: 3s
-      retries: 12
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
 
   app:
     build:
       context: .
       dockerfile: backend/dockerfile
     environment:
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-riul}:${POSTGRES_PASSWORD:-riul}@db:5432/${POSTGRES_DB:-riul}
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER:-riul}:${MYSQL_PASSWORD:-riul}@db:3306/${MYSQL_DATABASE:-riul}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-only-jwt-secret}
       SECRET_KEY: ${SECRET_KEY:-dev-only-secret-key}
       INSTITUTIONAL_EMAIL_DOMAIN: ${INSTITUTIONAL_EMAIL_DOMAIN:-unilibre.edu.co}
-      FRONTEND_DIR: /app/frontend
-      FLASK_APP: wsgi.py
+      FLASK_APP: run.py
+      DEMO_USERS_PASSWORD: ${DEMO_USERS_PASSWORD:-RiulDemo2026*}
     ports:
       - "5000:5000"
     volumes:
@@ -35,5 +37,5 @@ services:
         condition: service_healthy
 
 volumes:
-  pgdata:
+  mysql_data:
   uploads_data:
