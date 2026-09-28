@@ -5,8 +5,8 @@
 
 ## Purpose
 
-First backend module of the modular monolith. Establishes the Flask application
-skeleton, the PostgreSQL connection via Docker Compose, and the complete
+First backend capability of the Flask layered MVC app. Establishes the Flask
+application skeleton, the MySQL connection via Docker Compose, and the complete
 authentication flow defined in mockups `riul_iniciar_sesión` and
 `riul_registro_de_cuenta`: institutional registration (immediate access),
 external account request (pending admin approval), and JWT-based login.
@@ -70,11 +70,11 @@ Ciencias Básicas → (placeholder program).
 
 ## Non-Functional Requirements
 
-- NFR1: Everything runs via `docker compose up` (app + postgres:16-alpine);
+- NFR1: Everything runs via `docker compose up` (app + mysql:8.4);
   no local Python required (Principle V)
 - NFR2: Secrets only via env vars (`DATABASE_URL`, `JWT_SECRET_KEY`);
   `.env.example` committed, `.env` gitignored
-- NFR3: Tests run against real PostgreSQL (database `riul_test` in same
+- NFR3: Tests run against real MySQL (database `riul_test` in same
   container, schema dropped/created per session); require `docker compose up -d db`
 - NFR4: Frontend pages are standalone static HTML using only
   `css/design-system.css` + vanilla JS `fetch()`; token persisted in

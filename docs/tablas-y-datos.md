@@ -8,9 +8,9 @@ demostración que carga el comando `flask seed-demo`.
 
 ---
 
-## 1. Esquema de la base de datos (PostgreSQL)
+## 1. Esquema de la base de datos (MySQL 8.4)
 
-Migraciones: `0001_auth_module_initial_tables` y `0002_posts_module_tables`.
+Migración: `backend/migrations/versions/0001_initial_mysql_tables.py`.
 
 ### 1.1 `faculties`
 
@@ -192,7 +192,7 @@ Nota: Isabela (pending) y Tomás (rejected) no reaccionan ni publican.
 docker compose exec app flask seed-demo
 # (Al iniciar el contenedor ya se ejecuta: flask db upgrade && flask seed-demo)
 
-# Verificación rápida en consola psql / docker exec
+# Verificación rápida en MySQL / docker exec
 SELECT role, status, count(*) FROM users GROUP BY role, status;
 SELECT count(*) FROM posts;          -- 15
 SELECT category, count(*) FROM posts GROUP BY category;

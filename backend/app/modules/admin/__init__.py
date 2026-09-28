@@ -1,1 +1,0 @@
-"""Administrative module public interfaces."""

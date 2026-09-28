@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Dashboard del Investigador</title>
+  <link rel="stylesheet" href="/static/css/design-system.css">
+</head>
+<body data-nav-active="dashboard" style="min-height:100vh;display:flex;flex-direction:column;">
+
+  <!-- Chrome compartido (topnav, menú móvil, sidebar, footer): js/layout.js -->
+  <header id="topnavMount"></header>
+
+  <div class="app-shell app-shell-page">
+
+    <aside id="sidenavMount"></aside>
+
+    <main class="main-content">
+      <h1 class="headline-lg" style="margin-bottom:var(--space-6);">Hola, <span data-slot="name"></span></h1>
+
+      <div class="dash-grid">
+
+        <!-- Perfil snippet -->
+        <section class="glass-card dash-card col-4" aria-label="Perfil">
+          <span class="nav-avatar" data-slot="avatar" style="width:96px;height:96px;font-size:36px;">U</span>
+          <h2 class="title-lg" data-slot="name" style="margin:0;"></h2>
+          <p class="body-md" style="margin:0;color:var(--secondary);">Nivel 5 · Investigador Senior</p>
+          <div class="stars-row" id="snippetStars" aria-label="Estrellas"></div>
+          <a class="btn btn-outline label-caps" href="/profile" style="margin-top:auto;">Ver Todo</a>
+        </section>
+
+        <!-- Resumen de proyectos -->
+        <section class="glass-card dash-card col-8 border-left-primary" aria-label="Resumen de proyectos">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <h3 class="card-label" style="margin:0;border:none;padding:0;">Resumen de proyectos</h3>
+            <span class="chip active" id="projectsCount"></span>
+          </div>
+          <div id="projectsList" style="display:flex;flex-direction:column;"></div>
+          <div style="display:flex;gap:var(--space-3);margin-top:auto;">
+            <button class="btn btn-outline label-caps" type="button" disabled>Ver Todos</button>
+            <button class="btn btn-primary label-caps" type="button" disabled>Crear</button>
+          </div>
+        </section>
+
+        <!-- Publicaciones -->
+        <section class="glass-card dash-card col-6" aria-label="Publicaciones">
+          <h3 class="card-label" style="margin:0;">Publicaciones</h3>
+          <ul id="pubsList" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2);"></ul>
+          <button class="btn btn-outline label-caps" type="button" disabled style="margin-top:auto;">Registrar</button>
+        </section>
+
+        <!-- Semillero + Notificaciones -->
+        <div class="col-6" style="display:flex;flex-direction:column;gap:var(--space-5);">
+          <section class="glass-card dash-card accent-amber" aria-label="Mi semillero">
+            <div style="display:flex;align-items:center;gap:var(--space-4);">
+              <div style="width:64px;height:64px;border-radius:var(--radius-md);background-color:var(--primary-container);color:var(--on-primary-container);display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;">RIUL</div>
+              <div>
+                <h3 class="title-lg" id="semName" style="margin:0;"></h3>
+                <p class="body-md" id="semMembers" style="margin:0;color:var(--on-surface-variant);"></p>
+              </div>
+            </div>
+            <p class="body-md sem-activities" id="semActivities" style="margin:0;color:var(--primary);font-weight:600;"></p>
+          </section>
+
+          <section class="glass-card dash-card" aria-label="Notificaciones recientes">
+            <h3 class="card-label" style="margin:0;">Notificaciones recientes</h3>
+            <ul id="notifsList" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2);"></ul>
+            <button class="btn btn-outline label-caps" type="button" disabled style="margin-top:auto;">Ver Todas</button>
+          </section>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <footer id="footerMount"></footer>
+
+  <script type="module" src="/static/js/dashboard.js"></script>
+</body>
+</html>

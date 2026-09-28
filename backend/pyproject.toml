@@ -1,7 +1,7 @@
 [project]
 name = "riul-backend"
 version = "0.1.0"
-description = "RIUL modular monolith backend"
+description = "RIUL Flask layered MVC backend"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "flask>=3.1,<4",
@@ -9,7 +9,9 @@ dependencies = [
     "sqlalchemy>=2.0,<3",
     "flask-migrate>=4.1,<5",
     "alembic>=1.14,<2",
-    "psycopg[binary]>=3.2,<4",
+    "pymysql>=1.1,<2",
+    "cryptography>=44,<47",
+    "marshmallow>=3.26,<5",
     "flask-jwt-extended>=4.7,<5",
     "flask-bcrypt>=1.0.1,<2",
     "python-dotenv>=1.0,<2",
@@ -22,7 +24,8 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["app"]
+testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-q"
 
 [tool.uv]

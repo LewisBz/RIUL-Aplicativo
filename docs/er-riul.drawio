@@ -1,0 +1,255 @@
+<mxfile host="app.diagrams.net" agent="RIUL" version="22.1.0" type="device">
+  <diagram id="riul-er-domains" name="ER RIUL por dominio">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="legend" value="Leyenda: relleno = color de dominio · recuadro transparente = agrupación · punteado = no está en MySQL · líneas grises = FK reales" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#94A3B8;align=left;fontSize=11;fontColor=#334155;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1570" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- Dominio 2: Catálogo académico -->
+        <mxCell id="win-catalog" value="Dominio 2 — Catálogo académico" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#2563EB;strokeWidth=2;verticalAlign=top;align=left;fontStyle=1;fontSize=13;fontColor=#2563EB;spacingLeft=12;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="380" height="430" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-faculties" value="faculties" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#2563EB;fontColor=#FFFFFF;strokeColor=#1D4ED8;align=center;fontSize=12;" vertex="1" parent="win-catalog">
+          <mxGeometry x="30" y="40" width="320" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-faculties">
+          <mxGeometry y="30" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-name" value="UK  name : VARCHAR(120)" style="text;strokeColor=none;fillColor=#EFF6FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-faculties">
+          <mxGeometry y="56" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-programs" value="programs" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#2563EB;fontColor=#FFFFFF;strokeColor=#1D4ED8;align=center;fontSize=12;" vertex="1" parent="win-catalog">
+          <mxGeometry x="30" y="150" width="320" height="108" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-programs">
+          <mxGeometry y="30" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-name" value="name : VARCHAR(120)" style="text;strokeColor=none;fillColor=#EFF6FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-programs">
+          <mxGeometry y="56" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-fid" value="FK  faculty_id : INT NOT NULL" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-programs">
+          <mxGeometry y="82" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="note-uq-prog" value="UNIQUE (name, faculty_id)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontColor=#2563EB;fontStyle=2;" vertex="1" parent="win-catalog">
+          <mxGeometry x="30" y="270" width="320" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Dominio 1: Identidad y acceso (auth) -->
+        <mxCell id="win-auth" value="Dominio 1 — Identidad y acceso (auth)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7B001F;strokeWidth=2;verticalAlign=top;align=left;fontStyle=1;fontSize=13;fontColor=#7B001F;spacingLeft=12;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="440" y="60" width="380" height="430" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-users" value="users" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#7B001F;fontColor=#FFFFFF;strokeColor=#5A0017;align=center;fontSize=12;" vertex="1" parent="win-auth">
+          <mxGeometry x="30" y="40" width="320" height="290" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#FCE7EA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="30" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-name" value="full_name : VARCHAR(160)" style="text;strokeColor=none;fillColor=#FFF7F8;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="56" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-email" value="UK  email : VARCHAR(255)" style="text;strokeColor=none;fillColor=#FCE7EA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="82" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-hash" value="password_hash : VARCHAR(255) NOT NULL" style="text;strokeColor=none;fillColor=#FFF7F8;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="108" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-role" value="role : VARCHAR(20)  researcher|leader|administrator" style="text;strokeColor=none;fillColor=#FCE7EA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="134" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-status" value="status : VARCHAR(20)  active|pending|rejected" style="text;strokeColor=none;fillColor=#FFF7F8;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="160" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-mot" value="motivation : VARCHAR(500)" style="text;strokeColor=none;fillColor=#FCE7EA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="186" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-fid" value="FK  faculty_id : INT NULL" style="text;strokeColor=none;fillColor=#FFF7F8;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="212" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-pid" value="FK  program_id : INT NULL" style="text;strokeColor=none;fillColor=#FCE7EA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="238" width="320" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="u-ca" value="created_at : DATETIME" style="text;strokeColor=none;fillColor=#FFF7F8;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-users">
+          <mxGeometry y="264" width="320" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- Dominio 3: Feed -->
+        <mxCell id="win-feed" value="Dominio 3 — Feed / publicaciones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#0F766E;strokeWidth=2;verticalAlign=top;align=left;fontStyle=1;fontSize=13;fontColor=#0F766E;spacingLeft=12;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="840" y="60" width="770" height="430" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-posts" value="posts" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#0F766E;fontColor=#FFFFFF;strokeColor=#115E59;align=center;fontSize=12;" vertex="1" parent="win-feed">
+          <mxGeometry x="30" y="40" width="340" height="186" as="geometry"/>
+        </mxCell>
+        <mxCell id="po-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-posts">
+          <mxGeometry y="30" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="po-author" value="FK  author_id : INT NOT NULL" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-posts">
+          <mxGeometry y="56" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="po-cat" value="category : VARCHAR(30)  article|…|community" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-posts">
+          <mxGeometry y="82" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="po-content" value="content : TEXT" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-posts">
+          <mxGeometry y="108" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="po-link" value="link_url : VARCHAR(500)" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-posts">
+          <mxGeometry y="134" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="po-ca" value="created_at : DATETIME" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-posts">
+          <mxGeometry y="160" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-att" value="post_attachments" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#0F766E;fontColor=#FFFFFF;strokeColor=#115E59;align=center;fontSize=12;" vertex="1" parent="win-feed">
+          <mxGeometry x="390" y="40" width="350" height="212" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-att">
+          <mxGeometry y="30" width="350" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-pid" value="FK  post_id : INT NOT NULL" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-att">
+          <mxGeometry y="56" width="350" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-kind" value="kind : VARCHAR(10)  image|file" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-att">
+          <mxGeometry y="82" width="350" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-fn" value="file_name : VARCHAR(255)" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-att">
+          <mxGeometry y="108" width="350" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-sn" value="UK  storage_name : VARCHAR(120)" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-att">
+          <mxGeometry y="134" width="350" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-mime" value="mime_type : VARCHAR(100)" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-att">
+          <mxGeometry y="160" width="350" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-size" value="file_size : INT" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-att">
+          <mxGeometry y="186" width="350" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-rx" value="post_reactions" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#0F766E;fontColor=#FFFFFF;strokeColor=#115E59;align=center;fontSize=12;" vertex="1" parent="win-feed">
+          <mxGeometry x="30" y="250" width="340" height="134" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-rx">
+          <mxGeometry y="30" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-pid" value="FK  post_id : INT NOT NULL" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-rx">
+          <mxGeometry y="56" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-uid" value="FK  user_id : INT NOT NULL" style="text;strokeColor=none;fillColor=#CCFBF1;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-rx">
+          <mxGeometry y="82" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-ca" value="created_at : DATETIME" style="text;strokeColor=none;fillColor=#F0FDFA;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-rx">
+          <mxGeometry y="108" width="340" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="note-uq-rx" value="UNIQUE (post_id, user_id)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontColor=#0F766E;fontStyle=2;" vertex="1" parent="win-feed">
+          <mxGeometry x="390" y="270" width="320" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Dominios planificados -->
+        <mxCell id="win-sem" value="Dominio 4 — Semilleros (planificado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7C3AED;strokeWidth=2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#7C3AED;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="520" width="280" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-sem" value="semilleros" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#7C3AED;fontColor=#FFFFFF;strokeColor=#6D28D9;dashed=1;align=center;fontSize=12;" vertex="1" parent="win-sem">
+          <mxGeometry x="24" y="40" width="232" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="s-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-sem">
+          <mxGeometry y="30" width="232" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="s-nom" value="nombre : VARCHAR  (stub)" style="text;strokeColor=none;fillColor=#F5F3FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-sem">
+          <mxGeometry y="56" width="232" height="26" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="win-proj" value="Dominio 5 — Proyectos (planificado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#15803D;strokeWidth=2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#15803D;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="340" y="520" width="280" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-proj" value="projects" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#15803D;fontColor=#FFFFFF;strokeColor=#166534;dashed=1;align=center;fontSize=12;" vertex="1" parent="win-proj">
+          <mxGeometry x="24" y="40" width="232" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#DCFCE7;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-proj">
+          <mxGeometry y="30" width="232" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr-nom" value="nombre : VARCHAR  (stub)" style="text;strokeColor=none;fillColor=#F0FDF4;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-proj">
+          <mxGeometry y="56" width="232" height="26" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="win-evt" value="Dominio 6 — Eventos (planificado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#D97706;strokeWidth=2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#D97706;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="640" y="520" width="280" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-evt" value="events" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#D97706;fontColor=#FFFFFF;strokeColor=#B45309;dashed=1;align=center;fontSize=12;" vertex="1" parent="win-evt">
+          <mxGeometry x="24" y="40" width="232" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-evt">
+          <mxGeometry y="30" width="232" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-nom" value="nombre : VARCHAR  (stub)" style="text;strokeColor=none;fillColor=#FFFBEB;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-evt">
+          <mxGeometry y="56" width="232" height="26" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="win-ach" value="Dominio 7 — Gamificación (planificado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#EA580C;strokeWidth=2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#EA580C;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="940" y="520" width="300" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-ach" value="achievements" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#EA580C;fontColor=#FFFFFF;strokeColor=#C2410C;dashed=1;align=center;fontSize=12;" vertex="1" parent="win-ach">
+          <mxGeometry x="34" y="40" width="232" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#FFEDD5;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-ach">
+          <mxGeometry y="30" width="232" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-nom" value="nombre : VARCHAR  (stub)" style="text;strokeColor=none;fillColor=#FFF7ED;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-ach">
+          <mxGeometry y="56" width="232" height="26" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="win-rep" value="Dominio 8 — Reportes (planificado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64748B;strokeWidth=2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#64748B;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="520" width="350" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-rep" value="reports" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#64748B;fontColor=#FFFFFF;strokeColor=#475569;dashed=1;align=center;fontSize=12;" vertex="1" parent="win-rep">
+          <mxGeometry x="59" y="40" width="232" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="rp-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#F1F5F9;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-rep">
+          <mxGeometry y="30" width="232" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="rp-nom" value="nombre : VARCHAR  (stub)" style="text;strokeColor=none;fillColor=#F8FAFC;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-rep">
+          <mxGeometry y="56" width="232" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- FK reales -->
+        <mxCell id="e-fac-prog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;" edge="1" parent="1" source="t-faculties" target="t-programs">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-fac-usr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;" edge="1" parent="1" source="t-faculties" target="t-users">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-prog-usr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;" edge="1" parent="1" source="t-programs" target="t-users">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-posts" value="escribe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;fontColor=#64748B;fontSize=10;" edge="1" parent="1" source="t-users" target="t-posts">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-posts-att" value="tiene" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;fontColor=#64748B;fontSize=10;" edge="1" parent="1" source="t-posts" target="t-att">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-posts-rx" value="recibe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;fontColor=#64748B;fontSize=10;" edge="1" parent="1" source="t-posts" target="t-rx">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-rx" value="reacciona" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;fontColor=#64748B;fontSize=10;" edge="1" parent="1" source="t-users" target="t-rx">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Planificado, sin FK MySQL -->
+        <mxCell id="e-usr-sem" value="planificado" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=1;dashed=1;dashPattern=8 8;fontColor=#7C3AED;fontSize=9;fontStyle=2;" edge="1" parent="1" source="t-users" target="t-sem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-proj" value="planificado" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=1;dashed=1;dashPattern=8 8;fontColor=#15803D;fontSize=9;fontStyle=2;" edge="1" parent="1" source="t-users" target="t-proj">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-evt" value="planificado" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=1;dashed=1;dashPattern=8 8;fontColor=#D97706;fontSize=9;fontStyle=2;" edge="1" parent="1" source="t-users" target="t-evt">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-ach" value="planificado" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=1;dashed=1;dashPattern=8 8;fontColor=#EA580C;fontSize=9;fontStyle=2;" edge="1" parent="1" source="t-users" target="t-ach">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-rep" value="planificado" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=1;dashed=1;dashPattern=8 8;fontColor=#64748B;fontSize=9;fontStyle=2;" edge="1" parent="1" source="t-users" target="t-rep">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
