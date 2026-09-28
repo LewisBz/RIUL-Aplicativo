@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Perfil del Investigador</title>
+  <link rel="stylesheet" href="/static/css/design-system.css">
+</head>
+<body data-nav-active="profile" style="min-height:100vh;display:flex;flex-direction:column;">
+
+  <!-- Chrome compartido (topnav, menú móvil, sidebar, footer): js/layout.js -->
+  <header id="topnavMount"></header>
+
+  <div class="app-shell app-shell-page">
+
+    <aside id="sidenavMount"></aside>
+
+    <main class="main-content">
+
+      <!-- Banner de perfil -->
+      <section class="profile-banner" aria-label="Encabezado de perfil">
+        <span class="avatar-square" data-slot="avatar">U</span>
+        <div>
+          <h1 class="headline-md" style="margin:0 0 var(--space-1);" data-slot="name"></h1>
+          <p class="body-lg" style="margin:0;color:var(--on-surface-variant);"><span data-slot="role"></span> · Nivel 5</p>
+        </div>
+        <button class="btn btn-outline label-caps only-desktop" type="button" disabled style="position:absolute;top:var(--space-4);right:var(--space-4);">Editar Perfil</button>
+      </section>
+
+      <div class="profile-grid">
+
+        <!-- Columna izquierda -->
+        <div style="display:flex;flex-direction:column;gap:var(--space-5);">
+          <section class="glass-card dash-card" aria-label="Información personal">
+            <h3 class="card-label" style="margin:0;">Información personal</h3>
+            <dl class="info-list">
+              <div><dt>Nombre:</dt><dd data-slot="name"></dd></div>
+              <div><dt>Correo:</dt><dd id="infoEmail"></dd></div>
+              <div><dt>Facultad:</dt><dd id="infoFaculty">—</dd></div>
+              <div><dt>Programa:</dt><dd id="infoProgram">—</dd></div>
+              <div><dt>Biografía:</dt><dd style="max-width:60%;">Investigador en formación, apasionado por el análisis de datos y la innovación académica.</dd></div>
+            </dl>
+          </section>
+
+          <section class="glass-card dash-card" aria-label="Mis semilleros">
+            <h3 class="card-label" style="margin:0;">Mis semilleros</h3>
+            <ul id="mySemilleros" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2);"></ul>
+          </section>
+
+          <section class="glass-card dash-card" aria-label="Proyectos de investigación">
+            <h3 class="card-label" style="margin:0;">Proyectos de investigación</h3>
+            <ul id="profileProjects" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2);"></ul>
+          </section>
+        </div>
+
+        <!-- Columna derecha -->
+        <div style="display:flex;flex-direction:column;gap:var(--space-5);min-width:0;">
+
+          <section class="glass-card dash-card gamify-card" aria-label="Gamificación">
+            <h3 class="card-label" style="margin:0;">Gamificación</h3>
+            <div>
+              <div class="xp-head">
+                <span class="title-lg" id="gamLevel"></span>
+                <span class="xp-value" id="gamXp"></span>
+              </div>
+              <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%;"></div></div>
+            </div>
+            <div>
+              <p class="label-caps" style="margin:0 0 var(--space-1);color:var(--on-surface-variant);">Estrellas obtenidas</p>
+              <div class="stars-row" id="profileStars"></div>
+            </div>
+            <div>
+              <p class="label-caps" style="margin:0 0 var(--space-2);color:var(--on-surface-variant);">Últimas insignias</p>
+              <div class="badge-row" id="badgeRow"></div>
+            </div>
+          </section>
+
+          <section class="glass-card dash-card" aria-label="Publicaciones" style="overflow-x:auto;">
+            <h3 class="card-label" style="margin:0;">Publicaciones</h3>
+            <table class="table-data">
+              <thead>
+                <tr><th>Título del artículo</th><th>Venue / Revista</th><th>Fecha</th></tr>
+              </thead>
+              <tbody id="pubsTable"></tbody>
+            </table>
+          </section>
+
+          <div class="section-stack">
+            <section class="glass-card dash-card" aria-label="Productos de investigación" style="overflow-x:auto;">
+              <h3 class="card-label" style="margin:0;">Productos de investigación</h3>
+              <table class="table-data">
+                <thead>
+                  <tr><th>Tipo</th><th>Nombre</th><th>Estado</th></tr>
+                </thead>
+                <tbody id="productsTable"></tbody>
+              </table>
+            </section>
+
+            <section class="glass-card dash-card" aria-label="Logros y actividades">
+              <h3 class="card-label" style="margin:0;">Logros y actividades</h3>
+              <ol class="timeline" id="achievementsTimeline"></ol>
+            </section>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer id="footerMount"></footer>
+
+  <script type="module" src="/static/js/profile.js"></script>
+</body>
+</html>

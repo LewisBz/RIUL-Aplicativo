@@ -90,11 +90,11 @@ see the menu nor be able to delete.
 
 ## Non-Functional Requirements
 
-- NFR1: Module follows the established layout
-  `app/modules/posts/{models,services,routes,tests}` with `ServiceError`
-  handling and blueprint registration in `create_app` (Principle I)
-- NFR2: Alembic migration `0002_posts_module_tables` chained after 0001;
-  tests run against real PostgreSQL `riul_test` (NFR auth parity)
+- NFR1: Feature follows Flask layered MVC
+  (`app/{models,schemas,controllers,routes,services,repositories}`) with
+  `ServiceError` handling and blueprint registration in `create_app` (Principle I)
+- NFR2: Alembic migrations cover posts tables; tests run against real MySQL
+  `riul_test` (NFR auth parity)
 - NFR3: Uploads volume persisted via compose (`uploads_data:/app/uploads`);
   `UPLOAD_FOLDER` configurable by env var
 - NFR4: `feed.html` uses ONLY `css/design-system.css` (new section 16 "Feed

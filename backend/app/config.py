@@ -12,7 +12,7 @@ _BACKEND_ROOT = Path(__file__).resolve().parent.parent
 def _database_url() -> str:
     return os.environ.get(
         "DATABASE_URL",
-        "postgresql+psycopg://riul:riul@localhost:5433/riul",
+        "mysql+pymysql://riul:riul@localhost:3307/riul",
     )
 
 
@@ -42,7 +42,7 @@ class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "TEST_DATABASE_URL",
-        "postgresql+psycopg://riul:riul@localhost:5433/riul_test",
+        "mysql+pymysql://riul:riul@localhost:3307/riul_test",
     )
 
 
