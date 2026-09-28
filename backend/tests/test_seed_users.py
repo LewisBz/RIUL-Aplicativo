@@ -1,65 +1,127 @@
 import os
 
 from app import SEED_USERS_DEFAULT_PASSWORD
-from app.models import Faculty, Program, User
+from app.models import Faculty, Post, PostReaction, Program, User
 
-DEMO_EMAILS = {
-    "estudiante.demo@unilibre.edu.co": "researcher",
-    "docente.demo@unilibre.edu.co": "leader",
-    "admin.demo@unilibre.edu.co": "administrator",
+EXPECTED_USERS = 15
+EXPECTED_POSTS = 15
+EXPECTED_REACTIONS = 47
+
+EXPECTED_ROLES = {"administrator": 2, "leader": 4, "researcher": 9}
+EXPECTED_STATUSES = {"active": 13, "pending": 1, "rejected": 1}
+
+FACULTY_PROGRAMS = {"Ingeniería": 2, "Ciencias Básicas": 1}
+
+TEAMS = {
+    "laura.mendoza@unilibre.edu.co": {
+        "camila.rojas@unilibre.edu.co",
+        "andres.perez@unilibre.edu.co",
+    },
+    "maria.antonieta.perez@unilibre.edu.co": {
+        "luis.grandett@unilibre.edu.co",
+        "carolina.martinez@unilibre.edu.co",
+    },
+    "mateo.silva@unilibre.edu.co": {
+        "diego.gutierrez@unilibre.edu.co",
+        "paula.fernandez@unilibre.edu.co",
+    },
+    "javier.torres@unilibre.edu.co": {"sofia.diaz@unilibre.edu.co"},
 }
 
 
 def _run_seed(app):
     runner = app.test_cli_runner()
-    result = runner.invoke(args=["seed-users"])
+    result = runner.invoke(args=["seed-demo"])
     assert result.exit_code == 0, result.output
     return result
 
 
-class TestSeedUsersCommand:
-    def test_creates_one_user_per_role(self, app):
+class TestSeedDemoCommand:
+    def test_creates_full_dataset(self, app):
         _run_seed(app)
-        users = {user.email: user for user in User.query.all()}
-        for email, role in DEMO_EMAILS.items():
-            assert email in users
-            assert users[email].role == role
-            assert users[email].status == "active"
-            assert users[email].check_password(
-                os.environ.get("DEMO_USERS_PASSWORD", SEED_USERS_DEFAULT_PASSWORD)
+
+        assert User.query.count() == EXPECTED_USERS
+        assert Post.query.count() == EXPECTED_POSTS
+        assert PostReaction.query.count() == EXPECTED_REACTIONS
+
+    def test_roles_and_statuses(self, app):
+        _run_seed(app)
+
+        for role, expected in EXPECTED_ROLES.items():
+            assert User.query.filter(User.role == role).count() == expected
+        for status, expected in EXPECTED_STATUSES.items():
+            assert User.query.filter(User.status == status).count() == expected
+
+    def test_faculties_and_programs(self, app):
+        _run_seed(app)
+
+        for name, expected_programs in FACULTY_PROGRAMS.items():
+            faculty = Faculty.query.filter_by(name=name).one()
+            assert (
+                Program.query.filter_by(faculty_id=faculty.id).count()
+                == expected_programs
             )
 
-    def test_assigns_faculty_and_program_to_non_admins(self, app):
+    def test_researchers_share_program_with_their_leader(self, app):
         _run_seed(app)
-        faculty = Faculty.query.filter_by(name="Ingeniería").first()
-        program = Program.query.filter_by(name="Ingeniería de Sistemas").first()
-        student = User.query.filter_by(email="estudiante.demo@unilibre.edu.co").one()
-        leader = User.query.filter_by(email="docente.demo@unilibre.edu.co").one()
-        admin = User.query.filter_by(email="admin.demo@unilibre.edu.co").one()
-        assert student.faculty_id == faculty.id
-        assert student.program_id == program.id
-        assert leader.faculty_id == faculty.id
-        assert leader.program_id == program.id
-        assert admin.faculty_id is None
 
-    def test_is_idempotent(self, app):
-        _run_seed(app)
-        result = _run_seed(app)
-        assert "0 creados, 3 actualizados" in result.output
-        count = User.query.filter(User.email.in_(DEMO_EMAILS.keys())).count()
-        assert count == 3
+        for leader_email, members in TEAMS.items():
+            leader = User.query.filter_by(email=leader_email).one()
+            assert leader.role == "leader"
+            for member_email in members:
+                member = User.query.filter_by(email=member_email).one()
+                assert member.role == "researcher"
+                assert member.faculty_id == leader.faculty_id
+                assert member.program_id == leader.program_id
 
-    def test_seeded_accounts_can_login(self, app, client):
+    def test_admins_have_no_faculty(self, app):
         _run_seed(app)
-        for email in DEMO_EMAILS:
+
+        for admin in User.query.filter(User.role == "administrator").all():
+            assert admin.faculty_id is None
+            assert admin.program_id is None
+
+    def test_all_categories_are_present(self, app):
+        _run_seed(app)
+
+        categories = {post.category for post in Post.query.all()}
+        assert categories == {
+            "event",
+            "project_advance",
+            "article",
+            "presentation",
+            "community",
+        }
+
+    def test_no_duplicate_reactions(self, app):
+        _run_seed(app)
+
+        for post in Post.query.all():
+            seen = {r.user_id for r in post.reactions}
+            assert len(seen) == len(post.reactions)
+
+    def test_active_accounts_login_and_pending_rejected_are_blocked(self, app, client):
+        _run_seed(app)
+        password = os.environ.get("DEMO_USERS_PASSWORD", SEED_USERS_DEFAULT_PASSWORD)
+
+        for email in [
+            "laura.mendoza@unilibre.edu.co",
+            "camila.rojas@unilibre.edu.co",
+        ]:
             response = client.post(
-                "/api/auth/login",
-                json={
-                    "email": email,
-                    "password": os.environ.get(
-                        "DEMO_USERS_PASSWORD", SEED_USERS_DEFAULT_PASSWORD
-                    ),
-                },
+                "/api/auth/login", json={"email": email, "password": password}
             )
             assert response.status_code == 200, response.get_json()
-            assert response.get_json()["user"]["role"] == DEMO_EMAILS[email]
+
+        for email in ["isabela.blanco@gmail.com", "tomas.restrepo@hotmail.com"]:
+            response = client.post(
+                "/api/auth/login", json={"email": email, "password": password}
+            )
+            assert response.status_code == 403, response.get_json()
+
+    def test_all_users_share_the_demo_password(self, app):
+        _run_seed(app)
+
+        password = os.environ.get("DEMO_USERS_PASSWORD", SEED_USERS_DEFAULT_PASSWORD)
+        for user in User.query.all():
+            assert user.check_password(password)

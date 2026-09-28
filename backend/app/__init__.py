@@ -10,7 +10,7 @@ from .services.seed_service import (
     SEED_USERS_DEFAULT_PASSWORD,
     seed_admin as seed_admin_users,
     seed_db as seed_catalog,
-    seed_users as seed_demo_users,
+    seed_demo as run_seed_demo,
 )
 
 # Re-exported for tests
@@ -119,11 +119,12 @@ def _register_seed_cli(app: Flask) -> None:
         ready = seed_admin_users(email, password, name)
         click.echo(f"Administrador demo listo: {ready}")
 
-    @app.cli.command("seed-users")
-    def seed_users():
-        """Seed demo users (one per role) idempotently for development."""
-        created, updated = seed_demo_users()
+    @app.cli.command("seed-demo")
+    def seed_demo():
+        """Replace users/posts with the complete RIUL demo dataset (idempotent)."""
+        counts = run_seed_demo()
         click.echo(
-            "Usuarios demo listos: "
-            f"{created} creados, {updated} actualizados (rol/estado/contraseña normalizados)."
+            "Seed demo completo: "
+            + ", ".join(f"{k}={v}" for k, v in counts.items())
+            + f" ({counts['facultades_nuevas']} facultades nuevas)."
         )
