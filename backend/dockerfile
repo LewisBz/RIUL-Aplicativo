@@ -12,7 +12,7 @@ WORKDIR /app
 COPY backend/pyproject.toml backend/uv.lock ./
 RUN uv sync --frozen --no-install-project --no-dev
 
-COPY backend/alembic.ini backend/wsgi.py backend/run.py ./
+COPY backend/run.py ./
 COPY backend/migrations ./migrations
 COPY backend/app ./app
 
@@ -23,4 +23,4 @@ ENV PATH="/app/.venv/bin:$PATH" \
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "flask db upgrade && flask seed-demo && gunicorn --bind 0.0.0.0:5000 run:app"]
+CMD ["sh", "-c", "flask db upgrade && flask seed-demo --if-empty && gunicorn --bind 0.0.0.0:5000 run:app"]

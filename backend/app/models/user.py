@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, String, func
+from sqlalchemy import CheckConstraint, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import bcrypt, db
@@ -29,13 +29,25 @@ class Program(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120))
-    faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))
+    faculty_id: Mapped[int] = mapped_column(
+        ForeignKey("faculties.id", ondelete="CASCADE")
+    )
 
     faculty: Mapped["Faculty"] = relationship(back_populates="programs")
 
 
 class User(db.Model):
     __tablename__ = "users"
+    __table_args__ = (
+        CheckConstraint(
+            "role IN ('researcher', 'leader', 'administrator')",
+            name="ck_users_role",
+        ),
+        CheckConstraint(
+            "status IN ('active', 'pending', 'rejected')",
+            name="ck_users_status",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     full_name: Mapped[str | None] = mapped_column(String(160))
@@ -56,8 +68,12 @@ class User(db.Model):
         server_default=STATUS_ACTIVE,
     )
     motivation: Mapped[str | None] = mapped_column(String(500))
-    faculty_id: Mapped[int | None] = mapped_column(ForeignKey("faculties.id"))
-    program_id: Mapped[int | None] = mapped_column(ForeignKey("programs.id"))
+    faculty_id: Mapped[int | None] = mapped_column(
+        ForeignKey("faculties.id", ondelete="SET NULL")
+    )
+    program_id: Mapped[int | None] = mapped_column(
+        ForeignKey("programs.id", ondelete="SET NULL")
+    )
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     faculty: Mapped["Faculty | None"] = relationship()

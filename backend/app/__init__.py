@@ -31,11 +31,12 @@ def create_app(config_name: str = "dev") -> Flask:
     bcrypt.init_app(app)
 
     from app import models  # noqa: F401 — register metadata for Alembic/create_all
-    from app.routes import admin_bp, auth_bp, posts_bp
+    from app.routes import admin_bp, auth_bp, posts_bp, semilleros_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(posts_bp)
+    app.register_blueprint(semilleros_bp)
 
     _register_pages(app)
     _register_jwt_error_handlers()
@@ -47,6 +48,7 @@ def create_app(config_name: str = "dev") -> Flask:
 
 def _register_pages(app: Flask) -> None:
     @app.route("/")
+    @app.route("/index.html")
     def index():
         return render_template("index.html")
 
@@ -120,9 +122,17 @@ def _register_seed_cli(app: Flask) -> None:
         click.echo(f"Administrador demo listo: {ready}")
 
     @app.cli.command("seed-demo")
-    def seed_demo():
+    @click.option("--if-empty", is_flag=True, default=False, help="Solo sembrar si la base de datos está vacía.")
+    def seed_demo(if_empty: bool):
         """Replace users/posts with the complete RIUL demo dataset (idempotent)."""
-        counts = run_seed_demo()
+        counts = run_seed_demo(if_empty=if_empty)
+        if counts.get("skipped"):
+            click.echo(
+                "Se conservaron usuarios y publicaciones; "
+                f"semilleros agregados={counts['semilleros']}, "
+                f"miembros agregados={counts['miembros_semilleros']}."
+            )
+            return
         click.echo(
             "Seed demo completo: "
             + ", ".join(f"{k}={v}" for k, v in counts.items())

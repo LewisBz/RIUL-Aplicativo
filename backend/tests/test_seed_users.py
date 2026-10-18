@@ -1,11 +1,21 @@
 import os
 
 from app import SEED_USERS_DEFAULT_PASSWORD
-from app.models import Faculty, Post, PostReaction, Program, User
+from app.extensions import db
+from app.models import (
+    Faculty,
+    Post,
+    PostReaction,
+    Program,
+    Semillero,
+    SemilleroMember,
+    User,
+)
 
 EXPECTED_USERS = 15
 EXPECTED_POSTS = 15
 EXPECTED_REACTIONS = 47
+EXPECTED_SEMILLEROS = 4
 
 EXPECTED_ROLES = {"administrator": 2, "leader": 4, "researcher": 9}
 EXPECTED_STATUSES = {"active": 13, "pending": 1, "rejected": 1}
@@ -43,6 +53,39 @@ class TestSeedDemoCommand:
         assert User.query.count() == EXPECTED_USERS
         assert Post.query.count() == EXPECTED_POSTS
         assert PostReaction.query.count() == EXPECTED_REACTIONS
+        assert Semillero.query.count() == EXPECTED_SEMILLEROS
+        assert SemilleroMember.query.count() == 7
+
+    def test_if_empty_preserves_existing_records_and_seeds_missing_semilleros(self, app):
+        user = User(
+            full_name="Usuario existente",
+            email="existing.user@example.com",
+            role="researcher",
+            status="active",
+        )
+        user.set_password("existing-password")
+        db.session.add(user)
+        db.session.commit()
+
+        result = app.test_cli_runner().invoke(args=["seed-demo", "--if-empty"])
+
+        assert result.exit_code == 0, result.output
+        assert "Se conservaron usuarios y publicaciones" in result.output
+        assert User.query.count() == 1
+        assert Post.query.count() == 0
+        assert Semillero.query.count() == EXPECTED_SEMILLEROS
+        assert SemilleroMember.query.count() == 0
+        assert User.query.filter_by(email=user.email).one().full_name == "Usuario existente"
+        for name, expected_programs in FACULTY_PROGRAMS.items():
+            faculty = Faculty.query.filter_by(name=name).one()
+            assert (
+                Program.query.filter_by(faculty_id=faculty.id).count()
+                == expected_programs
+            )
+
+        app.test_cli_runner().invoke(args=["seed-demo", "--if-empty"])
+        assert User.query.count() == 1
+        assert Semillero.query.count() == EXPECTED_SEMILLEROS
 
     def test_roles_and_statuses(self, app):
         _run_seed(app)

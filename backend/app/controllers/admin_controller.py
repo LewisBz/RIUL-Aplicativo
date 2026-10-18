@@ -4,10 +4,9 @@ from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from app.controllers.http import json_error, load_schema
-from app.models import ROLE_ADMINISTRATOR, STATUS_ACTIVE
-from app.repositories import user_repository
+from app.models import ROLE_ADMINISTRATOR
 from app.schemas import AdminUsersQuerySchema, UserSchema, UserStatusSchema
-from app.services import admin_service
+from app.services import admin_service, auth_service
 from app.utils.errors import ServiceError
 
 
@@ -19,9 +18,10 @@ def require_administrator(view):
             user_id = int(get_jwt_identity())
         except (TypeError, ValueError):
             return json_error("Token inválido.", 401)
-        user = user_repository.get_user_by_id(user_id)
-        if user is None or user.status != STATUS_ACTIVE:
-            return json_error("Cuenta no disponible.", 401)
+        try:
+            user = auth_service.get_identity(user_id)
+        except ServiceError as error:
+            return json_error(error.message, error.status)
         if user.role != ROLE_ADMINISTRATOR:
             return json_error("Se requieren permisos de administrador.", 403)
         return view(*args, **kwargs)

@@ -1,11 +1,10 @@
 openapi: 3.0.3
 info:
-  title: RIUL API — Autenticación
+  title: RIUL API
   description: >
-    API del módulo de autenticación de RIUL (Red de Investigación Universidad
-    Libre). Registro institucional con acceso inmediato, solicitud de cuenta
-    externa pendiente de aprobación y login con JWT stateless (Flask-JWT-Extended).
-  version: 0.3.0
+    API de autenticación, catálogo, publicaciones, administración y consulta de
+    semilleros de RIUL (Red de Investigación Universidad Libre).
+  version: 1.0.0
 
 servers:
   - url: http://localhost:5000
@@ -15,6 +14,12 @@ tags:
     description: Registro, solicitud de cuenta, login e identidad
   - name: Catálogo
     description: Datos maestros públicos para formularios
+  - name: Publicaciones
+    description: Feed, adjuntos y reacciones (requiere autenticación)
+  - name: Administración
+    description: Operaciones administrativas (requiere rol administrador)
+  - name: Semilleros
+    description: Consulta pública de semilleros persistidos
 
 paths:
   /api/auth/register:
@@ -61,8 +66,7 @@ paths:
       summary: Solicitud de cuenta no institucional (pendiente)
       description: >
         Crea un usuario con estado `pending` (sin contraseña utilizable ni
-        token). Un administrador deberá aprobarla desde el portal admin
-        (feature futuro).
+        token). Un administrador deberá aprobarla desde el portal admin.
       requestBody:
         required: true
         content:
@@ -163,6 +167,341 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Faculty"
+
+  /api/posts:
+    get:
+      tags: [Publicaciones]
+      summary: Listar publicaciones del feed
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum: [community, article, project_advance, presentation, event]
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        "200":
+          description: Página de publicaciones
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Post"
+                  page:
+                    type: integer
+                  per_page:
+                    type: integer
+                  total:
+                    type: integer
+        "401":
+          $ref: "#/components/responses/Error401"
+    post:
+      tags: [Publicaciones]
+      summary: Crear publicación
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  enum: [community, article, project_advance, presentation, event]
+                content:
+                  type: string
+                link_url:
+                  type: string
+                  maxLength: 500
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Publicación creada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  post:
+                    $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/Error400"
+        "401":
+          $ref: "#/components/responses/Error401"
+        "413":
+          description: El archivo supera el tamaño permitido
+  /api/posts/{post_id}:
+    delete:
+      tags: [Publicaciones]
+      summary: Eliminar una publicación propia
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Publicación eliminada
+        "401":
+          $ref: "#/components/responses/Error401"
+        "403":
+          $ref: "#/components/responses/Error403"
+        "404":
+          description: Publicación no encontrada
+  /api/posts/{post_id}/reactions:
+    post:
+      tags: [Publicaciones]
+      summary: Alternar reacción del usuario autenticado
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Estado actualizado de la reacción
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reaction_count:
+                    type: integer
+                  reacted_by_me:
+                    type: boolean
+        "401":
+          $ref: "#/components/responses/Error401"
+        "404":
+          description: Publicación no encontrada
+  /api/posts/files/{name}:
+    get:
+      tags: [Publicaciones]
+      summary: Descargar un adjunto de una publicación
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Archivo adjunto
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Archivo no encontrado
+
+  /api/admin/overview:
+    get:
+      tags: [Administración]
+      summary: Obtener métricas del sistema
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Conteos de entidades implementadas y módulos pendientes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      active:
+                        type: integer
+                      pending:
+                        type: integer
+                  faculties:
+                    type: integer
+                  programs:
+                    type: integer
+                  semilleros:
+                    type: integer
+                  posts:
+                    type: integer
+                  unavailable:
+                    type: array
+                    items:
+                      type: string
+        "401":
+          $ref: "#/components/responses/Error401"
+        "403":
+          $ref: "#/components/responses/Error403"
+  /api/admin/users:
+    get:
+      tags: [Administración]
+      summary: Listar usuarios
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [active, pending, rejected]
+        - in: query
+          name: role
+          schema:
+            type: string
+            enum: [researcher, leader, administrator]
+      responses:
+        "200":
+          description: Usuarios registrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  total:
+                    type: integer
+        "401":
+          $ref: "#/components/responses/Error401"
+        "403":
+          $ref: "#/components/responses/Error403"
+  /api/admin/users/{user_id}:
+    patch:
+      tags: [Administración]
+      summary: Cambiar el estado de un usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [active, pending, rejected]
+      responses:
+        "200":
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/Error400"
+        "401":
+          $ref: "#/components/responses/Error401"
+        "403":
+          $ref: "#/components/responses/Error403"
+        "404":
+          description: Usuario no encontrado
+
+  /api/semilleros:
+    get:
+      tags: [Semilleros]
+      summary: Listar y filtrar semilleros
+      parameters:
+        - in: query
+          name: faculty_id
+          schema:
+            type: integer
+        - in: query
+          name: program_id
+          schema:
+            type: integer
+        - in: query
+          name: area
+          schema:
+            type: string
+        - in: query
+          name: query
+          description: También acepta el alias `q`
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Semilleros ordenados por nombre
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Semillero"
+                  total:
+                    type: integer
+  /api/semilleros/{identifier}:
+    get:
+      tags: [Semilleros]
+      summary: Obtener detalle de un semillero por ID o slug
+      parameters:
+        - in: path
+          name: identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalle del semillero
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  semillero:
+                    allOf:
+                      - $ref: "#/components/schemas/Semillero"
+                      - type: object
+                        properties:
+                          mission:
+                            type: string
+                            nullable: true
+                          vision:
+                            type: string
+                            nullable: true
+                          members:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/SemilleroMember"
+        "404":
+          description: Semillero no encontrado
 
 components:
   securitySchemes:
@@ -270,9 +609,112 @@ components:
               faculty_id:
                 type: integer
 
+    Semillero:
+      type: object
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        area:
+          type: string
+          nullable: true
+        faculty:
+          type: string
+        program:
+          type: string
+        leader:
+          type: string
+        member_count:
+          type: integer
+
+    SemilleroMember:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        role_in_semillero:
+          type: string
+        initials:
+          type: string
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+          enum: [community, article, project_advance, presentation, event]
+        content:
+          type: string
+          nullable: true
+        link_url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        author:
+          type: object
+          properties:
+            id:
+              type: integer
+            full_name:
+              type: string
+              nullable: true
+        attachments:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              kind:
+                type: string
+                enum: [image, file]
+              file_name:
+                type: string
+              mime_type:
+                type: string
+                nullable: true
+              file_size:
+                type: integer
+                nullable: true
+              url:
+                type: string
+        reaction_count:
+          type: integer
+        reacted_by_me:
+          type: boolean
+
   responses:
     Error400:
       description: Validación fallida (dominio, contraseña corta, datos faltantes)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Message"
+    Error401:
+      description: Se requiere autenticación o el token no es válido
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Message"
+    Error403:
+      description: La cuenta no tiene permisos para esta operación
       content:
         application/json:
           schema:

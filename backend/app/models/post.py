@@ -1,6 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, String, Text, UniqueConstraint, func
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import db
@@ -25,9 +32,18 @@ KIND_FILE = "file"
 
 class Post(db.Model):
     __tablename__ = "posts"
+    __table_args__ = (
+        CheckConstraint(
+            "category IN ('article', 'project_advance', 'presentation', "
+            "'event', 'community')",
+            name="ck_posts_category",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    author_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
     category: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
@@ -49,9 +65,16 @@ class Post(db.Model):
 
 class PostAttachment(db.Model):
     __tablename__ = "post_attachments"
+    __table_args__ = (
+        CheckConstraint(
+            "kind IN ('image', 'file')", name="ck_post_attachments_kind"
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"), nullable=False)
+    post_id: Mapped[int] = mapped_column(
+        ForeignKey("posts.id", ondelete="CASCADE"), nullable=False
+    )
     kind: Mapped[str] = mapped_column(String(10), nullable=False)
     file_name: Mapped[str] = mapped_column(String(255), nullable=False)
     storage_name: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
@@ -66,8 +89,12 @@ class PostReaction(db.Model):
     __table_args__ = (UniqueConstraint("post_id", "user_id"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"), nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    post_id: Mapped[int] = mapped_column(
+        ForeignKey("posts.id", ondelete="CASCADE"), nullable=False
+    )
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     post: Mapped["Post"] = relationship(back_populates="reactions")

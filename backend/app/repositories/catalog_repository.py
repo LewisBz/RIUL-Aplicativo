@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.extensions import db
 from app.models import Faculty, Program
@@ -13,11 +13,13 @@ def list_programs() -> list[Program]:
 
 
 def get_faculty_by_name(name: str) -> Faculty | None:
-    return Faculty.query.filter_by(name=name).first()
+    return db.session.scalar(select(Faculty).where(Faculty.name == name))
 
 
 def get_program_by_name(name: str, faculty_id: int) -> Program | None:
-    return Program.query.filter_by(name=name, faculty_id=faculty_id).first()
+    return db.session.scalar(
+        select(Program).where(Program.name == name, Program.faculty_id == faculty_id)
+    )
 
 
 def add_faculty(faculty: Faculty) -> Faculty:
@@ -28,3 +30,19 @@ def add_faculty(faculty: Faculty) -> Faculty:
 def add_program(program: Program) -> Program:
     db.session.add(program)
     return program
+
+
+def count_faculties() -> int:
+    return int(db.session.scalar(select(func.count()).select_from(Faculty)) or 0)
+
+
+def count_programs() -> int:
+    return int(db.session.scalar(select(func.count()).select_from(Program)) or 0)
+
+
+def flush() -> None:
+    db.session.flush()
+
+
+def commit() -> None:
+    db.session.commit()

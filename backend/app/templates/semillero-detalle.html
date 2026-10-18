@@ -34,7 +34,7 @@
             <p class="title-lg" id="semAffiliation" style="margin:0;color:var(--secondary);font-size:16px;"></p>
           </div>
         </div>
-        <button class="btn btn-outline label-caps" type="button" id="followBtn">
+        <button class="btn btn-outline label-caps" type="button" id="followBtn" disabled title="El seguimiento aún no está disponible.">
           <span class="material-symbols-outlined" id="followIcon">favorite_border</span><span id="followLabel">Seguir</span>
         </button>
       </section>
@@ -89,7 +89,7 @@
           </section>
 
           <!-- Líneas y proyectos -->
-          <section class="glass-card dash-card" aria-label="Líneas y proyectos de investigación">
+          <section class="glass-card dash-card" aria-label="Líneas y proyectos de investigación" id="researchDetails">
             <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
               <span class="material-symbols-outlined">science</span>Líneas &amp; Proyectos de Investigación
             </h2>
@@ -109,7 +109,7 @@
         <div class="col-4" style="display:flex;flex-direction:column;gap:var(--space-6);min-width:0;">
 
           <!-- Publicaciones -->
-          <section class="glass-card dash-card" aria-label="Publicaciones destacadas">
+          <section class="glass-card dash-card" aria-label="Publicaciones destacadas" id="publicationsSection">
             <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
               <span class="material-symbols-outlined">menu_book</span>Publicaciones
             </h2>
@@ -117,7 +117,7 @@
           </section>
 
           <!-- Actividades -->
-          <section class="glass-card dash-card" aria-label="Actividades y eventos">
+          <section class="glass-card dash-card" aria-label="Actividades y eventos" id="activitiesSection">
             <h2 class="card-label" style="display:flex;align-items:center;gap:var(--space-2);">
               <span class="material-symbols-outlined">event</span>Actividades
             </h2>
@@ -137,12 +137,12 @@
             <form id="linkForm" style="display:flex;flex-direction:column;gap:var(--space-3);">
               <div>
                 <label class="label-caps" for="motivationInput" style="display:block;margin-bottom:var(--space-1);color:var(--on-surface-variant);">Motivación</label>
-                <textarea class="input-base" id="motivationInput" rows="5" required
+                <textarea class="input-base" id="motivationInput" rows="5" required disabled
                   placeholder="Escribe aquí por qué deseas unirte, tus habilidades y áreas de interés..."></textarea>
               </div>
-              <button class="btn btn-primary label-caps btn-block" type="submit" id="submitLinkBtn">Solicitar Vinculación</button>
+              <button class="btn btn-primary label-caps btn-block" type="submit" id="submitLinkBtn" disabled>Vinculación no disponible</button>
               <p class="body-md" id="linkNote" style="margin:0;text-align:center;color:var(--secondary);font-size:11px;">
-                La solicitud será revisada por el líder del semillero.
+                El registro de solicitudes de vinculación aún no está habilitado.
               </p>
             </form>
           </section>

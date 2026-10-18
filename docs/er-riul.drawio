@@ -144,18 +144,54 @@
           <mxGeometry x="390" y="270" width="320" height="20" as="geometry"/>
         </mxCell>
 
-        <!-- Dominios planificados -->
-        <mxCell id="win-sem" value="Dominio 4 — Semilleros (planificado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7C3AED;strokeWidth=2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#7C3AED;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
-          <mxGeometry x="40" y="520" width="280" height="170" as="geometry"/>
+        <!-- Dominios implementados y planificados -->
+        <mxCell id="win-sem" value="Dominio 4 — Semilleros (implementado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7C3AED;strokeWidth=2;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#7C3AED;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="720" width="580" height="280" as="geometry"/>
         </mxCell>
-        <mxCell id="t-sem" value="semilleros" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#7C3AED;fontColor=#FFFFFF;strokeColor=#6D28D9;dashed=1;align=center;fontSize=12;" vertex="1" parent="win-sem">
-          <mxGeometry x="24" y="40" width="232" height="82" as="geometry"/>
+        <mxCell id="t-sem" value="semilleros (migración 0002)" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#7C3AED;fontColor=#FFFFFF;strokeColor=#6D28D9;align=center;fontSize=12;" vertex="1" parent="win-sem">
+          <mxGeometry x="20" y="40" width="250" height="212" as="geometry"/>
         </mxCell>
         <mxCell id="s-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-sem">
-          <mxGeometry y="30" width="232" height="26" as="geometry"/>
+          <mxGeometry y="30" width="250" height="26" as="geometry"/>
         </mxCell>
-        <mxCell id="s-nom" value="nombre : VARCHAR  (stub)" style="text;strokeColor=none;fillColor=#F5F3FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="t-sem">
-          <mxGeometry y="56" width="232" height="26" as="geometry"/>
+        <mxCell id="s-slug" value="slug : VARCHAR(50) UNIQUE" style="text;strokeColor=none;fillColor=#F5F3FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="t-sem">
+          <mxGeometry y="56" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="s-name" value="name : VARCHAR(200)" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="t-sem">
+          <mxGeometry y="82" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="s-description" value="description / mission / vision : TEXT" style="text;strokeColor=none;fillColor=#F5F3FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=9;" vertex="1" parent="t-sem">
+          <mxGeometry y="108" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="s-area" value="area : VARCHAR(100)" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="t-sem">
+          <mxGeometry y="134" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="s-faculty-program" value="FK faculty_id / program_id : INT NULL" style="text;strokeColor=none;fillColor=#F5F3FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=9;" vertex="1" parent="t-sem">
+          <mxGeometry y="160" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="s-leader" value="FK leader_id : INT NULL" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="t-sem">
+          <mxGeometry y="186" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-sem-members" value="semillero_members" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#7C3AED;fontColor=#FFFFFF;strokeColor=#6D28D9;align=center;fontSize=12;" vertex="1" parent="win-sem">
+          <mxGeometry x="300" y="40" width="250" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="sm-id" value="PK  id : INT" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" vertex="1" parent="t-sem-members">
+          <mxGeometry y="30" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sm-sem-id" value="FK  semillero_id : INT NOT NULL" style="text;strokeColor=none;fillColor=#F5F3FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="t-sem-members">
+          <mxGeometry y="56" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sm-user-id" value="FK  user_id : INT NOT NULL" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="t-sem-members">
+          <mxGeometry y="82" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sm-role" value="role_in_semillero : VARCHAR(50)" style="text;strokeColor=none;fillColor=#F5F3FF;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=9;" vertex="1" parent="t-sem-members">
+          <mxGeometry y="108" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sm-joined" value="joined_at : DATETIME" style="text;strokeColor=none;fillColor=#EDE9FE;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="t-sem-members">
+          <mxGeometry y="134" width="250" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="note-uq-sem-members" value="UNIQUE (semillero_id, user_id)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontColor=#7C3AED;fontStyle=2;" vertex="1" parent="win-sem">
+          <mxGeometry x="300" y="212" width="250" height="20" as="geometry"/>
         </mxCell>
 
         <mxCell id="win-proj" value="Dominio 5 — Proyectos (planificado)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#15803D;strokeWidth=2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;fontStyle=1;fontSize=12;fontColor=#15803D;spacingLeft=10;spacingTop=6;arcSize=8;container=1;collapsible=0;pointerEvents=0;" vertex="1" parent="1">
@@ -233,10 +269,24 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- Planificado, sin FK MySQL -->
-        <mxCell id="e-usr-sem" value="planificado" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=1;dashed=1;dashPattern=8 8;fontColor=#7C3AED;fontSize=9;fontStyle=2;" edge="1" parent="1" source="t-users" target="t-sem">
+        <!-- FK reales de semilleros -->
+        <mxCell id="e-fac-sem" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;" edge="1" parent="1" source="t-faculties" target="t-sem">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
+        <mxCell id="e-prog-sem" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;" edge="1" parent="1" source="t-programs" target="t-sem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-sem" value="lidera" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;fontColor=#64748B;fontSize=10;" edge="1" parent="1" source="t-users" target="t-sem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-sem-members" value="tiene" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;fontColor=#64748B;fontSize=10;" edge="1" parent="1" source="t-sem" target="t-sem-members">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-usr-sem-members" value="participa" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=2;fontColor=#64748B;fontSize=10;" edge="1" parent="1" source="t-users" target="t-sem-members">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Planificado, sin FK MySQL -->
         <mxCell id="e-usr-proj" value="planificado" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;endArrow=ERzeroToMany;startFill=0;endFill=0;strokeColor=#94A3B8;strokeWidth=1;dashed=1;dashPattern=8 8;fontColor=#15803D;fontSize=9;fontStyle=2;" edge="1" parent="1" source="t-users" target="t-proj">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>

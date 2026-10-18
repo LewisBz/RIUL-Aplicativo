@@ -54,12 +54,13 @@ class TestAdminOverview:
         assert body["users"]["total"] == 2
         assert body["users"]["active"] == 2
         assert body["faculties"] == 2
-        assert "semilleros" in body["unavailable"]
+        assert body["semilleros"] == 0
+        assert "semilleros" not in body["unavailable"]
 
     def test_rechecks_user_status_after_token_creation(self, client):
         token = admin_token()
         user = User.query.filter_by(email="admin.demo@unilibre.edu.co").one()
-        user.status = "suspended"
+        user.status = "rejected"
         db.session.commit()
         response = client.get(
             "/api/admin/overview",

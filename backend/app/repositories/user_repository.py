@@ -41,14 +41,6 @@ def count_users(*conditions) -> int:
     )
 
 
-def count_faculties() -> int:
-    return int(db.session.scalar(select(func.count()).select_from(Faculty)) or 0)
-
-
-def count_programs() -> int:
-    return int(db.session.scalar(select(func.count()).select_from(Program)) or 0)
-
-
 def commit() -> None:
     db.session.commit()
 

@@ -16,6 +16,12 @@ from app.schemas.auth import (
     serialize_posts,
 )
 
+from app.schemas.semillero import (
+    SemilleroDetailSchema,
+    SemilleroListSchema,
+    SemilleroMemberSchema,
+)
+
 __all__ = [
     "AdminUsersQuerySchema",
     "AttachmentSchema",
@@ -27,6 +33,9 @@ __all__ = [
     "ProgramSchema",
     "RegisterSchema",
     "RequestAccountSchema",
+    "SemilleroDetailSchema",
+    "SemilleroListSchema",
+    "SemilleroMemberSchema",
     "TokenUserSchema",
     "UserSchema",
     "UserStatusSchema",

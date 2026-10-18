@@ -11,6 +11,7 @@ from app.models.post import (
     PostAttachment,
     PostReaction,
 )
+from app.models.semillero import Semillero, SemilleroMember
 from app.models.user import (
     ROLE_ADMINISTRATOR,
     ROLE_LEADER,
@@ -43,5 +44,7 @@ __all__ = [
     "CATEGORY_COMMUNITY",
     "CATEGORY_EVENT",
     "CATEGORY_PRESENTATION",
+    "Semillero",
+    "SemilleroMember",
     "CATEGORY_PROJECT_ADVANCE",
 ]

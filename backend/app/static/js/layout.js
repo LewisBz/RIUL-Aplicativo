@@ -18,9 +18,9 @@ const TOPNAV_LINKS = [
 ];
 
 const FOOTER_LINKS = [
-  { label: 'Privacidad', href: '#' },
-  { label: 'Términos', href: '#' },
-  { label: 'Contacto', href: '#' },
+  { label: 'Semilleros', href: '/semilleros' },
+  { label: 'Proyectos', href: '/projects' },
+  { label: 'Eventos', href: '/events' },
 ];
 
 function topnavHtml() {
@@ -30,7 +30,7 @@ function topnavHtml() {
   return `
     <div class="container-main" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
       <div style="display:flex;align-items:center;">
-        <a class="topnav-brand" href="index.html">RIUL</a>
+        <a class="topnav-brand" href="/">RIUL</a>
       </div>
       <nav class="only-desktop">${links}</nav>
       <div style="display:flex;align-items:center;gap:16px;">

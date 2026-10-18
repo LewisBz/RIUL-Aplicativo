@@ -1,6 +1,6 @@
 # RIUL — Modelo de Datos y Conjunto de Datos Sembrado
 
-Documento de referencia del esquema (6 tablas) y del paquete de datos de
+Documento de referencia del esquema (8 tablas) y del paquete de datos de
 demostración que carga el comando `flask seed-demo`.
 
 - Fuente única de verdad del seed: `backend/app/seed_data.py`
@@ -11,6 +11,10 @@ demostración que carga el comando `flask seed-demo`.
 ## 1. Esquema de la base de datos (MySQL 8.4)
 
 Migración: `backend/migrations/versions/0001_initial_mysql_tables.py`.
+Las tablas `semilleros` y `semillero_members` se agregan en
+`backend/migrations/versions/0002_add_semilleros_tables.py`. Las restricciones
+`CHECK` y las reglas `ON DELETE` se agregan en
+`backend/migrations/versions/0003_add_check_constraints.py`.
 
 ### 1.1 `faculties`
 
@@ -76,34 +80,75 @@ Migración: `backend/migrations/versions/0001_initial_mysql_tables.py`.
 | `created_at` | datetime | NOT NULL, default `now()` |
 | — | — | UNIQUE (`post_id`, `user_id`) |
 
-### 1.7 Relaciones
+### 1.7 `semilleros`
+
+| Columna | Tipo | Restricciones |
+|---------|------|---------------|
+| `id` | integer | PRIMARY KEY |
+| `slug` | varchar(50) | NOT NULL, UNIQUE, INDEX |
+| `name` | varchar(200) | NOT NULL |
+| `description` | text | NULL |
+| `area` | varchar(100) | NULL |
+| `mission` | text | NULL |
+| `vision` | text | NULL |
+| `faculty_id` | integer | FK → `faculties.id`, NULL |
+| `program_id` | integer | FK → `programs.id`, NULL |
+| `leader_id` | integer | FK → `users.id`, NULL |
+| `created_at` | datetime | NOT NULL, default `now()` |
+
+### 1.8 `semillero_members`
+
+| Columna | Tipo | Restricciones |
+|---------|------|---------------|
+| `id` | integer | PRIMARY KEY |
+| `semillero_id` | integer | NOT NULL, FK → `semilleros.id` |
+| `user_id` | integer | NOT NULL, FK → `users.id` |
+| `role_in_semillero` | varchar(50) | NOT NULL, default `Estudiante Investigador` |
+| `joined_at` | datetime | NOT NULL, default `now()` |
+| — | — | UNIQUE (`semillero_id`, `user_id`) |
+
+### 1.9 Relaciones
 
 - `faculties` 1:N → `programs`
 - `users` N:1 → `faculties` (opcional) y N:1 → `programs` (opcional)
-- `users` 1:N → `posts` (autor)
-- `posts` 1:N → `post_attachments` (borrado en cascada)
-- `posts` N:N → `users` a través de `post_reactions` (reacción única por par)
+- `users` 1:N → `posts` (autor; `ON DELETE CASCADE`)
+- `posts` 1:N → `post_attachments` (`ON DELETE CASCADE` en MySQL)
+- `posts` N:N → `users` a través de `post_reactions` (reacción única por par; `ON DELETE CASCADE`)
+- `faculties` 1:N → `programs` (`ON DELETE CASCADE`)
+- `users` N:1 → `faculties`/`programs` (`ON DELETE SET NULL`)
+- `semilleros` N:1 → `faculties`, `programs` y `users` (líder; todas opcionales, `ON DELETE SET NULL`)
+- `semilleros` N:N → `users` a través de `semillero_members` (`ON DELETE CASCADE`)
 
 > No existe tabla de relación explícita usuario↔usuario. Las relaciones entre
 > usuarios se expresan por **facultad/programa compartidos** (líder que guía a
 > investigadores) y por **autoría/reacciones** de publicaciones.
 
-### 1.8 Valores permitidos (enum)
+### 1.10 Valores permitidos (enum)
 
-| Campo | Valores |
-|-------|---------|
-| `users.role` | `researcher`, `leader`, `administrator` |
-| `users.status` | `active`, `pending`, `rejected` |
-| `posts.category` | `community`, `article`, `project_advance`, `presentation`, `event` |
-| `post_attachments.kind` | `image`, `file` |
+Estos valores se validan además a nivel de base de datos con restricciones
+`CHECK` (migración `0003`), de modo que la integridad no depende solo de la
+aplicación.
+
+| Campo | Valores | CHECK (MySQL) |
+|-------|---------|---------------|
+| `users.role` | `researcher`, `leader`, `administrator` | `ck_users_role` |
+| `users.status` | `active`, `pending`, `rejected` | `ck_users_status` |
+| `posts.category` | `community`, `article`, `project_advance`, `presentation`, `event` | `ck_posts_category` |
+| `post_attachments.kind` | `image`, `file` | `ck_post_attachments_kind` |
 
 ---
 
 ## 2. Conjunto de datos sembrado (`flask seed-demo`)
 
-El comando **purga** `post_reactions`, `post_attachments`, `posts` y `users`
-(no toca facultades/programas: los upserta) y reconstruye el paquete completo.
-Totales: **2 facultades, 3 programas, 15 usuarios, 15 posts y 47 reacciones.**
+El comando `flask seed-demo` **purga** `post_reactions`, `post_attachments`,
+`posts`, `semillero_members`, `semilleros` y `users` (no toca
+facultades/programas: los upserta) y reconstruye el paquete completo. El
+arranque normal del contenedor usa `flask seed-demo --if-empty`, que no purga
+usuarios/publicaciones cuando ya existen usuarios; agrega los catálogos y
+semilleros seed que falten, más sus membresías para usuarios seed existentes.
+
+Totales: **2 facultades, 3 programas, 15 usuarios, 15 posts, 47 reacciones,
+4 semilleros y 7 miembros de semillero.**
 
 ### 2.1 Facultades y programas
 
@@ -197,6 +242,8 @@ SELECT role, status, count(*) FROM users GROUP BY role, status;
 SELECT count(*) FROM posts;          -- 15
 SELECT category, count(*) FROM posts GROUP BY category;
 SELECT count(*) FROM post_reactions; -- 47
+SELECT count(*) FROM semilleros;     -- 4
+SELECT count(*) FROM semillero_members; -- 7
 ```
 
 Cuentas de prueba:

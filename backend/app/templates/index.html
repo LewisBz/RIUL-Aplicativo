@@ -16,9 +16,9 @@
         <span class="topnav-brand-sub">(Research Institution University Link)</span>
       </div>
       <nav class="only-desktop">
-        <a class="nav-link label-caps" href="#">Semilleros</a>
-        <a class="nav-link label-caps" href="#">Proyectos</a>
-        <a class="nav-link label-caps" href="#">Eventos</a>
+        <a class="nav-link label-caps" href="/semilleros">Semilleros</a>
+        <a class="nav-link label-caps" href="/projects">Proyectos</a>
+        <a class="nav-link label-caps" href="/events">Eventos</a>
       </nav>
       <div style="display:flex;align-items:center;gap:16px;">
         <div class="nav-guest-actions" data-auth="guest" style="display:flex;align-items:center;gap:16px;">
@@ -36,7 +36,7 @@
           </button>
           <div class="nav-dropdown hidden" id="userPanel">
             <a class="nav-dropdown-item label-caps" href="/dashboard">Dashboard</a>
-            <span class="nav-dropdown-item is-disabled label-caps" title="Próximamente">Mi perfil</span>
+            <a class="nav-dropdown-item label-caps" href="/profile">Mi perfil</a>
             <button class="nav-dropdown-item as-button label-caps" type="button" data-action="logout">Cerrar sesión</button>
           </div>
         </div>
@@ -47,9 +47,9 @@
     </div>
   </header>
   <nav class="topnav-menu-panel" id="menuPanel">
-    <a class="nav-link label-caps" href="#">Semilleros</a>
-    <a class="nav-link label-caps" href="#">Proyectos</a>
-    <a class="nav-link label-caps" href="#">Eventos</a>
+    <a class="nav-link label-caps" href="/semilleros">Semilleros</a>
+    <a class="nav-link label-caps" href="/projects">Proyectos</a>
+    <a class="nav-link label-caps" href="/events">Eventos</a>
     <a class="nav-link label-caps" href="/login" data-auth="guest">Iniciar sesión</a>
     <div class="hidden" data-auth="user">
       <div class="mobile-user-head">
@@ -76,7 +76,7 @@
       <div class="col-span-8 stack-6">
         <div class="section-header">
           <h2 class="headline-md" style="margin:0;">Semilleros Destacados</h2>
-          <a class="label-caps" href="#" style="color:var(--primary);display:inline-flex;align-items:center;gap:4px;text-decoration:none;">Ver todos <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span></a>
+          <a class="label-caps" href="/semilleros" style="color:var(--primary);display:inline-flex;align-items:center;gap:4px;text-decoration:none;">Ver todos <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span></a>
         </div>
         <div class="grid-12" style="gap:var(--space-4);">
           <article class="card-research card-hover col-span-4" style="padding:0;overflow:hidden;">
@@ -188,10 +188,10 @@
     <div class="footer-landing-inner">
       <p class="body-md" style="margin:0;color:var(--on-surface-variant);text-align:center;">© 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico</p>
       <nav class="footer-links">
-        <a class="nav-link" href="#">Privacidad</a>
-        <a class="nav-link" href="#">Términos</a>
-        <a class="nav-link" href="#">Contacto</a>
-        <a class="nav-link" href="#">Universidad Libre</a>
+        <a class="nav-link" href="/semilleros">Semilleros</a>
+        <a class="nav-link" href="/projects">Proyectos</a>
+        <a class="nav-link" href="/events">Eventos</a>
+        <a class="nav-link" href="/login">Iniciar sesión</a>
       </nav>
     </div>
   </footer>

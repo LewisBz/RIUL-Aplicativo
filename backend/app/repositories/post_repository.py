@@ -71,6 +71,12 @@ def count_reactions(post_id: int) -> int:
     )
 
 
+def count_all_reactions() -> int:
+    return int(
+        db.session.scalar(select(func.count()).select_from(PostReaction)) or 0
+    )
+
+
 def commit() -> None:
     db.session.commit()
 

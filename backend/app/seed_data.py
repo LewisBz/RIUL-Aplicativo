@@ -362,3 +362,66 @@ SEED_DEMO_REACTIONS = [
     ["javier.torres@unilibre.edu.co", "camila.rojas@unilibre.edu.co", "andres.perez@unilibre.edu.co"],
     ["laura.mendoza@unilibre.edu.co", "leonardo.pardo@unilibre.edu.co", "maria.antonieta.perez@unilibre.edu.co"],
 ]
+
+# --- Semilleros ---
+SEED_DEMO_SEMILLEROS = [
+    {
+        "slug": "ita",
+        "name": "Innovación Tecnológica Aplicada (ITA)",
+        "faculty": "Ingeniería",
+        "program": "Ingeniería de Sistemas",
+        "area": "Inteligencia Artificial",
+        "description": "Desarrollo de soluciones tecnológicas innovadoras aplicadas a problemas reales de la industria y la sociedad.",
+        "leader_email": "maria.antonieta.perez@unilibre.edu.co",
+        "mission": "Formar investigadores con alta capacidad técnica y crítica para liderar proyectos tecnológicos.",
+        "vision": "Ser referente nacional en innovación aplicada y patentes universitarias para el 2026.",
+        "members": [
+            {"email": "luis.grandett@unilibre.edu.co", "role": "Estudiante Investigador"},
+            {"email": "carolina.martinez@unilibre.edu.co", "role": "Estudiante Investigador"},
+        ],
+    },
+    {
+        "slug": "datalab",
+        "name": "DataLab - RIUL",
+        "faculty": "Ingeniería",
+        "program": "Ingeniería de Sistemas",
+        "area": "Ciencia de Datos",
+        "description": "Minería de datos y modelos predictivos aplicados a problemáticas académicas e institucionales.",
+        "leader_email": "laura.mendoza@unilibre.edu.co",
+        "mission": "Promover el análisis riguroso de grandes volúmenes de datos para la toma de decisiones basada en evidencia.",
+        "vision": "Consolidar un laboratorio líder en minería de datos y analítica en la región Caribe.",
+        "members": [
+            {"email": "camila.rojas@unilibre.edu.co", "role": "Co-líder Estudiantil"},
+            {"email": "andres.perez@unilibre.edu.co", "role": "Estudiante Investigador"},
+        ],
+    },
+    {
+        "slug": "iot-campus",
+        "name": "Internet de las Cosas y Sostenibilidad (IoT-S)",
+        "faculty": "Ingeniería",
+        "program": "Ingeniería Industrial",
+        "area": "Internet de las Cosas",
+        "description": "Redes de sensores y optimización de recursos energéticos para campus inteligentes y sostenibles.",
+        "leader_email": "mateo.silva@unilibre.edu.co",
+        "mission": "Desarrollar tecnologías de bajo costo para el monitoreo ambiental y energético institucional.",
+        "vision": "Implementar el primer campus universitario con huella de carbono monitoreada en tiempo real.",
+        "members": [
+            {"email": "diego.gutierrez@unilibre.edu.co", "role": "Estudiante Investigador"},
+            {"email": "paula.fernandez@unilibre.edu.co", "role": "Estudiante Investigador"},
+        ],
+    },
+    {
+        "slug": "bioneuro",
+        "name": "Biomodelos y Neurocomputación (BioNeuro)",
+        "faculty": "Ciencias Básicas",
+        "program": "Biología",
+        "area": "Bioinformática",
+        "description": "Modelado computacional de sistemas biológicos y algoritmos bioinspirados para educación.",
+        "leader_email": "javier.torres@unilibre.edu.co",
+        "mission": "Integrar las ciencias biológicas con la computación avanzada para descubrir nuevos patrones adaptativos.",
+        "vision": "Generar publicaciones de alto impacto en revistas indexadas internacionales.",
+        "members": [
+            {"email": "sofia.diaz@unilibre.edu.co", "role": "Estudiante Investigador"},
+        ],
+    },
+]

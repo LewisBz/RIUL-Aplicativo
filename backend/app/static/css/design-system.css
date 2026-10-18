@@ -2331,3 +2331,18 @@ a.attachment-file:hover {
   .research-toolbar { padding: var(--space-3); }
   .detail-definition { grid-template-columns: 1fr; }
 }
+
+.demo-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding: var(--space-2) var(--space-4);
+  border-left: 4px solid var(--accent-gold);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-container-low);
+  color: var(--on-surface-variant);
+  font-size: 14px;
+}
+
+.demo-banner .material-symbols-outlined { color: var(--accent-gold); font-size: 20px; }

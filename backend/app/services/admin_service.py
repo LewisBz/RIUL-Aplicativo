@@ -7,7 +7,12 @@ from app.models import (
     STATUS_REJECTED,
     User,
 )
-from app.repositories import post_repository, user_repository
+from app.repositories import (
+    catalog_repository,
+    post_repository,
+    semillero_repository,
+    user_repository,
+)
 
 
 def overview() -> dict:
@@ -17,10 +22,11 @@ def overview() -> dict:
             "active": user_repository.count_users(User.status == "active"),
             "pending": user_repository.count_users(User.status == "pending"),
         },
-        "faculties": user_repository.count_faculties(),
-        "programs": user_repository.count_programs(),
+        "faculties": catalog_repository.count_faculties(),
+        "programs": catalog_repository.count_programs(),
+        "semilleros": semillero_repository.count_semilleros(),
         "posts": post_repository.count_posts(),
-        "unavailable": ["semilleros", "projects", "events", "achievements", "reports"],
+        "unavailable": ["projects", "events", "achievements", "reports"],
     }
 
 
