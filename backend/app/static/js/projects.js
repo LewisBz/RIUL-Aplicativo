@@ -1,6 +1,5 @@
-import { requireAuth } from './session.js';
+import { requireAuth, API_BASE, getToken } from './session.js';
 import { initLayout } from './layout.js';
-import { PROJECTS } from './demo-data.js';
 
 await initLayout();
 const user = await requireAuth();
@@ -13,6 +12,7 @@ const filters = {
   status: document.getElementById('projectStatus'),
   faculty: document.getElementById('projectFaculty'),
 };
+let PROJECTS = [];
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (character) => ({
@@ -46,9 +46,16 @@ function render() {
   grid.innerHTML = visible.length ? visible.map(projectCard).join('') : '<div class="research-empty"><span class="material-symbols-outlined">search_off</span><strong>No encontramos proyectos</strong><span>Prueba con otros filtros o términos de búsqueda.</span></div>';
 }
 
-fillFilter(filters.type, [...new Set(PROJECTS.map((project) => project.type))]);
-fillFilter(filters.status, [...new Set(PROJECTS.map((project) => project.status))]);
-fillFilter(filters.faculty, [...new Set(PROJECTS.map((project) => project.faculty))]);
+async function loadProjects() {
+  const response = await fetch(`${API_BASE}/api/projects`, { headers: { Authorization: `Bearer ${getToken()}` } });
+  const data = await response.json();
+  PROJECTS = data.items || [];
+  fillFilter(filters.type, [...new Set(PROJECTS.map((project) => project.type))]);
+  fillFilter(filters.status, [...new Set(PROJECTS.map((project) => project.status))]);
+  fillFilter(filters.faculty, [...new Set(PROJECTS.map((project) => project.faculty))]);
+  render();
+}
+
 search.addEventListener('input', render);
 Object.values(filters).forEach((select) => select.addEventListener('change', render));
-render();
+loadProjects();

@@ -421,6 +421,10 @@ textarea.input-base {
   outline: none;
   border: 2px solid var(--primary);
 }
+select.input-base option {
+  color: #1a1c1c;
+  background-color: #ffffff;
+}
 
 input[type='checkbox'],
 input[type='radio'] {
@@ -1447,7 +1451,7 @@ input[type='radio'] {
 .dash-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 .col-4 { grid-column: span 12; }
 .col-6 { grid-column: span 12; }
@@ -1461,8 +1465,8 @@ input[type='radio'] {
 .dash-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  gap: var(--space-5);
+  padding: var(--space-6);
 }
 
 .card-label {
@@ -1600,8 +1604,8 @@ input[type='radio'] {
 .profile-banner {
   display: flex;
   align-items: center;
-  gap: var(--space-5);
-  padding: var(--space-5);
+  gap: var(--space-6);
+  padding: var(--space-6);
   background-color: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-md);
@@ -1649,7 +1653,7 @@ input[type='radio'] {
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 @media (min-width: 1024px) {
   .profile-grid {

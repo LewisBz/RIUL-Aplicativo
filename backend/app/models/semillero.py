@@ -53,6 +53,12 @@ class SemilleroMember(db.Model):
         default="Estudiante Investigador",
         server_default="Estudiante Investigador",
     )
+    status: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        default="active",
+        server_default="active",
+    )
     joined_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     semillero: Mapped["Semillero"] = relationship(back_populates="members")

@@ -1,10 +1,14 @@
-import { requireAuth } from './session.js';
+import { requireAuth, API_BASE, getToken } from './session.js';
 import { initLayout } from './layout.js';
-import { NOTIFICATIONS } from './demo-data.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
+
+const loaded = await fetch(`${API_BASE}/api/notifications`, {
+  headers: { Authorization: `Bearer ${getToken()}` },
+});
+const NOTIFICATIONS = loaded.ok ? (await loaded.json()).items || [] : [];
 
 const list = document.getElementById('notificationList');
 const search = document.getElementById('notificationSearch');
@@ -23,6 +27,16 @@ function render() {
 }
 
 document.querySelector('[role="tablist"]').addEventListener('click', (event) => { const tab = event.target.closest('[role="tab"]'); if (!tab) return; filter = tab.dataset.filter; document.querySelectorAll('[role="tab"]').forEach((item) => { const active = item === tab; item.classList.toggle('active', active); item.setAttribute('aria-selected', String(active)); }); render(); });
-list.addEventListener('click', (event) => { const button = event.target.closest('[data-action="read"]'); if (!button) return; localRead.add(button.closest('[data-notification-id]').dataset.notificationId); render(); });
+list.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-action="read"]');
+  if (!button) return;
+  const id = button.closest('[data-notification-id]').dataset.notificationId;
+  await fetch(`${API_BASE}/api/notifications/${id}/read`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  localRead.add(id);
+  render();
+});
 search.addEventListener('input', render);
 render();

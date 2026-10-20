@@ -3,6 +3,7 @@ import posixpath
 
 import click
 from flask import Flask, jsonify, render_template, send_from_directory
+from jinja2 import TemplateNotFound
 
 from .config import config_by_name
 from .extensions import bcrypt, db, jwt, migrate
@@ -31,12 +32,13 @@ def create_app(config_name: str = "dev") -> Flask:
     bcrypt.init_app(app)
 
     from app import models  # noqa: F401 — register metadata for Alembic/create_all
-    from app.routes import admin_bp, auth_bp, posts_bp, semilleros_bp
+    from app.routes import admin_bp, auth_bp, posts_bp, semilleros_bp, workflow_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(posts_bp)
     app.register_blueprint(semilleros_bp)
+    app.register_blueprint(workflow_bp)
 
     _register_pages(app)
     _register_jwt_error_handlers()
@@ -61,9 +63,12 @@ def _register_pages(app: Flask) -> None:
     @app.route("/<path:path>")
     def pages(path: str):
         basename = posixpath.basename(path)
-        if "." not in basename:
-            template = path.rstrip("/") + ".html"
-            return render_template(template)
+        if "." not in basename or basename.endswith(".html"):
+            template = path if path.endswith(".html") else path.rstrip("/") + ".html"
+            try:
+                return render_template(template)
+            except TemplateNotFound:
+                pass
         static_path = os.path.join(app.static_folder, path)
         if os.path.isfile(static_path):
             return send_from_directory(app.static_folder, path)

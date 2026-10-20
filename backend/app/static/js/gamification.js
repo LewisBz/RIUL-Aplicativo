@@ -1,10 +1,18 @@
-import { requireAuth } from './session.js';
+import { requireAuth, API_BASE, getToken } from './session.js';
 import { initLayout } from './layout.js';
-import { GAMIFICATION, BADGES, RANKING, GAMIFICATION_ACHIEVEMENTS } from './demo-data.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
+
+const response = await fetch(`${API_BASE}/api/gamification`, {
+  headers: { Authorization: `Bearer ${getToken()}` },
+});
+const data = response.ok ? await response.json() : {};
+const GAMIFICATION = data.gamification || { xp: 0, level: 1, nextLevelXp: 100, stars: 0, totalStars: 5 };
+const BADGES = data.badges || [];
+const RANKING = data.ranking || [];
+const GAMIFICATION_ACHIEVEMENTS = data.achievements || [];
 
 const percent = Math.min(100, Math.round((GAMIFICATION.xp / GAMIFICATION.nextLevelXp) * 100));
 document.getElementById('headerXp').textContent = `${GAMIFICATION.xp} XP`;
@@ -51,4 +59,20 @@ GAMIFICATION_ACHIEVEMENTS.forEach((achievement) => {
   item.querySelector('small').textContent = achievement.status;
   item.querySelector('.xp-badge').textContent = `+${achievement.xp} XP`;
   achievementList.appendChild(item);
+});
+
+const form = document.createElement('form');
+form.className = 'glass-card';
+form.style.marginTop = '16px';
+form.innerHTML = '<h2 class="headline-md">Registrar logro</h2><input class="input-base" name="title" placeholder="Título" required><select class="input-base" name="kind"><option value="article">Artículo</option><option value="presentation">Ponencia</option><option value="patent">Patente</option><option value="event">Evento</option><option value="project">Proyecto</option></select><input class="input-base" name="evidence" placeholder="Enlace o nota de evidencia"><button class="btn btn-primary label-caps" type="submit">Enviar a validación</button>';
+achievementList.after(form);
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const body = Object.fromEntries(new FormData(form).entries());
+  const created = await fetch(`${API_BASE}/api/achievements`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (created.ok) location.reload();
 });

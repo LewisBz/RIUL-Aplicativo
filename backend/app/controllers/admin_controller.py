@@ -6,7 +6,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.controllers.http import json_error, load_schema
 from app.models import ROLE_ADMINISTRATOR
 from app.schemas import AdminUsersQuerySchema, UserSchema, UserStatusSchema
-from app.services import admin_service, auth_service
+from app.services import admin_service, auth_service, workflow_service
 from app.utils.errors import ServiceError
 
 
@@ -62,6 +62,28 @@ def patch_user(user_id: int):
     except PermissionError as error:
         return json_error(str(error), 403)
     return jsonify(user=UserSchema().dump(user)), 200
+
+
+@require_administrator
+def get_achievements():
+    return jsonify(items=workflow_service.list_achievements_admin()), 200
+
+
+@require_administrator
+def patch_achievement(achievement_id: int):
+    status = (request.get_json(silent=True) or {}).get("status")
+    try:
+        result = workflow_service.review_achievement(
+            int(get_jwt_identity()), achievement_id, status
+        )
+    except ServiceError as error:
+        return json_error(error.message, error.status)
+    return jsonify(result), 200
+
+
+@require_administrator
+def get_reports():
+    return jsonify(workflow_service.reports()), 200
 
 
 def handle_service_error(error: ServiceError):

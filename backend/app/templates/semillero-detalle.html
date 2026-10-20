@@ -6,7 +6,12 @@
   <title>RIUL - Detalle del Semillero</title>
   <link rel="stylesheet" href="/static/css/design-system.css">
 </head>
-<body data-nav-active="semilleros" style="min-height:100vh;display:flex;flex-direction:column;">
+<body data-nav-active="semilleros">
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || '';
+    location.replace('/semilleros' + (id ? `?id=${encodeURIComponent(id)}` : '') + location.hash);
+  </script>
 
   <!-- Chrome compartido (topnav, menú móvil, sidebar, footer): js/layout.js -->
   <header id="topnavMount"></header>
@@ -137,13 +142,13 @@
             <form id="linkForm" style="display:flex;flex-direction:column;gap:var(--space-3);">
               <div>
                 <label class="label-caps" for="motivationInput" style="display:block;margin-bottom:var(--space-1);color:var(--on-surface-variant);">Motivación</label>
-                <textarea class="input-base" id="motivationInput" rows="5" required disabled
+                <textarea class="input-base" id="motivationInput" rows="5" required
                   placeholder="Escribe aquí por qué deseas unirte, tus habilidades y áreas de interés..."></textarea>
               </div>
-              <button class="btn btn-primary label-caps btn-block" type="submit" id="submitLinkBtn" disabled>Vinculación no disponible</button>
-              <p class="body-md" id="linkNote" style="margin:0;text-align:center;color:var(--secondary);font-size:11px;">
-                El registro de solicitudes de vinculación aún no está habilitado.
-              </p>
+            <button class="btn btn-primary label-caps btn-block" type="submit" id="submitLinkBtn">Solicitar vinculación</button>
+            <p class="body-md" id="linkNote" style="margin:0;text-align:center;color:var(--secondary);font-size:11px;">
+              La solicitud queda pendiente hasta que el líder del semillero la apruebe.
+            </p>
             </form>
           </section>
 

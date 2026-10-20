@@ -131,7 +131,7 @@ function postCardHtml(post, viewerId) {
           <span class="material-symbols-outlined${post.reacted_by_me ? ' filled' : ''}">thumb_up</span>
           <span data-reaction-count>${post.reaction_count}</span> Reacciones
         </button>
-        <button class="post-action-btn" disabled title="Próximamente">
+        <button class="post-action-btn" data-action="comment" data-post-id="${post.id}">
           <span class="material-symbols-outlined">chat_bubble_outline</span> Comentarios
         </button>
         <button class="post-action-btn" data-action="share" data-post-id="${post.id}">
@@ -236,6 +236,30 @@ feedGrid.addEventListener('click', async (event) => {
     } catch {
       button.title = permalink;
     }
+  }
+
+  if (action === 'comment') {
+    const card = button.closest('[data-post-card]');
+    let box = card.querySelector('.comment-box');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'comment-box';
+      box.style.padding = '12px 16px';
+      card.appendChild(box);
+    }
+    const response = await api(`/api/posts/${postId}/comments`);
+    const data = response.ok ? await response.json() : { items: [] };
+    box.innerHTML = `${(data.items || []).map((item) => `<p class="body-md"><strong>${escapeHtml(item.author)}</strong> ${escapeHtml(item.body)}</p>`).join('')}<form class="comment-form"><input class="input-base" name="body" placeholder="Escribe un comentario" required><button class="btn btn-primary label-caps" type="submit">Comentar</button></form>`;
+    box.querySelector('form').addEventListener('submit', async (submitEvent) => {
+      submitEvent.preventDefault();
+      const body = new FormData(submitEvent.target).get('body');
+      await api(`/api/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body }),
+      });
+      button.click();
+    });
   }
 
   if (action === 'delete') {

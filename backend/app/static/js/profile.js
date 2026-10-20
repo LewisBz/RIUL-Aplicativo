@@ -1,18 +1,21 @@
-import { requireAuth, API_BASE } from './session.js';
+import { requireAuth, API_BASE, getToken } from './session.js';
 import { initLayout } from './layout.js';
-import {
-  GAMIFICATION,
-  BADGES,
-  MY_SEMILLEROS,
-  PROFILE_PROJECTS,
-  PROFILE_PUBLICATIONS,
-  PRODUCTS,
-  ACHIEVEMENTS,
-} from './demo-data.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
+
+const profileResponse = await fetch(`${API_BASE}/api/profile`, {
+  headers: { Authorization: `Bearer ${getToken()}` },
+});
+const profile = profileResponse.ok ? await profileResponse.json() : {};
+const GAMIFICATION = profile.gamification || { level: 1, xp: 0, nextLevelXp: 100, stars: 0, totalStars: 5 };
+const BADGES = profile.badges || [];
+const MY_SEMILLEROS = profile.semilleros || [];
+const PROFILE_PROJECTS = profile.projects || [];
+const PROFILE_PUBLICATIONS = profile.publications || [];
+const PRODUCTS = profile.products || [];
+const ACHIEVEMENTS = profile.achievements || [];
 
 function starRow(container, total, filled) {
   for (let i = 0; i < total; i++) {
@@ -118,4 +121,17 @@ ACHIEVEMENTS.forEach((item) => {
   meta.textContent = item.done ? 'Validado' : 'En proceso de validación';
   li.append(node, text, meta);
   timeline.appendChild(li);
+});
+
+const bioForm = document.createElement('form');
+bioForm.innerHTML = `<label class="label-caps" for="bioInput">Hoja de vida</label><textarea class="input-base" id="bioInput" name="bio" rows="3">${profile.bio || ''}</textarea><button class="btn btn-primary label-caps" type="submit">Guardar perfil</button>`;
+document.getElementById('infoEmail')?.closest('section, article, div')?.append(bioForm);
+bioForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  await fetch(`${API_BASE}/api/profile`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bio: new FormData(bioForm).get('bio') }),
+  });
+  bioForm.insertAdjacentHTML('beforeend', '<p class="body-md">Perfil guardado.</p>');
 });

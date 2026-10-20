@@ -1,16 +1,19 @@
-import { requireAuth } from './session.js';
+import { requireAuth, API_BASE, getToken } from './session.js';
 import { initLayout } from './layout.js';
-import {
-  PROJECTS_SUMMARY,
-  PUBLICATIONS,
-  SEMILLERO,
-  NOTIFICATIONS,
-  GAMIFICATION,
-} from './demo-data.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
+
+const homeResponse = await fetch(`${API_BASE}/api/home`, {
+  headers: { Authorization: `Bearer ${getToken()}` },
+});
+const home = homeResponse.ok ? await homeResponse.json() : {};
+const PROJECTS_SUMMARY = home.projects || [];
+const PUBLICATIONS = home.publications || [];
+const SEMILLERO = home.semillero || { name: 'Sin semillero', members: '', activities: '' };
+const NOTIFICATIONS = home.notifications || [];
+const GAMIFICATION = home.gamification || { stars: 0, totalStars: 5 };
 
 function starRow(container, total, filled) {
   for (let i = 0; i < total; i++) {
@@ -41,7 +44,8 @@ PROJECTS_SUMMARY.forEach((project) => {
   const arrow = document.createElement('button');
   arrow.className = 'icon-btn-round';
   arrow.type = 'button';
-  arrow.disabled = true;
+  arrow.disabled = false;
+  arrow.addEventListener('click', () => { location.href = `/project-detail?id=${encodeURIComponent(project.id)}`; });
   arrow.innerHTML = '<span class="material-symbols-outlined">arrow_forward</span>';
   row.append(info, arrow);
   projectsList.appendChild(row);

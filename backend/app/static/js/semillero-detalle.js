@@ -138,6 +138,53 @@ toggleMembersBtn.addEventListener('click', () => {
 });
 renderMembers();
 
+document.getElementById('linkForm')?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const motivation = document.getElementById('motivationInput').value;
+  const response = await fetch(`${API_BASE}/api/semilleros/${encodeURIComponent(requestedId)}/join`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('riul_token')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ motivation }),
+  });
+  const data = await response.json().catch(() => ({}));
+  document.getElementById('linkNote').textContent = response.ok
+    ? 'Solicitud enviada. Estado: pendiente de aprobación del líder.'
+    : (data.message || 'No se pudo enviar la solicitud.');
+});
+
+if (record.leader && user.full_name && record.leader === user.full_name) {
+  const pendingResponse = await fetch(`${API_BASE}/api/semilleros/${encodeURIComponent(requestedId)}/pending`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('riul_token')}` },
+  });
+  const pending = pendingResponse.ok ? (await pendingResponse.json()).items || [] : [];
+  const box = document.getElementById('vinculacion');
+  pending.forEach((item) => {
+    const row = document.createElement('div');
+    row.className = 'body-md';
+    row.textContent = `${item.name} (${item.email})`;
+    const approve = document.createElement('button');
+    approve.className = 'btn btn-teal label-caps';
+    approve.type = 'button';
+    approve.textContent = 'Aprobar';
+    approve.addEventListener('click', async () => {
+      await fetch(`${API_BASE}/api/semilleros/${encodeURIComponent(requestedId)}/members/${item.user_id}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('riul_token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'active' }),
+      });
+      location.reload();
+    });
+    row.append(approve);
+    box.append(row);
+  });
+}
+
 document.getElementById('researchDetails').hidden = true;
 document.getElementById('publicationsSection').hidden = true;
 document.getElementById('activitiesSection').hidden = true;

@@ -1,6 +1,5 @@
-import { requireAuth } from './session.js';
+import { requireAuth, API_BASE, getToken } from './session.js';
 import { initLayout } from './layout.js';
-import { EVENTS } from './demo-data.js';
 
 await initLayout();
 const user = await requireAuth();
@@ -10,6 +9,7 @@ const grid = document.getElementById('eventsGrid');
 const search = document.getElementById('eventSearch');
 const filters = { type: document.getElementById('eventType'), location: document.getElementById('eventLocation'), period: document.getElementById('eventPeriod') };
 let activeKind = 'event';
+let EVENTS = [];
 
 function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character])); }
 function dateLabel(value) { return new Date(value).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' }); }
@@ -31,5 +31,14 @@ function render() {
 function renderMyEvents() { document.getElementById('myEventsTable').innerHTML = EVENTS.filter((item) => item.participationStatus !== 'available').map((item) => `<tr><td>${escapeHtml(item.title)}</td><td>${escapeHtml(item.kind === 'call' ? 'Convocatoria' : item.type)}</td><td><span class="status-pill">${escapeHtml(item.participationStatus === 'registered' ? 'Inscrito' : item.participationStatus === 'pending' ? 'Postulación pendiente' : 'Cerrado')}</span></td></tr>`).join(''); }
 function setupFilters() { fillFilter(filters.type, [...new Set(EVENTS.map((item) => item.type))]); fillFilter(filters.location, [...new Set(EVENTS.map((item) => item.location))]); [...new Set(EVENTS.map((item) => item.startDate.slice(0, 7)))].forEach((value) => filters.period.insertAdjacentHTML('beforeend', `<option value="${value}">${dateLabel(`${value}-01`)}</option>`)); }
 
+async function boot() {
+  const response = await fetch(`${API_BASE}/api/activities`, { headers: { Authorization: `Bearer ${getToken()}` } });
+  const data = await response.json();
+  EVENTS = data.items || [];
+  setupFilters();
+  render();
+  renderMyEvents();
+}
+
 document.querySelector('[role="tablist"]').addEventListener('click', (event) => { const tab = event.target.closest('[role="tab"]'); if (!tab) return; activeKind = tab.dataset.kind; document.querySelectorAll('[role="tab"]').forEach((item) => { const active = item === tab; item.classList.toggle('active', active); item.setAttribute('aria-selected', String(active)); }); document.getElementById('eventsPanel').textContent = activeKind === 'event' ? 'Próximos eventos' : 'Convocatorias disponibles'; render(); });
-search.addEventListener('input', render); Object.values(filters).forEach((select) => select.addEventListener('change', render)); setupFilters(); render(); renderMyEvents();
+search.addEventListener('input', render); Object.values(filters).forEach((select) => select.addEventListener('change', render)); boot();

@@ -26,7 +26,7 @@ def overview() -> dict:
         "programs": catalog_repository.count_programs(),
         "semilleros": semillero_repository.count_semilleros(),
         "posts": post_repository.count_posts(),
-        "unavailable": ["projects", "events", "achievements", "reports"],
+        "unavailable": [],
     }
 
 

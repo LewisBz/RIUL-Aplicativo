@@ -1,13 +1,17 @@
-import { requireAuth } from './session.js';
+import { requireAuth, API_BASE, getToken } from './session.js';
 import { initLayout } from './layout.js';
-import { PROJECTS } from './demo-data.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
 
 const root = document.getElementById('projectDetail');
-const project = PROJECTS.find(({ id }) => id === new URLSearchParams(location.search).get('id'));
+const slug = new URLSearchParams(location.search).get('id');
+const response = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(slug || '')}`, {
+  headers: { Authorization: `Bearer ${getToken()}` },
+});
+const payload = response.ok ? await response.json() : {};
+const project = payload.project;
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));

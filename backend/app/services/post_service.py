@@ -91,6 +91,16 @@ def create_post(user_id: int, data: dict, file=None) -> Post:
         _store_attachment(post, file)
 
     post_repository.commit()
+    from app.services.workflow_service import record_pending
+
+    record_pending(
+        user_id,
+        "post",
+        "Publicación en la comunidad",
+        content,
+        source_kind="post",
+        source_id=post.id,
+    )
     return post
 
 

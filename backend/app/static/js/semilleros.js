@@ -57,11 +57,13 @@ function normalize(text) {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
-function fillSelect(select, values) {
+function fillSelect(select, values, placeholder) {
+  if (!select) return;
+  const current = select.value || 'all';
   select.innerHTML = '';
   const allOption = document.createElement('option');
   allOption.value = 'all';
-  allOption.textContent = '(Todas)';
+  allOption.textContent = placeholder;
   select.appendChild(allOption);
   [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es')).forEach((value) => {
     const option = document.createElement('option');
@@ -69,11 +71,39 @@ function fillSelect(select, values) {
     option.textContent = value;
     select.appendChild(option);
   });
+  select.value = [...select.options].some((option) => option.value === current) ? current : 'all';
 }
 
-fillSelect(filterFaculty, semillerosList.map((s) => s.faculty));
-fillSelect(filterProgram, semillerosList.map((s) => s.program));
-fillSelect(filterArea, semillerosList.map((s) => s.area));
+let catalog = [];
+try {
+  const catalogResponse = await fetch(`${API_BASE}/api/auth/catalog`);
+  if (catalogResponse.ok) catalog = (await catalogResponse.json()).faculties || [];
+} catch (error) {
+  console.error('No se pudo cargar el catálogo.', error);
+}
+
+function programNames() {
+  if (state.faculty === 'all') {
+    return catalog.length
+      ? catalog.flatMap((faculty) => (faculty.programs || []).map((program) => program.name))
+      : semillerosList.map((item) => item.program);
+  }
+  const faculty = catalog.find((item) => item.name === state.faculty);
+  if (faculty) return (faculty.programs || []).map((program) => program.name);
+  return semillerosList.filter((item) => item.faculty === state.faculty).map((item) => item.program);
+}
+
+function refillFilters() {
+  fillSelect(
+    filterFaculty,
+    catalog.length ? catalog.map((faculty) => faculty.name) : semillerosList.map((item) => item.faculty),
+    'Todas las facultades',
+  );
+  fillSelect(filterProgram, programNames(), 'Todos los programas');
+  fillSelect(filterArea, semillerosList.map((item) => item.area), 'Todas las áreas');
+}
+
+refillFilters();
 
 function filteredSemilleros() {
   const query = normalize(state.query.trim());
@@ -89,8 +119,59 @@ function filteredSemilleros() {
   });
 }
 
-function detailHref(id, anchor) {
-  return `/semillero-detalle?id=${encodeURIComponent(id)}${anchor ? `#${anchor}` : ''}`;
+function detailHref(id) {
+  return `/semilleros?id=${encodeURIComponent(id)}`;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[character]));
+}
+
+async function showDetail(id, anchor) {
+  const panel = document.getElementById('semilleroDetail');
+  const response = await fetch(`${API_BASE}/api/semilleros/${encodeURIComponent(id)}`);
+  const data = await response.json();
+  if (!response.ok || !data.semillero) {
+    panel.innerHTML = '<p class="body-lg">No fue posible cargar este semillero.</p>';
+    return;
+  }
+  const record = data.semillero;
+  const members = (record.members || []).map((member) => `<li class="body-md">${escapeHtml(member.full_name)} · ${escapeHtml(member.role_in_semillero)}</li>`).join('');
+  panel.innerHTML = `
+    <p class="label-caps" style="margin:0;color:var(--secondary);">${escapeHtml(record.faculty)} / ${escapeHtml(record.program)}</p>
+    <h2 class="headline-md" style="margin:0;">${escapeHtml(record.name)}</h2>
+    <p class="body-md" style="margin:0;">${escapeHtml(record.description || '')}</p>
+    <p class="body-md" style="margin:0;"><strong>Líder:</strong> ${escapeHtml(record.leader)}</p>
+    <h3 class="card-label">Misión</h3>
+    <p class="body-md" style="margin:0;">${escapeHtml(record.mission || 'Sin misión registrada.')}</p>
+    <h3 class="card-label">Visión</h3>
+    <p class="body-md" style="margin:0;">${escapeHtml(record.vision || 'Sin visión registrada.')}</p>
+    <h3 class="card-label">Integrantes</h3>
+    <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:var(--space-2);">${members || '<li>Sin integrantes activos.</li>'}</ul>
+    <form id="linkForm" style="display:flex;flex-direction:column;gap:var(--space-3);">
+      <label class="label-caps" for="motivationInput">Solicitar vinculación</label>
+      <textarea class="input-base" id="motivationInput" rows="4" required placeholder="Por qué quieres unirte"></textarea>
+      <button class="btn btn-primary label-caps" type="submit">Enviar solicitud</button>
+      <p class="body-md" id="linkNote" style="margin:0;"></p>
+    </form>`;
+  const url = detailHref(id) + (anchor ? `#${anchor}` : '');
+  history.replaceState(null, '', url);
+  document.getElementById('linkForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const token = localStorage.getItem('riul_token');
+    const join = await fetch(`${API_BASE}/api/semilleros/${encodeURIComponent(id)}/join`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ motivation: document.getElementById('motivationInput').value }),
+    });
+    const body = await join.json().catch(() => ({}));
+    document.getElementById('linkNote').textContent = join.ok
+      ? 'Solicitud enviada. Queda pendiente de aprobación del líder.'
+      : (body.message || 'No se pudo enviar la solicitud.');
+  });
+  if (anchor) document.getElementById('linkForm')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function buildCard(sem) {
@@ -121,6 +202,10 @@ function buildCard(sem) {
 
   const titleLink = document.createElement('a');
   titleLink.href = detailHref(sem.id);
+  titleLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    showDetail(sem.id);
+  });
   titleLink.textContent = sem.name;
   titleLink.className = 'headline-md';
   titleLink.style.cssText = 'font-size:18px;line-height:1.3;color:var(--primary);text-decoration:none;margin:0;';
@@ -179,14 +264,14 @@ function buildCard(sem) {
   viewButton.className = 'btn btn-outline label-caps';
   viewButton.style.flex = '1';
   viewButton.textContent = 'Ver Detalle';
-  viewButton.addEventListener('click', () => { location.href = detailHref(sem.id); });
+  viewButton.addEventListener('click', () => { showDetail(sem.id); });
 
   const joinButton = document.createElement('button');
   joinButton.type = 'button';
   joinButton.className = 'btn btn-primary label-caps';
   joinButton.style.flex = '1';
   joinButton.textContent = 'Solicitar Vinculación';
-  joinButton.addEventListener('click', () => { location.href = detailHref(sem.id, 'vinculacion'); });
+  joinButton.addEventListener('click', () => { showDetail(sem.id, 'vinculacion'); });
 
   actionsRow.append(viewButton, joinButton);
   card.append(headRow, description, metaBox, actionsRow);
@@ -210,13 +295,38 @@ searchBtn.addEventListener('click', () => {
   render();
 });
 
-[filterFaculty, filterProgram, filterArea].forEach((select) => {
-  select.addEventListener('change', () => {
-    state.faculty = filterFaculty.value;
-    state.program = filterProgram.value;
-    state.area = filterArea.value;
-    render();
+function showFiltered() {
+  const list = filteredSemilleros();
+  render();
+  const panel = document.getElementById('semilleroDetail');
+  if (list.length === 1) {
+    showDetail(list[0].id);
+    return;
+  }
+  if (!list.length) {
+    panel.innerHTML = '<p class="body-lg" style="margin:0;">Ningún semillero coincide con ese filtro.</p>';
+    return;
+  }
+  if (state.faculty === 'all' && state.program === 'all' && state.area === 'all' && !state.query) return;
+  panel.innerHTML = `<p class="body-md" style="margin:0;">${list.length} semilleros con ese filtro. Elige uno para ver misión, integrantes y vinculación.</p><ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--space-3);">${list.map((item) => `<li><button class="btn btn-outline label-caps" type="button" data-open="${item.id}">${item.name}</button><p class="body-md" style="margin:var(--space-2) 0 0;">${item.faculty} · ${item.program} · ${item.area}</p></li>`).join('')}</ul>`;
+  panel.querySelectorAll('[data-open]').forEach((button) => {
+    button.addEventListener('click', () => showDetail(button.dataset.open));
   });
+}
+
+filterFaculty.addEventListener('change', () => {
+  state.faculty = filterFaculty.value;
+  state.program = 'all';
+  fillSelect(filterProgram, programNames(), 'Todos los programas');
+  showFiltered();
+});
+filterProgram.addEventListener('change', () => {
+  state.program = filterProgram.value;
+  showFiltered();
+});
+filterArea.addEventListener('change', () => {
+  state.area = filterArea.value;
+  showFiltered();
 });
 
 clearFiltersBtn.addEventListener('click', () => {
@@ -228,7 +338,10 @@ clearFiltersBtn.addEventListener('click', () => {
   filterFaculty.value = 'all';
   filterProgram.value = 'all';
   filterArea.value = 'all';
+  fillSelect(filterProgram, programNames(), 'Todos los programas');
   render();
 });
 
 render();
+const requested = new URLSearchParams(location.search).get('id');
+if (requested) showDetail(requested, location.hash.replace('#', ''));
