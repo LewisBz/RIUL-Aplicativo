@@ -10,11 +10,14 @@ from app.schemas import (
     AchievementListQuerySchema,
     AchievementReviewSchema,
     AdminUsersQuerySchema,
+    ReportCreateSchema,
+    ReportListQuerySchema,
     UserSchema,
     UserStatusSchema,
     serialize_achievement,
+    serialize_report,
 )
-from app.services import admin_service, gamification_service
+from app.services import admin_service, gamification_service, report_service
 from app.utils.errors import ServiceError
 
 
@@ -39,6 +42,11 @@ def require_administrator(view):
 @require_administrator
 def get_overview():
     return jsonify(admin_service.overview()), 200
+
+
+@require_administrator
+def get_analytics():
+    return jsonify(admin_service.analytics()), 200
 
 
 @require_administrator
@@ -94,3 +102,37 @@ def patch_achievement(achievement_id: int):
         actor, achievement_id, data["status"], data.get("xp")
     )
     return jsonify(achievement=serialize_achievement(achievement, with_user=True)), 200
+
+@require_administrator
+def list_reports():
+    query = load_schema(
+        ReportListQuerySchema(),
+        {"kind": request.args["kind"]} if request.args.get("kind") else {},
+    )
+    actor = user_repository.get_user_by_id(int(get_jwt_identity()))
+    reports = report_service.list_reports(actor, query.get("kind"))
+    return jsonify(
+        items=[serialize_report(r, with_metrics=False) for r in reports], total=len(reports)
+    ), 200
+
+
+@require_administrator
+def create_report():
+    data = load_schema(ReportCreateSchema(), request.get_json(silent=True) or {})
+    actor = user_repository.get_user_by_id(int(get_jwt_identity()))
+    report = report_service.generate(
+        actor, data["kind"], data["period_start"], data["period_end"]
+    )
+    return jsonify(report=serialize_report(report)), 201
+
+
+@require_administrator
+def get_report(report_id: int):
+    return jsonify(report=serialize_report(report_service.get_or_404(report_id))), 200
+
+
+@require_administrator
+def publish_report(report_id: int):
+    actor = user_repository.get_user_by_id(int(get_jwt_identity()))
+    report = report_service.publish(actor, report_id)
+    return jsonify(report=serialize_report(report)), 200

@@ -1,4 +1,4 @@
-﻿import { API_BASE, requireAuth, getToken, logout } from './session.js';
+import { API_BASE, requireAuth, getToken, logout } from './session.js';
 import { initLayout } from './layout.js';
 import { showSkeleton } from './skeleton.js';
 
@@ -136,13 +136,16 @@ function postCardHtml(post, viewerId) {
           <span class="material-symbols-outlined${post.reacted_by_me ? ' filled' : ''}">thumb_up</span>
           <span data-reaction-count>${post.reaction_count}</span> Reacciones
         </button>
-        <button class="post-action-btn" disabled title="Próximamente">
-          <span class="material-symbols-outlined">chat_bubble_outline</span> Comentarios
+        <button class="post-action-btn" data-action="comments" data-post-id="${post.id}" aria-expanded="false">
+          <span class="material-symbols-outlined">chat_bubble_outline</span>
+          <span data-comment-count>${post.comment_count ?? 0}</span> Comentarios
         </button>
-        <button class="post-action-btn" data-action="share" data-post-id="${post.id}">
-          <span class="material-symbols-outlined">share</span> Compartir
+        <button class="post-action-btn${post.shared_by_me ? ' reacted' : ''}" data-action="share" data-post-id="${post.id}">
+          <span class="material-symbols-outlined${post.shared_by_me ? ' filled' : ''}">share</span>
+          <span data-share-count>${post.share_count ?? 0}</span> Compartir
         </button>
       </div>
+      <section class="post-comments" data-comments-for="${post.id}" hidden></section>
     </article>`;
 }
 
@@ -211,6 +214,64 @@ document.getElementById('categoryChips').addEventListener('click', async (event)
   }
 });
 
+function commentHtml(comment, postId) {
+  const mine = comment.author?.id === state.me?.id || state.me?.role === 'administrator';
+  return `
+    <div class="post-comment" data-comment="${comment.id}" style="display:flex;gap:var(--space-2);align-items:flex-start;margin-top:var(--space-2);">
+      <span class="avatar avatar-sm">${escapeHtml(initials(comment.author?.full_name))}</span>
+      <div style="flex:1;min-width:0;">
+        <strong>${escapeHtml(comment.author?.full_name || 'Investigador')}</strong>
+        <time style="margin-left:var(--space-2);font-size:12px;" datetime="${escapeHtml(comment.created_at)}">${escapeHtml(timeAgo(comment.created_at))}</time>
+        <p class="body-md" style="margin:0;">${escapeHtml(comment.body)}</p>
+      </div>
+      ${mine ? `<button class="icon-action" data-action="delete-comment" data-post-id="${postId}" data-comment-id="${comment.id}" aria-label="Eliminar comentario" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>` : ''}
+    </div>`;
+}
+
+async function refreshComments(postId) {
+  const box = document.querySelector(`[data-comments-for="${postId}"]`);
+  const response = await api(`/api/posts/${postId}/comments`);
+  if (!response.ok) return;
+  const { items } = await response.json();
+  box.querySelector('[data-comment-list]').innerHTML = items.map((item) => commentHtml(item, postId)).join('');
+  document.querySelector(`[data-post-card="${postId}"] [data-comment-count]`).textContent = items.length;
+}
+
+async function toggleComments(button, postId) {
+  const box = document.querySelector(`[data-comments-for="${postId}"]`);
+  const open = box.hidden;
+  button.setAttribute('aria-expanded', String(open));
+  box.hidden = !open;
+  if (!open || box.dataset.ready) return;
+  box.dataset.ready = '1';
+  box.innerHTML = `
+    <div data-comment-list></div>
+    <form data-comment-form style="display:flex;gap:var(--space-2);margin-top:var(--space-3);">
+      <input class="input-base" name="body" maxlength="2000" required placeholder="Escribe un comentario…" aria-label="Escribe un comentario">
+      <button class="btn btn-primary label-caps" type="submit">Comentar</button>
+    </form>
+    <p class="body-md" data-comment-error role="alert" style="color:var(--error);margin:var(--space-1) 0 0;"></p>`;
+  box.querySelector('[data-comment-form]').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const input = form.elements.body;
+    const errorEl = box.querySelector('[data-comment-error]');
+    errorEl.textContent = '';
+    const response = await api(`/api/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body: input.value.trim() }),
+    });
+    if (!response.ok) {
+      errorEl.textContent = (await response.json().catch(() => ({}))).message || 'No fue posible comentar.';
+      return;
+    }
+    input.value = '';
+    await refreshComments(postId);
+  });
+  await refreshComments(postId);
+}
+
 feedGrid.addEventListener('click', async (event) => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
@@ -234,12 +295,34 @@ feedGrid.addEventListener('click', async (event) => {
 
   if (action === 'share') {
     const permalink = `${location.origin}${location.pathname.replace(/#.*$/, '')}#post-${postId}`;
+    button.disabled = true;
     try {
-      await navigator.clipboard.writeText(permalink);
-      button.title = '¡Enlace copiado!';
-      setTimeout(() => { button.title = ''; }, 1500);
-    } catch {
-      button.title = permalink;
+      const response = await api(`/api/posts/${postId}/shares`, { method: 'POST' });
+      if (response.ok) {
+        const { share_count, shared_by_me } = await response.json();
+        button.querySelector('[data-share-count]').textContent = share_count;
+        button.classList.toggle('reacted', shared_by_me);
+        button.querySelector('.material-symbols-outlined').classList.toggle('filled', shared_by_me);
+        if (shared_by_me) {
+          await navigator.clipboard.writeText(permalink).catch(() => {});
+          button.title = '¡Enlace copiado!';
+          setTimeout(() => { button.title = ''; }, 1500);
+        }
+      }
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  if (action === 'comments') {
+    await toggleComments(button, postId);
+  }
+
+  if (action === 'delete-comment') {
+    const { commentId } = button.dataset;
+    const response = await api(`/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE' });
+    if (response.ok || response.status === 204) {
+      await refreshComments(postId);
     }
   }
 

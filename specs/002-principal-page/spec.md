@@ -4,7 +4,7 @@
 
 **Created**: 2026-08-22
 
-**Status**: Draft
+**Status**: Implementado (rutas actualizadas: antes `frontend/`, hoy `backend/app/templates/index.html`, `backend/app/static/js/main.js` y `backend/app/static/css/design-system.css`; Flask la sirve en `/`)
 
 **Input**: User description: "Generar el primer módulo, es decir página principal, con base al mockup riul_p_gina_principal y usando el CSS centralizado ubicado en frontend/."
 
@@ -12,13 +12,13 @@
 
 ### User Story 1 - Landing page faithful to mockup with centralized CSS (Priority: P1)
 
-A visitor opens `frontend/index.html` and sees the public RIUL landing page
+A visitor opens `/` (`backend/app/templates/index.html`) and sees the public RIUL landing page
 reproducing `mockup/stitch_riul_design_system_strategy/riul_p_gina_principal/code.html`
 section by section: sticky top navigation (brand + Semilleros/Proyectos/Eventos +
 Iniciar sesión/Registrarse actions), hero with abstract background at 20% opacity,
 bento grid (featured seedbeds span-8 + recent projects span-4), upcoming-events
 carousel, "Descubrir Más" section, and institutional footer — styled exclusively by
-`frontend/css/design-system.css` with zero Tailwind usage.
+`backend/app/static/css/design-system.css` with zero Tailwind usage.
 
 **Why this priority**: It is the first real module of the application and the public
 entry point that routes visitors to `/login` and `/register`.
@@ -43,7 +43,7 @@ browser and visually comparing each section against the mockup screenshot.
 
 The mobile hamburger toggles a simple navigation menu, and the carousel chevron
 buttons scroll the events track left/right, using a small vanilla ES module
-(`frontend/js/main.js`) with no libraries.
+(`backend/app/static/js/main.js`) with no libraries.
 
 **Why this priority**: The mockup renders these affordances as inert decorations; the
 real page must respond, but they are enhancements on top of US1.

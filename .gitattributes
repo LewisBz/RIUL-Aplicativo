@@ -1,0 +1,10 @@
+# Normaliza finales de línea; los scripts de shell deben ser LF para correr en Linux.
+* text=auto
+*.sh text eol=lf
+*.cnf text eol=lf
+dockerfile text eol=lf
+Dockerfile text eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary

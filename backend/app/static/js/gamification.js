@@ -36,7 +36,7 @@ document.getElementById('gamLevel').textContent = `Nivel ${GAMIFICATION.level}`;
 document.getElementById('gamXp').textContent = `${GAMIFICATION.xp} / ${GAMIFICATION.nextLevelXp} XP`;
 document.getElementById('xpFill').style.width = `${percent}%`;
 document.getElementById('gamStars').textContent = `${GAMIFICATION.stars} / ${GAMIFICATION.totalStars}`;
-document.getElementById('gamAchievements').textContent = ACHIEVEMENTS.filter(({ status }) => status === 'Validado').length;
+document.getElementById('gamAchievements').textContent = ACHIEVEMENTS.filter(({ statusCode }) => statusCode === 'approved').length;
 document.getElementById('gamPosition').textContent = RANKING.find(({ isCurrentUser }) => isCurrentUser)?.position ?? '—';
 
 const badgeGrid = document.getElementById('badgeGrid');
@@ -76,33 +76,111 @@ if (!ACHIEVEMENTS.length) {
 }
 ACHIEVEMENTS.forEach((achievement) => {
   const item = document.createElement('li');
-  item.className = `achievement-item${achievement.status === 'Validado' ? ' is-validated' : ''}`;
+  item.className = `achievement-item${achievement.statusCode === 'approved' ? ' is-validated' : ''}`;
   item.innerHTML = '<span class="material-symbols-outlined achievement-icon"></span><div class="achievement-content"><strong></strong><span class="achievement-description"></span><small></small></div><span class="xp-badge"></span>';
   item.querySelector('.achievement-icon').textContent = achievement.icon;
   item.querySelector('strong').textContent = achievement.title;
   item.querySelector('.achievement-description').textContent = achievement.description;
-  item.querySelector('small').textContent = achievement.status;
+  const origin = achievement.origin ? ` · ${achievement.origin.kindLabel}: ${achievement.origin.label ?? ''}` : '';
+  const evidence = achievement.evidenceCount
+    ? ` · ${achievement.evidenceCount} ${achievement.evidenceCount === 1 ? 'evidencia' : 'evidencias'}`
+    : '';
+  item.querySelector('small').textContent = `${achievement.status}${origin}${evidence}`;
+  if (achievement.statusCode !== 'rejected') {
+    const attach = document.createElement('button');
+    attach.type = 'button';
+    attach.className = 'btn btn-outline label-caps';
+    attach.textContent = 'Adjuntar evidencia';
+    attach.setAttribute('aria-label', `Adjuntar evidencia a ${achievement.title}`);
+    attach.addEventListener('click', () => attachEvidence(achievement));
+    item.querySelector('.achievement-content').appendChild(attach);
+  }
   item.querySelector('.xp-badge').textContent = `+${achievement.xp} XP`;
   achievementList.appendChild(item);
 });
 
+const EVIDENCE_ACCEPT = '.pdf,.png,.jpg,.jpeg,.doc,.docx';
+
+function uploadEvidence(achievementId, file) {
+  const body = new FormData();
+  body.append('file', file);
+  return api(`/api/gamification/achievements/${achievementId}/evidences`, { method: 'POST', body });
+}
+
+async function attachEvidence(achievement) {
+  const done = await openFormDialog({
+    title: `Evidencia: ${achievement.title}`,
+    submitLabel: 'Subir evidencia',
+    fields: [{ name: 'file', label: 'Archivo (PDF, imagen o documento)', type: 'file', accept: EVIDENCE_ACCEPT, required: true }],
+    onSubmit: ({ file }) => uploadEvidence(achievement.id, file),
+  });
+  if (done) location.href = '/gamification';
+}
+
+// Cada logro nace de exactamente un origen que el usuario puede acreditar.
+const ORIGIN_KINDS = [
+  { value: 'event', label: 'Evento en el que participé' },
+  { value: 'project', label: 'Proyecto de investigación' },
+  { value: 'product', label: 'Producto de investigación' },
+  { value: 'semillero', label: 'Semillero' },
+  { value: 'post', label: 'Publicación propia' },
+];
+
+async function loadOrigins(kind) {
+  if (kind === 'event') {
+    const { items } = await api('/api/events');
+    return items
+      .filter((item) => item.kind === 'event' && item.participation === 'registered')
+      .map((item) => ({ value: item.slug, label: item.title }));
+  }
+  if (kind === 'post') {
+    const { items } = await api('/api/posts');
+    return items
+      .filter((item) => item.author?.id === user.id)
+      .map((item) => ({ value: item.id, label: (item.content || `Publicación #${item.id}`).slice(0, 70) }));
+  }
+  const { projects, products, semilleros } = await api('/api/profile');
+  if (kind === 'project') return projects.map((item) => ({ value: item.slug, label: item.title }));
+  if (kind === 'product') return products.map((item) => ({ value: item.id, label: item.name }));
+  return semilleros.map((item) => ({ value: item.slug, label: item.name }));
+}
+
 async function registerAchievement() {
+  const step = await openFormDialog({
+    title: 'Registrar logro',
+    submitLabel: 'Continuar',
+    fields: [{ name: 'kind', label: '¿De dónde proviene el logro?', type: 'select', options: ORIGIN_KINDS, required: true }],
+    onSubmit: async ({ kind }) => ({ kind, options: await loadOrigins(kind) }),
+  });
+  if (!step) return;
+  if (!step.options.length) {
+    await openFormDialog({
+      title: 'Sin orígenes disponibles',
+      submitLabel: 'Entendido',
+      fields: [],
+      onSubmit: async () => true,
+    });
+    return;
+  }
   const created = await openFormDialog({
-    title: 'Registrar logro o actividad',
+    title: 'Registrar logro',
     submitLabel: 'Enviar a validación',
     fields: [
-      { name: 'title', label: 'Título', required: true, placeholder: 'Ej. Ponencia en congreso nacional' },
+      { name: 'origin', label: ORIGIN_KINDS.find(({ value }) => value === step.kind).label, type: 'select', options: step.options, required: true },
+      { name: 'title', label: 'Título', placeholder: 'Ej. Ponencia en congreso nacional' },
       { name: 'description', label: 'Descripción', type: 'textarea' },
       { name: 'achieved_on', label: 'Fecha', type: 'date' },
+      { name: 'file', label: 'Evidencia (opcional)', type: 'file', accept: EVIDENCE_ACCEPT },
     ],
-    onSubmit: async (values) => {
-      const body = Object.fromEntries(Object.entries(values).filter(([, value]) => value !== ''));
-      return (await api('/api/gamification/achievements', { method: 'POST', body })).achievement;
+    onSubmit: async ({ origin, file, ...rest }) => {
+      const body = { [step.kind]: origin, ...Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== '')) };
+      const { achievement } = await api('/api/gamification/achievements', { method: 'POST', body });
+      if (file && file.name) await uploadEvidence(achievement.id, file);
+      return achievement;
     },
   });
   if (created) location.href = '/gamification';
 }
-
 document.querySelector('.page-heading').insertAdjacentHTML('beforeend', '<button class="btn btn-primary label-caps" type="button" id="newAchievementBtn"><span class="material-symbols-outlined">add</span>Registrar logro</button>');
 document.getElementById('newAchievementBtn').addEventListener('click', registerAchievement);
 if (new URLSearchParams(location.search).get('new')) registerAchievement();

@@ -10,11 +10,13 @@
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./docker/mysql/riul.cnf:/etc/mysql/conf.d/riul.cnf:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-priulroot"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
       interval: 5s
       timeout: 5s
       retries: 20
+      start_period: 20s
     restart: unless-stopped
 
   app:
@@ -26,8 +28,11 @@
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-only-jwt-secret}
       SECRET_KEY: ${SECRET_KEY:-dev-only-secret-key}
       INSTITUTIONAL_EMAIL_DOMAIN: ${INSTITUTIONAL_EMAIL_DOMAIN:-unilibre.edu.co}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
       FLASK_APP: run.py
       DEMO_USERS_PASSWORD: ${DEMO_USERS_PASSWORD:-RiulDemo2026*}
+      # 1 = reemplaza los datos con el dataset demo en cada arranque; 0 = conserva los datos.
+      SEED_DEMO: ${SEED_DEMO:-1}
     ports:
       - "5000:5000"
     volumes:
@@ -35,8 +40,27 @@
     depends_on:
       db:
         condition: service_healthy
+    restart: unless-stopped
+
+  # Suite de pruebas contra MySQL real: docker compose --profile test run --rm tests
+  tests:
+    profiles: ["test"]
+    image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+    working_dir: /app
+    command: uv run pytest -q
+    environment:
+      UV_PROJECT_ENVIRONMENT: /venv
+      UV_LINK_MODE: copy
+      TEST_DATABASE_URL: mysql+pymysql://${MYSQL_USER:-riul}:${MYSQL_PASSWORD:-riul}@db:3306/riul_test
+      MYSQL_ADMIN_URL: mysql+pymysql://root:${MYSQL_ROOT_PASSWORD:-riulroot}@db:3306/mysql
+    volumes:
+      - ./backend:/app
+      - riul_venv:/venv
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   mysql_data:
   uploads_data:
-
+  riul_venv:

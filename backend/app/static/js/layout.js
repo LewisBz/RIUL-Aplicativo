@@ -21,6 +21,7 @@ const TOPNAV_LINKS = [
 const FOOTER_LINKS = [
   { label: 'Privacidad', href: '/privacidad' },
   { label: 'Términos', href: '/terminos' },
+  { label: 'Ayuda', href: '/help' },
   { label: 'Contacto', href: '/contacto' },
 ];
 

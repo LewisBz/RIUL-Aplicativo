@@ -37,6 +37,7 @@ export function openFormDialog({ title, submitLabel = 'Guardar', fields, onSubmi
         input = document.createElement('input');
         input.type = field.type || 'text';
         if (field.min !== undefined) input.min = field.min;
+        if (field.accept) input.accept = field.accept;
       }
       input.className = 'input-base';
       input.id = `dlg-${field.name}`;

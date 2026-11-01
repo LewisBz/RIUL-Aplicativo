@@ -3,8 +3,10 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from app.controllers.http import json_error, load_schema
 from app.schemas import (
+    CommentCreateSchema,
     PostCreateSchema,
     PostListQuerySchema,
+    serialize_comment,
     serialize_post,
     serialize_posts,
 )
@@ -65,6 +67,36 @@ def toggle_reaction(post_id: int):
     user_id = int(get_jwt_identity())
     count, reacted = post_service.toggle_reaction(user_id, post_id)
     return jsonify(reaction_count=count, reacted_by_me=reacted), 200
+
+
+@jwt_required()
+def list_comments(post_id: int):
+    comments = post_service.list_comments(post_id)
+    return jsonify(items=[serialize_comment(c) for c in comments], total=len(comments)), 200
+
+
+@jwt_required()
+def create_comment(post_id: int):
+    user_id = int(get_jwt_identity())
+    data = load_schema(CommentCreateSchema(), request.get_json(silent=True) or {})
+    comment = post_service.add_comment(user_id, post_id, data["body"])
+    return jsonify(comment=serialize_comment(comment)), 201
+
+
+@jwt_required()
+def delete_comment(post_id: int, comment_id: int):
+    user_id = int(get_jwt_identity())
+    actor = user_repository.get_user_by_id(user_id)
+    is_admin = actor is not None and actor.role == ROLE_ADMINISTRATOR
+    post_service.delete_comment(user_id, post_id, comment_id, is_admin=is_admin)
+    return "", 204
+
+
+@jwt_required()
+def toggle_share(post_id: int):
+    user_id = int(get_jwt_identity())
+    count, shared = post_service.toggle_share(user_id, post_id)
+    return jsonify(share_count=count, shared_by_me=shared), 200
 
 
 @jwt_required(locations=["headers", "query_string"])

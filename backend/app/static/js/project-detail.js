@@ -15,7 +15,14 @@ const STATUS_OPTIONS = [
   { value: 'planned', label: 'Planeado' },
   { value: 'in_progress', label: 'En curso' },
   { value: 'review', label: 'Revisión' },
-  { value: 'completed', label: 'Completado' },
+  { value: 'closed', label: 'Cerrado' },
+];
+
+const PRODUCT_TYPES = [
+  { value: 'article', label: 'Artículo' },
+  { value: 'presentation', label: 'Ponencia' },
+  { value: 'patent', label: 'Patente' },
+  { value: 'report', label: 'Informe' },
 ];
 
 function initials(name) {
@@ -64,7 +71,7 @@ async function load() {
     const added = await openFormDialog({
       title: 'Agregar producto',
       fields: [
-        { name: 'type', label: 'Tipo (Artículo, Informe, Patente…)', required: true },
+        { name: 'type', label: 'Tipo', type: 'select', options: PRODUCT_TYPES, required: true },
         { name: 'name', label: 'Nombre', required: true },
       ],
       onSubmit: (values) => api(`/api/projects/${encodeURIComponent(slug)}/products`, { method: 'POST', body: values }),

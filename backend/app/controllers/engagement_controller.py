@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import current_app, jsonify, request, send_from_directory
 
 from app.controllers.guards import active_user_required, items_response
 from app.controllers.http import json_error, load_schema, query_args
@@ -7,6 +7,8 @@ from app.schemas import (
     NotificationListQuerySchema,
     NotificationUpdateSchema,
     serialize_achievement,
+    serialize_achievement_type,
+    serialize_evidence,
     serialize_gamification,
     serialize_notification,
     serialize_ranking,
@@ -55,6 +57,25 @@ def create_achievement(user):
     data = load_schema(AchievementCreateSchema(), request.get_json(silent=True) or {})
     achievement = gamification_service.register_achievement(user, data)
     return jsonify(achievement=serialize_achievement(achievement)), 201
+
+
+@active_user_required
+def list_achievement_types(user):
+    return items_response(
+        [serialize_achievement_type(t) for t in gamification_service.catalog()["types"]]
+    )
+
+
+@active_user_required
+def upload_evidence(user, achievement_id: int):
+    evidence = gamification_service.add_evidence(user, achievement_id, request.files.get("file"))
+    return jsonify(evidence=serialize_evidence(evidence)), 201
+
+
+@active_user_required
+def serve_evidence(user, name: str):
+    gamification_service.get_evidence_for_download(user, name)
+    return send_from_directory(current_app.config["UPLOAD_FOLDER"], f"evidences/{name}")
 
 
 def handle_service_error(error: ServiceError):

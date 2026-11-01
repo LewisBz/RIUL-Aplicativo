@@ -1,7 +1,7 @@
 # Feature 004: Feed de Publicaciones (Comunidad)
 
 **Branch**: `004-feed-publicaciones` | **Base**: `develop`
-**Constitution**: v1.1.0 | **Priority**: P1 (first authenticated social module)
+**Constitution**: v3.0.0 (originalmente v1.1.0) | **Priority**: P1 (first authenticated social module) | **Status**: Implementado
 **Mockup**: `mockup/stitch_riul_design_system_strategy/riul_feed_de_publicaciones/`
 
 ## Purpose
@@ -16,7 +16,7 @@ Scope decisions (agreed 2026-08-22):
 
 - Real file uploads (multipart) stored in a container volume; no URL-pasting.
 - Comments deferred to a later feature; the "Comentarios" button renders inert.
-- Frontend page name: `frontend/feed.html`.
+- Frontend page: `backend/app/templates/feed.html` (ruta `/feed`). Un editor completo en `/crear-publicacion` (feature 011) usa el mismo `POST /api/posts`.
 - The per-card `more_horiz` menu only appears on your own posts → delete.
 
 ## API Contract (defined before implementation — Principle II)

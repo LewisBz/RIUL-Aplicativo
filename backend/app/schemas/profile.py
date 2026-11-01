@@ -13,6 +13,9 @@ class ProfileUpdateSchema(Schema):
     full_name = fields.Str(validate=validate.Length(min=2, max=160, error="El nombre debe tener entre 2 y 160 caracteres."))
     faculty_id = fields.Int(allow_none=True)
     program_id = fields.Int(allow_none=True)
+    bio = fields.Str(allow_none=True)
+    photo = fields.Str(allow_none=True)
+    orcid = fields.Str(allow_none=True)
 
 
 class ChangePasswordSchema(Schema):
@@ -27,6 +30,9 @@ def serialize_profile(profile: dict, user_payload: dict) -> dict:
     user = profile["user"]
     return {
         "user": user_payload,
+        "bio": user.profile.bio if user.profile else None,
+        "photo": user.profile.photo if user.profile else None,
+        "orcid": user.profile.orcid if user.profile else None,
         "faculty": {"id": user.faculty.id, "name": user.faculty.name} if user.faculty else None,
         "program": {"id": user.program.id, "name": user.program.name} if user.program else None,
         "semilleros": [

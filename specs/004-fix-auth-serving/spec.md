@@ -1,7 +1,7 @@
 # Feature 004: Fix Auth Serving (alembic.ini + static frontend via Flask)
 
 **Branch**: `004-fix-auth-serving` | **Base**: `develop`
-**Type**: Bugfix of 003-auth | **Constitution**: v1.2.0
+**Type**: Bugfix of 003-auth | **Constitution**: v1.2.0 (vigente hoy: v3.0.0) | **Status**: Implementado
 
 ## Problem
 
@@ -24,15 +24,15 @@ gunicorn` succeed. Logs show migration applied + "Seed completo" + gunicorn
 listening.
 
 ### US2: Frontend served by Flask
-`GET /` returns `frontend/index.html`; `GET /login.html`, `/register.html`,
-`css/*`, `js/*` return static files. Clean extension-less URLs resolve to
-their `.html` file (`/login`, `/register`, `/docs`); all `/api/*` routes keep
-precedence.
+`GET /` renders `backend/app/templates/index.html`. Clean extension-less URLs
+resolve to their template in `backend/app/templates` (`/login`, `/register`,
+`/docs`), and assets are served from `backend/app/static` (`/static/css/*`,
+`/static/js/*`); all `/api/*` routes keep precedence.
 
 ### US2.1: Manual testing tools (dev-only)
 - `backend/api.http` provides ready-to-send requests for the VS Code REST
   Client extension, including automatic token capture from the login response.
-- `frontend/docs.html` + `frontend/openapi.yaml` expose interactive Swagger UI
+- `backend/app/templates/docs.html` + `backend/app/static/openapi.yaml` (served at `/openapi.yaml`) expose interactive Swagger UI
   at `/docs` (CDN-loaded, dev documentation only — not part of the product
   runtime).
 
@@ -45,10 +45,10 @@ to `http://localhost:5000` for any other origin (CORS already enabled).
 - [ ] `docker compose up -d --build app` → healthy, no restart loop
 - [ ] `curl localhost:5000/api/auth/catalog` lists seeded faculties+programs
 - [ ] Full flow via curl works: register → login → me (Bearer)
-- [ ] `curl localhost:5000/login.html` returns 200 HTML
+- [ ] `curl localhost:5000/login` returns 200 HTML
 - [ ] Clean URLs return 200: `/login`, `/register`, `/docs`
 - [ ] `/openapi.yaml` served; Swagger UI renders it at `/docs`
-- [ ] pytest suite remains 14/14 green
+- [ ] pytest suite remains green (14 tests originally; 93 today)
 
 ## Out of Scope
 

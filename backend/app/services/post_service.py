@@ -1,18 +1,22 @@
 import time
-import uuid
 from pathlib import Path
 
 from flask import current_app
-from werkzeug.utils import secure_filename
 
-from app.models import KIND_FILE, KIND_IMAGE, POST_CATEGORIES, Post, PostAttachment, PostReaction
+from app.models import (
+    POST_CATEGORIES,
+    Comment,
+    Post,
+    PostAttachment,
+    PostReaction,
+    PostShare,
+)
 from app.repositories import post_repository
 from app.utils.errors import ServiceError
+from app.utils.uploads import save_upload
 
-MAX_UPLOAD_BYTES = 10 * 1024 * 1024
-ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif"}
-ALLOWED_FILE_EXTENSIONS = {"pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"}
 DEFAULT_PER_PAGE = 10
+MAX_COMMENT_LENGTH = 2000
 
 
 def _clean(value) -> str:
@@ -33,43 +37,8 @@ def _validate_link(link_url) -> str | None:
     return link
 
 
-def _attachment_kind(filename: str) -> str:
-    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
-    if ext in ALLOWED_IMAGE_EXTENSIONS:
-        return KIND_IMAGE
-    if ext in ALLOWED_FILE_EXTENSIONS:
-        return KIND_FILE
-    raise ServiceError(
-        "Tipo de archivo no permitido. Imágenes: png, jpg, jpeg, webp, gif. "
-        "Documentos: pdf, doc, docx, ppt, pptx, xls, xlsx.",
-        400,
-    )
-
-
-def _uploads_dir() -> Path:
-    directory = Path(current_app.config["UPLOAD_FOLDER"]) / "posts"
-    directory.mkdir(parents=True, exist_ok=True)
-    return directory
-
-
 def _store_attachment(post: Post, file) -> None:
-    original = secure_filename(file.filename or "")
-    if not original or "." not in original:
-        raise ServiceError("Adjunto inválido o sin extensión.", 400)
-    kind = _attachment_kind(original)
-    ext = original.rsplit(".", 1)[-1].lower()
-    storage_name = f"{uuid.uuid4().hex}.{ext}"
-    target = _uploads_dir() / storage_name
-    file.save(target)
-    post.attachments.append(
-        PostAttachment(
-            kind=kind,
-            file_name=original,
-            storage_name=storage_name,
-            mime_type=getattr(file, "mimetype", None),
-            file_size=target.stat().st_size,
-        )
-    )
+    post.attachments.append(PostAttachment(**save_upload(file, "posts")))
 
 
 def create_post(user_id: int, data: dict, file=None) -> Post:
@@ -129,6 +98,10 @@ def delete_post(user_id: int, post_id: int, is_admin: bool = False) -> None:
     post = get_post_or_404(post_id)
     if post.author_id != user_id and not is_admin:
         raise ServiceError("Solo el autor puede eliminar esta publicación.", 403)
+    if post_repository.post_has_achievements(post.id):
+        raise ServiceError(
+            "La publicación respalda un logro y no puede eliminarse.", 409
+        )
     storage_names = [a.storage_name for a in post.attachments]
     post_repository.delete_post(post)
     post_repository.commit()
@@ -147,3 +120,48 @@ def toggle_reaction(user_id: int, post_id: int) -> tuple[int, bool]:
         reacted = False
     post_repository.commit()
     return post_repository.count_reactions(post_id), reacted
+
+
+# --- Comentarios ---
+def list_comments(post_id: int) -> list[Comment]:
+    get_post_or_404(post_id)
+    return post_repository.list_comments(post_id)
+
+
+def add_comment(user_id: int, post_id: int, body: str) -> Comment:
+    post = get_post_or_404(post_id)
+    text = _clean(body)
+    if not text:
+        raise ServiceError("El comentario no puede estar vacío.", 400)
+    if len(text) > MAX_COMMENT_LENGTH:
+        raise ServiceError(
+            f"El comentario no puede superar {MAX_COMMENT_LENGTH} caracteres.", 400
+        )
+    comment = post_repository.add_comment(Comment(post_id=post.id, user_id=user_id, body=text))
+    post_repository.commit()
+    return comment
+
+
+def delete_comment(user_id: int, post_id: int, comment_id: int, is_admin: bool = False) -> None:
+    get_post_or_404(post_id)
+    comment = post_repository.get_comment(post_id, comment_id)
+    if comment is None:
+        raise ServiceError("Comentario no encontrado.", 404)
+    if comment.user_id != user_id and not is_admin:
+        raise ServiceError("Solo el autor puede eliminar este comentario.", 403)
+    post_repository.delete_comment(comment)
+    post_repository.commit()
+
+
+# --- Compartidos ---
+def toggle_share(user_id: int, post_id: int) -> tuple[int, bool]:
+    post = get_post_or_404(post_id)
+    existing = post_repository.get_share(post_id, user_id)
+    if existing is None:
+        post_repository.add_share(PostShare(post_id=post.id, user_id=user_id))
+        shared = True
+    else:
+        post_repository.delete_share(existing)
+        shared = False
+    post_repository.commit()
+    return post_repository.count_shares(post_id), shared

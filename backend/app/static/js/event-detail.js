@@ -61,3 +61,45 @@ async function load() {
 }
 
 await load();
+
+const APPLICATION_LABELS = { pending: 'Pendiente', accepted: 'Aceptada', rejected: 'Rechazada' };
+
+async function renderApplications(item) {
+  const stack = root.querySelector('.detail-stack');
+  const card = document.createElement('section');
+  card.className = 'glass-card detail-card';
+  card.innerHTML = '<h2 class="headline-md">Postulaciones</h2><div data-applications></div><p class="body-md" data-application-message role="status"></p>';
+  stack.appendChild(card);
+  const list = card.querySelector('[data-applications]');
+  const message = card.querySelector('[data-application-message]');
+
+  async function refresh() {
+    const { items } = await api(`/api/events/${encodeURIComponent(slug)}/applications`);
+    list.innerHTML = items.length
+      ? `<div class="table-scroll"><table class="table-data"><thead><tr><th>Postulante</th><th>Tipo</th><th>Estado</th><th></th></tr></thead><tbody>${items.map((app) => `<tr><td>${escapeHtml(app.applicant.name || '—')}</td><td>${app.applicant.kind === 'semillero' ? 'Semillero' : 'Persona'}</td><td>${escapeHtml(APPLICATION_LABELS[app.status] ?? app.status)}</td><td>${app.status === 'pending' ? `<button class="btn btn-primary label-caps" type="button" data-review="accepted" data-id="${app.id}">Aceptar</button> <button class="btn btn-outline label-caps" type="button" data-review="rejected" data-id="${app.id}">Rechazar</button>` : ''}</td></tr>`).join('')}</tbody></table></div>`
+      : '<p class="body-md">Aún no hay postulaciones.</p>';
+  }
+
+  list.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-review]');
+    if (!button) return;
+    button.disabled = true;
+    try {
+      await api(`/api/events/${encodeURIComponent(slug)}/applications/${button.dataset.id}`, {
+        method: 'PATCH',
+        body: { status: button.dataset.review },
+      });
+      message.textContent = 'Postulación actualizada.';
+      await refresh();
+    } catch (error) {
+      message.textContent = error.message;
+      button.disabled = false;
+    }
+  });
+  await refresh();
+}
+
+if (user.role === 'administrator' && slug) {
+  const current = toEvent((await api(`/api/events/${encodeURIComponent(slug)}`)).event);
+  if (current.kind === 'call') await renderApplications(current);
+}

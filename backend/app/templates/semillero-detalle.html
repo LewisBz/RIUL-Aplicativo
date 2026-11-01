@@ -35,6 +35,7 @@
           <div style="min-width:0;">
             <h1 class="headline-md" id="semName" style="margin:0 0 var(--space-1);color:var(--primary);"></h1>
             <p class="title-lg" id="semAffiliation" style="margin:0;color:var(--secondary);font-size:16px;"></p>
+            <p class="body-md" id="semProgress" style="margin:var(--space-1) 0 0;color:var(--secondary);font-size:13px;"></p>
           </div>
         </div>
         <button class="btn btn-outline label-caps" type="button" id="followBtn">
@@ -88,6 +89,11 @@
               <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--secondary);">Integrantes</h3>
               <div id="membersGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-3);"></div>
               <button class="btn btn-outline label-caps btn-block" type="button" id="toggleMembers" style="margin-top:var(--space-3);"></button>
+              <div id="pendingBox" hidden style="margin-top:var(--space-4);">
+                <h3 class="label-caps" style="margin:0 0 var(--space-2);color:var(--secondary);">Solicitudes pendientes</h3>
+                <div id="pendingList" style="display:flex;flex-direction:column;gap:var(--space-2);"></div>
+                <p class="body-md" id="pendingNote" role="status" style="margin:var(--space-2) 0 0;color:var(--secondary);font-size:12px;"></p>
+              </div>
             </div>
           </section>
 

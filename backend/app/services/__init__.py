@@ -7,8 +7,11 @@ from app.services import (
     post_service,
     profile_service,
     project_service,
+    reference_service,
+    report_service,
     seed_service,
     semillero_service,
+    support_service,
 )
 
 __all__ = [
@@ -20,6 +23,9 @@ __all__ = [
     "post_service",
     "profile_service",
     "project_service",
+    "reference_service",
+    "report_service",
     "seed_service",
     "semillero_service",
+    "support_service",
 ]

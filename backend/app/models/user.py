@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, String, func
+from sqlalchemy import ForeignKey, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import bcrypt, db
@@ -62,9 +62,34 @@ class User(db.Model):
 
     faculty: Mapped["Faculty | None"] = relationship()
     program: Mapped["Program | None"] = relationship()
+    profile: Mapped["UserProfile | None"] = relationship(
+        back_populates="user", cascade="all, delete-orphan", uselist=False
+    )
 
     def set_password(self, raw: str) -> None:
         self.password_hash = bcrypt.generate_password_hash(raw).decode("utf-8")
 
     def check_password(self, raw: str) -> bool:
         return bcrypt.check_password_hash(self.password_hash, raw)
+
+    def ensure_profile(self) -> "UserProfile":
+        """Devuelve el perfil extendido, creándolo si todavía no existe."""
+        if self.profile is None:
+            self.profile = UserProfile()
+        return self.profile
+
+
+class UserProfile(db.Model):
+    """Datos públicos opcionales del investigador (1:1 con `users`)."""
+
+    __tablename__ = "user_profiles"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
+    )
+    bio: Mapped[str | None] = mapped_column(Text)
+    photo: Mapped[str | None] = mapped_column(String(255))
+    orcid: Mapped[str | None] = mapped_column(String(19))
+
+    user: Mapped["User"] = relationship(back_populates="profile")

@@ -1,5 +1,7 @@
+from datetime import datetime, timezone
+
 from app.models import (
-    ACHIEVEMENT_IN_REVIEW,
+    ACHIEVEMENT_PENDING,
     NOTIFICATION_ACCOUNT,
     PRIORITY_HIGH,
     ROLE_ADMINISTRATOR,
@@ -11,8 +13,9 @@ from app.models import (
     User,
 )
 from app.repositories import (
-    engagement_repository,
+    analytics_repository,
     event_repository,
+    gamification_repository,
     post_repository,
     project_repository,
     semillero_repository,
@@ -35,10 +38,59 @@ def overview() -> dict:
         "projects": project_repository.count_projects(),
         "events": event_repository.count_events(),
         "achievements": {
-            "total": engagement_repository.count_achievements(),
-            "pending": engagement_repository.count_achievements(ACHIEVEMENT_IN_REVIEW),
+            "total": gamification_repository.count_achievements(),
+            "pending": gamification_repository.count_achievements(ACHIEVEMENT_PENDING),
         },
-        "unavailable": ["reports"],
+        "unavailable": [],
+    }
+
+
+def _month_keys(count: int = 12) -> list[str]:
+    today = datetime.now(timezone.utc).replace(tzinfo=None)
+    year, month = today.year, today.month
+    keys = []
+    for _ in range(count):
+        keys.append(f"{year:04d}-{month:02d}")
+        month -= 1
+        if month == 0:
+            year, month = year - 1, 12
+    return list(reversed(keys))
+
+
+def analytics() -> dict:
+    keys = _month_keys(12)
+    production = {key: {"month": key, "publications": 0, "projects": 0} for key in keys}
+    for produced_on in analytics_repository.publication_dates():
+        entry = production.get(produced_on.strftime("%Y-%m"))
+        if entry:
+            entry["publications"] += 1
+    for produced_on in analytics_repository.project_dates():
+        entry = production.get(produced_on.strftime("%Y-%m"))
+        if entry:
+            entry["projects"] += 1
+    by_status = analytics_repository.users_by_status()
+    return {
+        "totals": {
+            "publications": analytics_repository.count_publications(),
+            "active_projects": analytics_repository.count_active_projects(),
+            "semilleros": semillero_repository.count_semilleros(),
+            "validated_xp": analytics_repository.total_validated_xp(),
+        },
+        "production": [production[key] for key in keys],
+        "semilleros_by_faculty": [
+            {"faculty": name, "count": total}
+            for name, total in analytics_repository.semilleros_by_faculty()
+        ],
+        "top_semilleros": [
+            {"name": name, "faculty": faculty, "xp": xp}
+            for name, faculty, xp in analytics_repository.top_semilleros_by_xp()
+        ],
+        "account_status": {
+            "active": by_status.get(STATUS_ACTIVE, 0),
+            "pending": by_status.get(STATUS_PENDING, 0),
+            "rejected": by_status.get(STATUS_REJECTED, 0),
+            "total": sum(by_status.values()),
+        },
     }
 
 

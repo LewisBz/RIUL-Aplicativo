@@ -5,9 +5,12 @@ from app.routes.events import events_bp
 from app.routes.posts import posts_bp
 from app.routes.profile import profile_bp
 from app.routes.projects import projects_bp
+from app.routes.reports import reports_bp
 from app.routes.semilleros import semilleros_bp
+from app.routes.support import support_bp
 
 ALL_BLUEPRINTS = (
+    support_bp,
     auth_bp,
     profile_bp,
     posts_bp,
@@ -16,6 +19,7 @@ ALL_BLUEPRINTS = (
     events_bp,
     notifications_bp,
     gamification_bp,
+    reports_bp,
     admin_bp,
 )
 

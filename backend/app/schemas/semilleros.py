@@ -1,5 +1,12 @@
 from marshmallow import Schema, fields, validate
 
+from app.models import (
+    MEMBERSHIP_ACTIVE,
+    MEMBERSHIP_REJECTED,
+    SEMILLERO_ROLE_CO_LEADER,
+    SEMILLERO_ROLE_LEADER,
+    SEMILLERO_ROLE_MEMBER,
+)
 from app.schemas.projects import (
     iso,
     serialize_project_summary,
@@ -39,6 +46,24 @@ class SemilleroListQuerySchema(Schema):
     area = fields.Str(load_default=None, allow_none=True)
 
 
+class MemberReviewSchema(Schema):
+    """Resolución de una solicitud de vinculación por el líder."""
+
+    status = fields.Str(
+        required=True,
+        validate=validate.OneOf(
+            [MEMBERSHIP_ACTIVE, MEMBERSHIP_REJECTED], error="Estado de vinculación inválido."
+        ),
+    )
+    role = fields.Str(
+        load_default=None,
+        allow_none=True,
+        validate=validate.OneOf(
+            [SEMILLERO_ROLE_MEMBER, SEMILLERO_ROLE_CO_LEADER], error="Rol de vinculación inválido."
+        ),
+    )
+
+
 def _initials(name: str | None) -> str:
     parts = (name or "?").split()
     return "".join(p[0] for p in parts[:2]).upper() or "?"
@@ -55,21 +80,39 @@ def serialize_semillero_summary(s, my_role: str | None = None) -> dict:
         "top_badge": s.top_badge,
         "faculty": {"id": s.faculty.id, "name": s.faculty.name} if s.faculty else None,
         "program": {"id": s.program.id, "name": s.program.name} if s.program else None,
-        "leader": {"id": s.leader_id, "full_name": s.leader_name},
-        "member_count": len(s.members) + (1 if s.leader_id else 0),
+        "leader": {"id": s.leader_id, "full_name": s.leader.full_name if s.leader else None},
+        "member_count": len(s.active_members),
         "my_role": my_role,
     }
 
 
-def serialize_semillero_detail(s, my_role, projects, publications) -> dict:
-    payload = serialize_semillero_summary(s, my_role)
+def serialize_semillero_detail(
+    s,
+    membership: dict,
+    projects,
+    publications,
+    *,
+    can_manage: bool = False,
+    following: bool = False,
+    follower_count: int = 0,
+) -> dict:
+    payload = serialize_semillero_summary(s, membership["role"])
     payload["leader"]["title"] = s.leader_title
+    progress = s.progress
     payload.update(
+        my_status=membership["status"],
+        following=following,
+        follower_count=follower_count,
+        progress={
+            "xp": progress.xp if progress else 0,
+            "level": progress.level.level_number if progress else 1,
+        },
         affiliation=s.affiliation,
         about=s.about,
         mission=s.mission,
         vision=s.vision,
         interest_areas=s.interest_areas or [],
+        # El líder se muestra aparte; aquí van los demás integrantes activos.
         members=[
             {
                 "id": m.user.id,
@@ -77,8 +120,22 @@ def serialize_semillero_detail(s, my_role, projects, publications) -> dict:
                 "initials": _initials(m.user.full_name),
                 "role": m.role,
             }
-            for m in s.members
+            for m in s.active_members
+            if m.role != SEMILLERO_ROLE_LEADER
         ],
+        pending_members=(
+            [
+                {
+                    "id": m.user.id,
+                    "full_name": m.user.full_name,
+                    "initials": _initials(m.user.full_name),
+                    "requested_at": iso(m.joined_at),
+                }
+                for m in s.pending_members
+            ]
+            if can_manage
+            else []
+        ),
         lines=[
             {"id": line.id, "name": line.name, "icon": line.icon, "coordinator": line.coordinator}
             for line in s.lines

@@ -1,4 +1,4 @@
-﻿from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 
 import pytest
 
@@ -23,11 +23,11 @@ def admin(make_role_user):
 
 
 @pytest.fixture()
-def semillero(client, leader):
+def semillero(client, leader, ids):
     response = client.post(
         "/api/semilleros",
         json={"name": "Semillero de Pruebas", "area": "IA", "interest_areas": ["IA"],
-              "lines": [{"name": "Línea 1"}]},
+              "faculty_id": ids["facultad_ingenieria"], "lines": [{"name": "Línea 1"}]},
         headers=leader[1],
     )
     assert response.status_code == 201, response.get_json()
@@ -57,10 +57,19 @@ class TestSemilleros:
         response = client.post("/api/semilleros", json={"name": "Nuevo"}, headers=researcher[1])
         assert response.status_code == 403
 
-    def test_create_and_slug_unique(self, client, leader, semillero):
+    def test_create_and_slug_unique(self, client, leader, ids, semillero):
         assert semillero["slug"] == "semillero-de-pruebas"
-        again = client.post("/api/semilleros", json={"name": "Semillero de Pruebas"}, headers=leader[1])
+        assert semillero["leader"]["id"] == leader[0].id
+        assert semillero["member_count"] == 1 and semillero["my_role"] == "leader"
+        assert semillero["progress"] == {"xp": 0, "level": 1}
+        again = client.post("/api/semilleros",
+                            json={"name": "Semillero de Pruebas", "faculty_id": ids["facultad_ingenieria"]},
+                            headers=leader[1])
         assert again.get_json()["semillero"]["slug"] == "semillero-de-pruebas-2"
+
+    def test_faculty_is_required(self, client, leader):
+        response = client.post("/api/semilleros", json={"name": "Sin Facultad"}, headers=leader[1])
+        assert response.status_code == 400
 
     def test_list_filter_and_detail(self, client, researcher, semillero):
         listing = client.get("/api/semilleros?q=Pruebas", headers=researcher[1]).get_json()
@@ -69,17 +78,61 @@ class TestSemilleros:
         assert detail["semillero"]["lines"][0]["name"] == "Línea 1"
         assert client.get("/api/semilleros/nope", headers=researcher[1]).status_code == 404
 
-    def test_join_leave_flow_notifies_leader(self, client, researcher, leader, semillero):
+    def test_join_request_is_pending_until_leader_approves(self, client, researcher, leader, semillero):
         slug = semillero["slug"]
         joined = client.post(f"/api/semilleros/{slug}/members", headers=researcher[1])
         assert joined.status_code == 201
-        assert joined.get_json()["semillero"]["my_role"] == "member"
+        view = joined.get_json()["semillero"]
+        assert view["my_role"] is None and view["my_status"] == "pending"
+        assert view["member_count"] == 1  # solo el líder cuenta hasta aprobar
         assert client.post(f"/api/semilleros/{slug}/members", headers=researcher[1]).status_code == 409
         notes = client.get("/api/notifications", headers=leader[1]).get_json()
         assert notes["unread_count"] == 1
+
+        leader_view = client.get(f"/api/semilleros/{slug}", headers=leader[1]).get_json()["semillero"]
+        assert [m["id"] for m in leader_view["pending_members"]] == [researcher[0].id]
+        applicant_view = client.get(f"/api/semilleros/{slug}", headers=researcher[1]).get_json()["semillero"]
+        assert applicant_view["pending_members"] == []  # solo gestores ven solicitudes
+
+        url = f"/api/semilleros/{slug}/members/{researcher[0].id}"
+        assert client.patch(url, json={"status": "active"}, headers=researcher[1]).status_code == 403
+        assert client.patch(url, json={"status": "pending"}, headers=leader[1]).status_code == 400
+        approved = client.patch(url, json={"status": "active"}, headers=leader[1])
+        assert approved.status_code == 200
+        assert approved.get_json()["semillero"]["member_count"] == 2
+        mine = client.get(f"/api/semilleros/{slug}", headers=researcher[1]).get_json()["semillero"]
+        assert mine["my_role"] == "member" and mine["my_status"] == "active"
+        assert client.get("/api/notifications", headers=researcher[1]).get_json()["unread_count"] == 1
+
+    def test_rejected_request_can_be_retried_and_leave(self, client, researcher, leader, semillero):
+        slug = semillero["slug"]
+        client.post(f"/api/semilleros/{slug}/members", headers=researcher[1])
+        url = f"/api/semilleros/{slug}/members/{researcher[0].id}"
+        assert client.patch(url, json={"status": "rejected"}, headers=leader[1]).status_code == 200
+        rejected = client.get(f"/api/semilleros/{slug}", headers=researcher[1]).get_json()["semillero"]
+        assert rejected["my_role"] is None and rejected["my_status"] == "rejected"
+        retry = client.post(f"/api/semilleros/{slug}/members", headers=researcher[1])
+        assert retry.status_code == 201 and retry.get_json()["semillero"]["my_status"] == "pending"
         left = client.delete(f"/api/semilleros/{slug}/members/me", headers=researcher[1])
-        assert left.status_code == 200 and left.get_json()["semillero"]["my_role"] is None
+        assert left.status_code == 200 and left.get_json()["semillero"]["my_status"] is None
         assert client.delete(f"/api/semilleros/{slug}/members/me", headers=researcher[1]).status_code == 404
+
+    def test_leader_cannot_leave_or_be_reviewed(self, client, leader, semillero):
+        slug = semillero["slug"]
+        assert client.delete(f"/api/semilleros/{slug}/members/me", headers=leader[1]).status_code == 409
+        url = f"/api/semilleros/{slug}/members/{leader[0].id}"
+        assert client.patch(url, json={"status": "rejected"}, headers=leader[1]).status_code == 409
+
+    def test_follow_and_unfollow(self, client, researcher, semillero):
+        slug = semillero["slug"]
+        followed = client.post(f"/api/semilleros/{slug}/follow", headers=researcher[1])
+        assert followed.status_code == 201
+        view = followed.get_json()["semillero"]
+        assert view["following"] is True and view["follower_count"] == 1
+        assert client.post(f"/api/semilleros/{slug}/follow", headers=researcher[1]).status_code == 409
+        unfollowed = client.delete(f"/api/semilleros/{slug}/follow", headers=researcher[1])
+        assert unfollowed.get_json()["semillero"]["following"] is False
+        assert client.delete(f"/api/semilleros/{slug}/follow", headers=researcher[1]).status_code == 404
 
     def test_activity_only_for_leader(self, client, researcher, leader, semillero):
         url = f"/api/semilleros/{semillero['slug']}/activities"
@@ -91,9 +144,11 @@ class TestSemilleros:
 
 
 class TestProjects:
-    def test_create_update_flow(self, client, researcher, semillero):
+    def test_create_update_flow(self, client, researcher, leader, semillero):
         slug = semillero["slug"]
         client.post(f"/api/semilleros/{slug}/members", headers=researcher[1])
+        client.patch(f"/api/semilleros/{slug}/members/{researcher[0].id}",
+                     json={"status": "active"}, headers=leader[1])
         created = client.post(
             "/api/projects",
             json={"title": "Proyecto Uno", "semillero": slug, "milestones": ["A", "B"]},
@@ -114,6 +169,12 @@ class TestProjects:
         product = client.post(f"/api/projects/{project['slug']}/products",
                               json={"type": "Artículo", "name": "Paper"}, headers=researcher[1])
         assert product.status_code == 201
+        assert product.get_json()["product"]["type"] == "article"
+        closed = client.patch(f"/api/projects/{project['slug']}",
+                              json={"status": "closed"}, headers=researcher[1])
+        assert closed.get_json()["project"]["status"] == "closed"
+        assert client.patch(f"/api/projects/{project['slug']}",
+                            json={"status": "completed"}, headers=researcher[1]).status_code == 400
 
         mine = client.get("/api/projects?mine=1", headers=researcher[1]).get_json()
         assert mine["total"] == 1
@@ -159,7 +220,8 @@ class TestEvents:
         assert client.get(f"/api/events/{slug}", headers=other).get_json()["event"]["participation"] == "full"
 
         gamification = client.get("/api/gamification/me", headers=researcher[1]).get_json()["gamification"]
-        assert gamification["achievements"][0]["status"] == "in_review"
+        assert gamification["achievements"][0]["status"] == "pending"
+        assert gamification["achievements"][0]["origin"]["kind"] == "event"
         unreg = client.delete(f"/api/events/{slug}/registrations/me", headers=researcher[1])
         assert unreg.get_json()["event"]["participation"] == "available"
 
@@ -171,42 +233,57 @@ class TestEvents:
 
 
 class TestGamificationAndNotifications:
-    def test_achievement_review_flow(self, client, researcher, admin):
-        created = client.post("/api/gamification/achievements",
-                              json={"title": "Ponencia nacional"}, headers=researcher[1])
-        assert created.status_code == 201
-        achievement_id = created.get_json()["achievement"]["id"]
+    def _pending_event_achievement(self, client, researcher, leader, title="Simposio de Logros"):
+        """Inscribirse a un evento genera un logro pendiente de validar."""
+        event = client.post(
+            "/api/events",
+            json={"title": title, "starts_at": _iso(5), "ends_at": _iso(6)},
+            headers=leader[1],
+        ).get_json()["event"]
+        client.post(f"/api/events/{event['slug']}/registrations", headers=researcher[1])
+        summary = client.get("/api/gamification/me", headers=researcher[1]).get_json()["gamification"]
+        return event, next(a for a in summary["achievements"] if title in a["title"])
+
+    def test_achievement_review_flow(self, client, researcher, leader, admin):
+        _, achievement = self._pending_event_achievement(client, researcher, leader)
+        achievement_id = achievement["id"]
+        assert achievement["status"] == "pending" and achievement["xp"] == 20
 
         assert client.get("/api/admin/achievements", headers=researcher[1]).status_code == 403
-        pending = client.get("/api/admin/achievements?status=in_review", headers=admin[1]).get_json()
+        pending = client.get("/api/admin/achievements?status=pending", headers=admin[1]).get_json()
         assert pending["total"] == 1
 
-        review = client.patch(f"/api/admin/achievements/{achievement_id}",
-                              json={"status": "validated", "xp": 250}, headers=admin[1])
+        url = f"/api/admin/achievements/{achievement_id}"
+        assert client.patch(url, json={"status": "pending"}, headers=admin[1]).status_code == 400
+        review = client.patch(url, json={"status": "approved", "xp": 250}, headers=admin[1])
         assert review.status_code == 200
-        assert client.patch(f"/api/admin/achievements/{achievement_id}",
-                            json={"status": "in_review"}, headers=admin[1]).status_code == 400
+        assert review.get_json()["achievement"]["status"] == "approved"
+        assert client.patch(url, json={"status": "rejected"}, headers=admin[1]).status_code == 409
 
         summary = client.get("/api/gamification/me", headers=researcher[1]).get_json()["gamification"]
         assert summary["total_xp"] == 250 and summary["level"] == 2 and summary["xp"] == 50
+        assert summary["badges"][0]["title"] == "Participante de eventos"
 
         ranking = client.get("/api/gamification/ranking", headers=researcher[1]).get_json()
         assert ranking["items"][0]["is_current_user"] is True
 
         notes = client.get("/api/notifications?unread=1", headers=researcher[1]).get_json()
-        assert notes["unread_count"] == 1 and notes["items"][0]["type"] == "achievement"
-        note_id = notes["items"][0]["id"]
-        read = client.patch(f"/api/notifications/{note_id}", json={"read": True}, headers=researcher[1])
-        assert read.get_json()["notification"]["read"] is True
+        assert notes["unread_count"] == 2  # inscripción + logro aprobado
+        achievement_note = next(n for n in notes["items"] if n["type"] == "achievement")
+        read = client.patch(f"/api/notifications/{achievement_note['id']}",
+                            json={"read": True}, headers=researcher[1])
+        body = read.get_json()["notification"]
+        assert body["read"] is True and body["read_at"] is not None
         assert client.patch("/api/notifications/9999", json={"read": True}, headers=researcher[1]).status_code == 404
 
-    def test_read_all(self, client, researcher, admin):
+    def test_read_all(self, client, researcher, leader, admin):
         for index in range(2):
-            achievement = client.post("/api/gamification/achievements",
-                                      json={"title": f"Logro {index}"}, headers=researcher[1])
-            client.patch(f"/api/admin/achievements/{achievement.get_json()['achievement']['id']}",
+            _, achievement = self._pending_event_achievement(
+                client, researcher, leader, title=f"Evento {index} de Lectura"
+            )
+            client.patch(f"/api/admin/achievements/{achievement['id']}",
                          json={"status": "rejected"}, headers=admin[1])
-        assert client.get("/api/notifications", headers=researcher[1]).get_json()["unread_count"] == 2
+        assert client.get("/api/notifications", headers=researcher[1]).get_json()["unread_count"] == 4
         assert client.post("/api/notifications/read-all", headers=researcher[1]).get_json()["unread_count"] == 0
 
     def test_approving_user_notifies(self, client, make_role_user, admin):

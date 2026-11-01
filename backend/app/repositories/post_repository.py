@@ -1,7 +1,7 @@
 from sqlalchemy import func, select
 
 from app.extensions import db
-from app.models import Post, PostAttachment, PostReaction
+from app.models import Achievement, Comment, Post, PostAttachment, PostReaction, PostShare
 
 
 def add_post(post: Post) -> Post:
@@ -43,6 +43,14 @@ def delete_post(post: Post) -> None:
     db.session.delete(post)
 
 
+def post_has_achievements(post_id: int) -> bool:
+    return (
+        db.session.scalar(select(Achievement.id).where(Achievement.post_id == post_id).limit(1))
+        is not None
+    )
+
+
+# --- Reacciones ---
 def get_reaction(post_id: int, user_id: int) -> PostReaction | None:
     return db.session.scalar(
         select(PostReaction).where(
@@ -66,6 +74,65 @@ def count_reactions(post_id: int) -> int:
             select(func.count())
             .select_from(PostReaction)
             .where(PostReaction.post_id == post_id)
+        )
+        or 0
+    )
+
+
+# --- Comentarios ---
+def add_comment(comment: Comment) -> Comment:
+    db.session.add(comment)
+    return comment
+
+
+def get_comment(post_id: int, comment_id: int) -> Comment | None:
+    return db.session.scalar(
+        select(Comment).where(Comment.post_id == post_id, Comment.id == comment_id)
+    )
+
+
+def list_comments(post_id: int) -> list[Comment]:
+    stmt = (
+        select(Comment)
+        .where(Comment.post_id == post_id)
+        .order_by(Comment.created_at, Comment.id)
+    )
+    return list(db.session.scalars(stmt).all())
+
+
+def count_comments(post_id: int) -> int:
+    return int(
+        db.session.scalar(
+            select(func.count()).select_from(Comment).where(Comment.post_id == post_id)
+        )
+        or 0
+    )
+
+
+def delete_comment(comment: Comment) -> None:
+    db.session.delete(comment)
+
+
+# --- Compartidos ---
+def get_share(post_id: int, user_id: int) -> PostShare | None:
+    return db.session.scalar(
+        select(PostShare).where(PostShare.post_id == post_id, PostShare.user_id == user_id)
+    )
+
+
+def add_share(share: PostShare) -> PostShare:
+    db.session.add(share)
+    return share
+
+
+def delete_share(share: PostShare) -> None:
+    db.session.delete(share)
+
+
+def count_shares(post_id: int) -> int:
+    return int(
+        db.session.scalar(
+            select(func.count()).select_from(PostShare).where(PostShare.post_id == post_id)
         )
         or 0
     )

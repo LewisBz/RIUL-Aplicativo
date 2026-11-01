@@ -2,6 +2,7 @@
 
 **Branch:** `005-session-navbar` (from `develop`)
 **Type:** Frontend-only feature
+**Status:** Implementado (rutas actualizadas: `backend/app/static/js/session.js`, `backend/app/templates/index.html`)
 **Depends on:** 003-auth (backend `/api/auth/me`), 004-fix-auth-serving (static serving, clean URLs)
 **Backend changes:** NONE
 
@@ -32,7 +33,7 @@ replaces the guest CTAs with an identity block:
 - My full name (fallback: email) and role caption
   (`researcher → Investigador`, `administrator → Administrador`, external roles shown raw).
 - Clicking it opens a dropdown with:
-  - **Mi perfil** — placeholder, disabled with "Próximamente" tooltip.
+  - **Mi perfil** — links to `/profile` (feature 006; it was a disabled placeholder before).
   - **Cerrar sesión** — removes the token and returns to guest view.
 
 **Acceptance**
@@ -45,7 +46,7 @@ replaces the guest CTAs with an identity block:
 If `riul_token` exists but `/api/auth/me` answers 401/403 (expired, tampered),
 or fetch fails (backend down):
 
-- Token is removed from localStorage silently (on auth errors only).
+- Token is removed from localStorage silently (on 401/403 only; a 5xx or network failure keeps the token and just shows the guest view).
 - Navbar falls back to guest view.
 - No console crashes; no redirect loops.
 
@@ -55,11 +56,11 @@ or fetch fails (backend down):
 ### US4 — Logout restores guest state
 
 Clicking "Cerrar sesión" (desktop dropdown or mobile panel) clears the token,
-closes any open menus, and re-renders the navbar as guest immediately.
+closes any open menus, and redirects to `/login` (the user is a guest from then on).
 
 ## Implementation Notes
 
-- New shared module `frontend/js/session.js`: `getSessionUser()` + `logout()`.
+- New shared module `backend/app/static/js/session.js`: `getSessionUser()` + `logout()`.
   API base logic mirrors `auth.js` (`port !== '5000' → http://localhost:5000`).
 - `index.html` marks guest actions with `data-auth="guest"` and adds a hidden
   block `data-auth="user"`; CSS toggles visibility via `.hidden`.
@@ -68,4 +69,4 @@ closes any open menus, and re-renders the navbar as guest immediately.
   (absolute card, reuses design tokens).
 - `main.js` becomes an ES module that initializes session rendering after DOM
   load (top-level await allowed in modules).
-- "Mi perfil" stays disabled until the future researcher-profile feature.
+- "Mi perfil" now links to `/profile`.
