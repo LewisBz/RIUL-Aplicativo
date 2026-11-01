@@ -4,7 +4,7 @@
 
 **Created**: 2026-08-22
 
-**Status**: Draft
+**Status**: Implementado (rutas actualizadas a la estructura Flask de la constitución v3.0.0: antes `frontend/`, hoy `backend/app/static` y `backend/app/templates`)
 
 **Input**: User description: "Generar un único archivo que centralice el style de la aplicación (CSS) a partir de los mockups de la carpeta mockup/, ubicado en una carpeta frontend/, junto con una página styleguide.html de demostración."
 
@@ -13,7 +13,7 @@
 ### User Story 1 - Single stylesheet with all tokens and components (Priority: P1)
 
 A developer building any RIUL view links one stylesheet
-(`frontend/css/design-system.css`) from an HTML page and, without any build step,
+(`backend/app/static/css/design-system.css`) from an HTML page and, without any build step,
 obtains: the complete color/typography/spacing/radius/shadow token set as CSS custom
 properties, base reset styles, semantic typography utility classes, and reusable
 component classes matching the recurring visual patterns of the 19 Stitch mockups.
@@ -28,7 +28,7 @@ immediately: new views stop depending on Tailwind CDN.
 
 **Acceptance Scenarios**:
 
-1. **Given** an HTML page that links `../frontend/css/design-system.css` via relative
+1. **Given** an HTML page that links `/static/css/design-system.css` via relative
    path, **When** it renders offline (no Tailwind), **Then** colors, typography,
    spacing, radii, shadows and component classes resolve from CSS custom properties.
 2. **Given** two different views use `.glass-card` or `.btn-primary`, **When** compared
@@ -40,7 +40,7 @@ immediately: new views stop depending on Tailwind CDN.
 
 ### User Story 2 - Styleguide demo page for visual validation (Priority: P2)
 
-A designer or developer opens `frontend/styleguide.html` in a browser and sees every
+A designer or developer opens `backend/app/templates/styleguide.html` (ruta `/styleguide`, solo en desarrollo y pruebas) in a browser and sees every
 design token (color swatches, type scale, spacing scale) and every component (buttons,
 inputs, state pills, cards, XP bar, tables, timeline, shell) rendered live, so the page
 can be validated visually against the Stitch mockups before building real views.

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL Admin - Analítica</title>
+  <link rel="stylesheet" href="/static/css/design-system.css">
+  <meta name="theme-color" content="#8c1230">
+  <script type="module" src="/static/js/icons.js"></script>
+  <script type="module" src="/static/js/motion.js"></script>
+</head>
+<body class="admin-page">
+  <header class="admin-topbar">
+    <a class="topnav-brand" href="/admin">RIUL Admin</a>
+    <div class="admin-topbar-actions"><span class="label-caps">Panel administrativo</span><button class="icon-action" id="adminLogout" type="button" aria-label="Cerrar sesión" title="Cerrar sesión"><span class="material-symbols-outlined">logout</span></button></div>
+  </header>
+  <div class="admin-shell">
+    <aside class="admin-sidebar" aria-label="Navegación administrativa">
+      <p class="admin-sidebar-label">Gestión</p>
+      <nav class="admin-nav" id="adminNav"></nav>
+      <button class="btn btn-gold btn-block label-caps admin-export" id="exportBtn" type="button" hidden><span class="material-symbols-outlined">download</span>Exportar datos</button>
+    </aside>
+    <main class="admin-main" id="adminContent" aria-live="polite"><div class="admin-loading"><span class="material-symbols-outlined">progress_activity</span><span>Verificando permisos...</span></div></main>
+  </div>
+  <script type="module" src="/static/js/admin-analytics.js"></script>
+</body>
+</html>

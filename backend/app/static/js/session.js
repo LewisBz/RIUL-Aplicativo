@@ -22,10 +22,11 @@ export async function getSessionUser() {
     const response = await fetch(`${API_BASE}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
       localStorage.removeItem(TOKEN_KEY);
       return null;
     }
+    if (!response.ok) return null;
     const data = await response.json();
     return data.user ?? null;
   } catch {

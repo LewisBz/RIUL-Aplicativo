@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Ayuda y soporte</title>
+  <link rel="stylesheet" href="/static/css/design-system.css">
+  <meta name="theme-color" content="#8c1230">
+  <script type="module" src="/static/js/icons.js"></script>
+  <script type="module" src="/static/js/motion.js"></script>
+</head>
+<body data-nav-active="" style="min-height:100vh;display:flex;flex-direction:column;">
+  <header id="topnavMount"></header>
+  <div class="app-shell app-shell-page">
+    <aside id="sidenavMount"></aside>
+    <main class="main-content">
+      <div class="page-heading"><div><p class="eyebrow">Soporte</p><h1 class="headline-lg">Ayuda y soporte</h1><p class="body-lg page-subtitle">Reporta un problema o haz una consulta. El equipo administrativo te responderá aquí.</p></div></div>
+      <div class="help-layout">
+        <section class="glass-card detail-card">
+          <h2 class="headline-md">Nuevo ticket</h2>
+          <form id="ticketForm" class="help-form" novalidate>
+            <div><label class="label-base" for="ticketCategory">Categoría</label><select class="input-base" id="ticketCategory" name="category" required></select></div>
+            <div><label class="label-base" for="ticketSubject">Asunto</label><input class="input-base" id="ticketSubject" name="subject" maxlength="160" required></div>
+            <div><label class="label-base" for="ticketMessage">Mensaje</label><textarea class="input-base" id="ticketMessage" name="message" rows="6" maxlength="4000" required></textarea></div>
+            <p class="body-md" id="ticketError" role="alert" style="margin:0;color:var(--error);min-height:1em;"></p>
+            <button class="btn btn-primary label-caps" type="submit" id="ticketSubmit">Enviar ticket</button>
+          </form>
+        </section>
+        <section class="glass-card detail-card">
+          <h2 class="headline-md">Mis tickets</h2>
+          <div id="ticketList" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <footer id="footerMount"></footer>
+  <script type="module" src="/static/js/help.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@ from app.services import (
     project_service,
     seed_service,
     semillero_service,
+    support_service,
 )
 
 __all__ = [
@@ -22,4 +23,5 @@ __all__ = [
     "project_service",
     "seed_service",
     "semillero_service",
+    "support_service",
 ]

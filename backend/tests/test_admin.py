@@ -54,7 +54,7 @@ class TestAdminOverview:
         assert body["users"]["total"] == 2
         assert body["users"]["active"] == 2
         assert body["faculties"] == 2
-        assert body["unavailable"] == ["reports"]
+        assert body["unavailable"] == []
 
     def test_rechecks_user_status_after_token_creation(self, client):
         token = admin_token()

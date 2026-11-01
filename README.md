@@ -51,7 +51,7 @@ RIUL-Aplicativo/
 │   │   ├── templates/           # Páginas Jinja (una por pantalla)
 │   │   ├── static/              # css, js (ES modules), openapi.yaml
 │   │   └── seed_data.py         # Datos demo (fuente única)
-│   ├── migrations/versions/     # 0001 base, 0002 dominio de investigación
+│   ├── migrations/versions/     # 0001 base, 0002 dominio, 0003 soporte
 │   ├── tests/                   # pytest por módulo
 │   ├── api.http                 # Peticiones manuales (REST Client)
 │   ├── dockerfile · pyproject.toml · run.py · wsgi.py
@@ -89,7 +89,8 @@ salvo las de registro, login y catálogo. Documentación interactiva en **`/docs
 | Eventos | `GET·POST /events` · `GET /events/{slug}` · `POST /events/{slug}/registrations` · `DELETE /events/{slug}/registrations/me` |
 | Notificaciones | `GET /notifications` · `PATCH /notifications/{id}` · `POST /notifications/read-all` |
 | Gamificación | `GET /gamification/me` · `GET /gamification/ranking` · `POST /gamification/achievements` |
-| Admin | `GET /admin/overview` · `GET /admin/users` · `PATCH /admin/users/{id}` · `GET /admin/achievements` · `PATCH /admin/achievements/{id}` |
+| Admin | `GET /admin/overview` · `GET /admin/analytics` · `GET /admin/users` · `PATCH /admin/users/{id}` · `GET /admin/achievements` · `PATCH /admin/achievements/{id}` |
+| Soporte | `GET·POST /support/tickets` · `GET /admin/support/tickets` · `PATCH /admin/support/tickets/{id}` |
 
 Convenciones: colecciones devuelven `{items, total}`; recursos devuelven un objeto con el nombre del
 recurso (`{"project": {...}}`); semilleros, proyectos y eventos se direccionan por `slug`.
@@ -98,7 +99,7 @@ recurso (`{"project": {...}}`); semilleros, proyectos y eventos se direccionan p
 
 `/` · `/login` · `/register` · `/dashboard` · `/profile` · `/feed` · `/semilleros` · `/semillero-detalle?id=` ·
 `/projects` · `/project-detail?id=` · `/events` · `/event-detail?id=` · `/gamification` · `/notifications` ·
-`/admin` · `/docs` · `/privacidad` · `/terminos` · `/contacto`
+`/crear-publicacion` · `/help` · `/admin` · `/admin-analytics` · `/support` · `/docs` · `/privacidad` · `/terminos` · `/contacto`
 
 ### Flujos principales
 
@@ -173,6 +174,19 @@ uv run flask --app run.py run --port 5000
 docker compose up -d db
 cd backend && uv run pytest
 ```
+
+Sin `uv` instalado, puedes correr la suite con Docker (la imagen de la app no incluye pytest):
+
+```bash
+docker compose up -d db
+docker run --rm --network <proyecto>_default -v "$PWD/backend:/app" -w /app \
+  -e UV_PROJECT_ENVIRONMENT=/venv \
+  -e TEST_DATABASE_URL=mysql+pymysql://riul:riul@db:3306/riul_test \
+  -e MYSQL_ADMIN_URL=mysql+pymysql://root:riulroot@db:3306/mysql \
+  ghcr.io/astral-sh/uv:python3.12-bookworm-slim sh -c "uv sync --frozen && uv run pytest"
+```
+
+(`<proyecto>` es el nombre de la carpeta del repo en minúsculas, por ejemplo `riul-aplicativo`.)
 
 Las pruebas usan la base `riul_test` (se crea sola) y cubren auth, feed, administración,
 semilleros, proyectos, eventos, notificaciones, gamificación, perfil y esquemas.

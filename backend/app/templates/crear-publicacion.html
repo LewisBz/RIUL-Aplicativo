@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIUL - Crear publicación</title>
+  <link rel="stylesheet" href="/static/css/design-system.css">
+  <meta name="theme-color" content="#8c1230">
+  <script type="module" src="/static/js/icons.js"></script>
+  <script type="module" src="/static/js/motion.js"></script>
+</head>
+<body data-nav-active="comunidad" style="min-height:100vh;display:flex;flex-direction:column;">
+  <header id="topnavMount"></header>
+  <div class="app-shell app-shell-page">
+    <aside id="sidenavMount"></aside>
+    <main class="main-content">
+      <form id="publishForm" class="editor-layout" novalidate>
+        <section class="glass-card editor-card">
+          <h1 class="headline-md editor-title">Editor de contenido</h1>
+          <div>
+            <label class="label-base" for="postTitle">Título</label>
+            <input class="input-base" id="postTitle" name="title" maxlength="200" placeholder="Escribe el título de tu publicación">
+          </div>
+          <div>
+            <label class="label-base" for="postBody">Contenido</label>
+            <textarea class="input-base editor-textarea" id="postBody" name="content" rows="9" maxlength="4800" placeholder="Escribe tu contenido aquí..."></textarea>
+          </div>
+          <div>
+            <label class="label-base" for="postLink">Enlace (opcional)</label>
+            <input class="input-base" id="postLink" name="link_url" type="url" maxlength="500" placeholder="https://...">
+          </div>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Subir imagen o evidencia">
+            <span class="material-symbols-outlined">cloud_upload</span>
+            <p id="dropzoneText">Imagen o evidencia<br><small>Arrastra y suelta o haz clic para subir un archivo (máx. 10 MB)</small></p>
+            <input type="file" id="postFile" accept=".png,.jpg,.jpeg,.webp,.gif,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" hidden>
+          </div>
+        </section>
+        <aside class="editor-side">
+          <section class="glass-card editor-card">
+            <h2 class="title-lg">Categoría</h2>
+            <div class="category-options" id="categoryOptions"></div>
+          </section>
+          <section class="glass-card editor-card">
+            <h2 class="title-lg">Confirmación</h2>
+            <p class="body-md" id="publishError" role="alert" style="margin:0;color:var(--error);min-height:1em;"></p>
+            <button class="btn btn-primary btn-block label-caps" type="submit" id="publishBtn">Publicar</button>
+            <a class="btn btn-outline btn-block label-caps" href="/feed">Cancelar</a>
+          </section>
+        </aside>
+      </form>
+    </main>
+  </div>
+  <footer id="footerMount"></footer>
+  <script type="module" src="/static/js/crear-publicacion.js"></script>
+</body>
+</html>

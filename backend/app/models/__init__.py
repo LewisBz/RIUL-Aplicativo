@@ -68,6 +68,14 @@ from app.models.semillero import (
     SemilleroActivity,
     SemilleroMember,
 )
+from app.models.support import (
+    TICKET_CATEGORIES,
+    TICKET_IN_PROGRESS,
+    TICKET_OPEN,
+    TICKET_RESOLVED,
+    TICKET_STATUSES,
+    SupportTicket,
+)
 from app.models.user import (
     ROLE_ADMINISTRATOR,
     ROLE_LEADER,
@@ -103,4 +111,6 @@ __all__ = [
     "PRIORITY_HIGH", "PRIORITY_NORMAL", "PRIORITY_LOW",
     "Achievement", "ACHIEVEMENT_VALIDATED", "ACHIEVEMENT_IN_REVIEW",
     "ACHIEVEMENT_REJECTED", "ACHIEVEMENT_STATUSES",
+    "SupportTicket", "TICKET_OPEN", "TICKET_IN_PROGRESS", "TICKET_RESOLVED",
+    "TICKET_STATUSES", "TICKET_CATEGORIES",
 ]

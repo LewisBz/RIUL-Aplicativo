@@ -42,6 +42,11 @@ def get_overview():
 
 
 @require_administrator
+def get_analytics():
+    return jsonify(admin_service.analytics()), 200
+
+
+@require_administrator
 def get_users():
     query = load_schema(
         AdminUsersQuerySchema(),

@@ -1,7 +1,7 @@
 # Feature 003: User Authentication Module
 
 **Branch**: `003-auth` | **Base**: `develop`
-**Constitution**: v1.1.0 | **Priority**: P0 (blocks all authenticated modules)
+**Constitution**: v3.0.0 (originalmente v1.1.0) | **Priority**: P0 (blocks all authenticated modules) | **Status**: Implementado
 
 ## Purpose
 
@@ -44,7 +44,7 @@ email and motivation, matching the "Solicitud (No Institucional)" tab.
 ### US3: Login with stateless JWT
 **As a** registered active user **I want** to log in and receive a bearer token.
 
-- Password verified with bcrypt (`check_password_hash`)
+- Password verified with bcrypt via Flask-Bcrypt (`User.check_password`); Werkzeug hashes are not used (constitution VII)
 - Access token expires in 12h; custom claims include `role` and `status`
 - Pending accounts receive `403` with message "Solicitud pendiente de aprobación"
   (mockup banner); rejected accounts receive `403` with rejection message
@@ -76,7 +76,7 @@ Ciencias Básicas → (placeholder program).
   `.env.example` committed, `.env` gitignored
 - NFR3: Tests run against real MySQL (database `riul_test` in same
   container, schema dropped/created per session); require `docker compose up -d db`
-- NFR4: Frontend pages are standalone static HTML using only
+- NFR4: Frontend pages are Flask templates (`backend/app/templates`) using only
   `css/design-system.css` + vanilla JS `fetch()`; token persisted in
   `localStorage` key `riul_token` (Principle III & VII tradeoff)
 
@@ -89,5 +89,5 @@ Ciencias Básicas → (placeholder program).
 
 ## Out of Scope
 
-Admin approval endpoints (admin portal feature), password recovery email flow,
+Admin approval endpoints (delivered later by the admin panel: `PATCH /api/admin/users/<id>`), password recovery email flow,
 refresh tokens, OAuth/social login.

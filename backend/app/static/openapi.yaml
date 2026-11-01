@@ -31,6 +31,8 @@ tags:
     description: Nivel, logros e insignias y ranking
   - name: Admin
     description: Administración (solo rol administrator)
+  - name: Soporte
+    description: Tickets de ayuda de los usuarios y su gestión administrativa
 
 paths:
   /api/auth/register:
@@ -671,6 +673,74 @@ paths:
         "403": { $ref: "#/components/responses/Error403" }
         "404": { $ref: "#/components/responses/Error404" }
 
+  /api/admin/analytics:
+    get:
+      tags: [Admin]
+      summary: "Analítica institucional (totales, producción de 12 meses, semilleros por facultad, top por XP, estado de cuentas)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Operación exitosa
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Analytics" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/support/tickets:
+    get:
+      tags: [Soporte]
+      summary: "Listar los tickets propios"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: "Operación exitosa: `{items, total}`" }
+        "401": { $ref: "#/components/responses/Error401" }
+    post:
+      tags: [Soporte]
+      summary: "Crear un ticket de soporte"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TicketInput" }
+      responses:
+        "201": { description: "Ticket creado: `{ticket}` con estado `open`" }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+
+  /api/admin/support/tickets:
+    get:
+      tags: [Admin, Soporte]
+      summary: "Listar todos los tickets con datos del usuario (`status`)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: status, in: query, required: false, schema: { type: string, enum: [open, in_progress, resolved] } }
+      responses:
+        "200": { description: "Operación exitosa: `{items, total}`" }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/admin/support/tickets/{ticket_id}:
+    patch:
+      tags: [Admin, Soporte]
+      summary: "Responder un ticket y/o cambiar su estado (notifica al autor al responder)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: ticket_id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TicketReplyInput" }
+      responses:
+        "200": { description: "Operación exitosa: `{ticket}`" }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -791,6 +861,16 @@ components:
     AchievementInput: { type: object, required: [title], properties: { title: { type: string }, description: { type: string }, icon: { type: string }, achieved_on: { type: string, format: date } } }
     AchievementReviewInput: { type: object, required: [status], properties: { status: { type: string, enum: [validated, rejected] }, xp: { type: integer, minimum: 0, maximum: 1000 } } }
     UserStatusInput: { type: object, required: [status], properties: { status: { type: string, enum: [active, pending, rejected] } } }
+    TicketInput: { type: object, required: [category, subject, message], properties: { category: { type: string, enum: [technical_bug, feature_request, account_issue, other] }, subject: { type: string, minLength: 3, maxLength: 160 }, message: { type: string, minLength: 10, maxLength: 4000 } } }
+    TicketReplyInput: { type: object, description: "Al menos uno de `reply` o `status`", properties: { reply: { type: string, minLength: 1, maxLength: 4000 }, status: { type: string, enum: [open, in_progress, resolved] } } }
+    Analytics:
+      type: object
+      properties:
+        totals: { type: object, properties: { publications: { type: integer }, active_projects: { type: integer }, semilleros: { type: integer }, validated_xp: { type: integer } } }
+        production: { type: array, description: "12 meses, el más antiguo primero", items: { type: object, properties: { month: { type: string, example: "2026-10" }, publications: { type: integer }, projects: { type: integer } } } }
+        semilleros_by_faculty: { type: array, items: { type: object, properties: { faculty: { type: string }, count: { type: integer } } } }
+        top_semilleros: { type: array, items: { type: object, properties: { name: { type: string }, faculty: { type: string, nullable: true }, xp: { type: integer } } } }
+        account_status: { type: object, properties: { active: { type: integer }, pending: { type: integer }, rejected: { type: integer }, total: { type: integer } } }
   responses:
     Error401: { description: "Token ausente, inválido o cuenta no disponible", content: { application/json: { schema: { $ref: "#/components/schemas/Message" } } } }
     Error403: { description: Permisos insuficientes, content: { application/json: { schema: { $ref: "#/components/schemas/Message" } } } }

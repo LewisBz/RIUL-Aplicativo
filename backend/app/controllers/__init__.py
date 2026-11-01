@@ -7,6 +7,7 @@ from app.controllers import (
     profile_controller,
     projects_controller,
     semilleros_controller,
+    support_controller,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "profile_controller",
     "projects_controller",
     "semilleros_controller",
+    "support_controller",
 ]
