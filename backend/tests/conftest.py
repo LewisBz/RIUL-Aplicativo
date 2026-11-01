@@ -22,6 +22,7 @@ os.environ.setdefault(
 from app import create_app  # noqa: E402
 from app.extensions import db as _db  # noqa: E402
 from app.models import Faculty, Program  # noqa: E402
+from app.services import reference_service  # noqa: E402
 
 TEST_DB_URL = os.environ["TEST_DATABASE_URL"]
 MYSQL_ADMIN_URL = os.environ["MYSQL_ADMIN_URL"]
@@ -36,7 +37,17 @@ def _ensure_test_database() -> None:
     engine.dispose()
 
 
+def _drop_all_tables() -> None:
+    """Elimina también tablas de esquemas anteriores que ya no están en el metadata."""
+    with _db.engine.begin() as conn:
+        conn.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
+        for (name,) in conn.execute(text("SHOW TABLES")).all():
+            conn.execute(text(f"DROP TABLE IF EXISTS `{name}`"))
+        conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
+
+
 def _truncate_all() -> None:
+    _db.session.rollback()
     _db.session.expunge_all()
     _db.session.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
     for table in reversed(_db.metadata.sorted_tables):
@@ -63,7 +74,7 @@ def uploads_root(app):
 
 @pytest.fixture(scope="session", autouse=True)
 def schema(app):
-    _db.drop_all()
+    _drop_all_tables()
     _db.create_all()
     yield
 
@@ -78,11 +89,14 @@ def clean_data(schema):
     _db.session.add(Program(name="Ingeniería Industrial", faculty_id=ing.id))
     _db.session.add(Faculty(name="Ciencias Básicas"))
     _db.session.commit()
+    reference_service.seed_reference_data()
+    _db.session.commit()
     yield
-    posts_dir = os.path.join(_UPLOAD_ROOT, "posts")
-    if os.path.isdir(posts_dir):
-        for name in os.listdir(posts_dir):
-            os.unlink(os.path.join(posts_dir, name))
+    for subdir in ("posts", "evidences"):
+        directory = os.path.join(_UPLOAD_ROOT, subdir)
+        if os.path.isdir(directory):
+            for name in os.listdir(directory):
+                os.unlink(os.path.join(directory, name))
 
 
 @pytest.fixture()

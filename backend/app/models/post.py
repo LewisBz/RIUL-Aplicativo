@@ -27,7 +27,8 @@ class Post(db.Model):
     __tablename__ = "posts"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    # Columna `user_id` en la base; el atributo conserva el nombre `author_id`.
+    author_id: Mapped[int] = mapped_column("user_id", ForeignKey("users.id"), nullable=False)
     category: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
@@ -44,6 +45,15 @@ class Post(db.Model):
     )
     reactions: Mapped[list["PostReaction"]] = relationship(
         back_populates="post", cascade="all, delete-orphan"
+    )
+    comments: Mapped[list["Comment"]] = relationship(
+        back_populates="post",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        order_by="Comment.created_at, Comment.id",
+    )
+    shares: Mapped[list["PostShare"]] = relationship(
+        back_populates="post", cascade="all, delete-orphan", passive_deletes=True
     )
 
 
@@ -71,3 +81,36 @@ class PostReaction(db.Model):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     post: Mapped["Post"] = relationship(back_populates="reactions")
+
+
+class Comment(db.Model):
+    """Comentario de una publicación; se elimina en cascada con ella."""
+
+    __tablename__ = "comments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    post_id: Mapped[int] = mapped_column(
+        ForeignKey("posts.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    post: Mapped["Post"] = relationship(back_populates="comments")
+    user: Mapped["User"] = relationship()
+
+
+class PostShare(db.Model):
+    """Compartido de una publicación; una sola vez por usuario."""
+
+    __tablename__ = "post_shares"
+    __table_args__ = (UniqueConstraint("post_id", "user_id"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    post_id: Mapped[int] = mapped_column(
+        ForeignKey("posts.id", ondelete="CASCADE"), nullable=False
+    )
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    post: Mapped["Post"] = relationship(back_populates="shares")

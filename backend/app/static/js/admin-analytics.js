@@ -65,7 +65,57 @@ function render(data) {
       <section class="glass-card admin-panel"><div class="section-heading"><h2 class="headline-md">Semilleros por facultad</h2></div>${facultyBars(data.semilleros_by_faculty)}</section>
       <section class="glass-card admin-panel analytics-wide"><div class="section-heading"><h2 class="headline-md">Semilleros con mayor XP</h2></div>${topTable(data.top_semilleros)}</section>
       <section class="glass-card admin-panel"><div class="section-heading"><h2 class="headline-md">Estado de cuentas</h2></div>${donut(data.account_status)}</section>
+      <section class="glass-card admin-panel analytics-wide" id="reportsPanel"><div class="section-heading"><h2 class="headline-md">Reportes institucionales</h2></div>
+        <form id="reportForm" class="admin-user-actions" style="flex-wrap:wrap;align-items:flex-end;gap:var(--space-3);margin-bottom:var(--space-4);">
+          <label class="label-base">Tipo<select class="input-base" name="kind" required><option value="report">Reporte de producción</option><option value="ranking">Ranking de semilleros</option></select></label>
+          <label class="label-base">Desde<input class="input-base" type="date" name="period_start" required></label>
+          <label class="label-base">Hasta<input class="input-base" type="date" name="period_end" required></label>
+          <button class="btn btn-primary label-caps" type="submit">Generar reporte</button>
+        </form>
+        <p class="body-md" id="reportMessage" role="status"></p>
+        <div id="reportList"></div>
+      </section>
     </div>`;
+}
+
+const REPORT_KIND_LABELS = { report: 'Producción', ranking: 'Ranking' };
+
+async function loadReports() {
+  const { items } = await adminRequest('/api/admin/reports');
+  const list = document.getElementById('reportList');
+  list.innerHTML = items.length
+    ? `<div class="table-scroll"><table class="table-data"><thead><tr><th>Tipo</th><th>Periodo</th><th>Generado por</th><th>Estado</th><th></th></tr></thead><tbody>${items.map((item) => `<tr><td>${REPORT_KIND_LABELS[item.kind] ?? escapeHtml(item.kind)}</td><td>${escapeHtml(item.period_start)} → ${escapeHtml(item.period_end)}</td><td>${escapeHtml(item.generated_by.full_name || '—')}</td><td><span class="status-pill">${item.published ? 'Publicado' : 'Borrador'}</span></td><td>${item.published ? '' : `<button class="btn btn-teal label-caps" type="button" data-publish="${item.id}">Publicar</button>`}</td></tr>`).join('')}</tbody></table></div>`
+    : '<p class="body-md admin-empty-text">Aún no se han generado reportes.</p>';
+}
+
+function initReports() {
+  const message = document.getElementById('reportMessage');
+  document.getElementById('reportForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    message.textContent = '';
+    const body = Object.fromEntries(new FormData(event.currentTarget).entries());
+    try {
+      await adminRequest('/api/admin/reports', { method: 'POST', body });
+      message.textContent = 'Reporte generado como borrador.';
+      await loadReports();
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  });
+  document.getElementById('reportList').addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-publish]');
+    if (!button) return;
+    button.disabled = true;
+    try {
+      await adminRequest(`/api/admin/reports/${button.dataset.publish}/publication`, { method: 'POST' });
+      message.textContent = 'Reporte publicado.';
+      await loadReports();
+    } catch (error) {
+      message.textContent = error.message;
+      button.disabled = false;
+    }
+  });
+  return loadReports();
 }
 
 function exportData(data) {
@@ -99,6 +149,7 @@ async function init() {
   try {
     const data = await adminRequest('/api/admin/analytics');
     render(data);
+    await initReports();
     exportBtn.hidden = false;
     exportBtn.addEventListener('click', () => exportData(data));
   } catch (error) {

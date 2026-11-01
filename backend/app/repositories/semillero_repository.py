@@ -2,13 +2,11 @@ from sqlalchemy import func, select
 
 from app.extensions import db
 from app.models import (
-    Faculty,
-    Program,
-    ResearchLine,
+    MEMBERSHIP_ACTIVE,
     Semillero,
     SemilleroActivity,
+    SemilleroFollow,
     SemilleroMember,
-    User,
 )
 
 
@@ -18,6 +16,10 @@ def slug_exists(slug: str) -> bool:
 
 def get_by_slug(slug: str) -> Semillero | None:
     return db.session.scalar(select(Semillero).where(Semillero.slug == slug))
+
+
+def get_by_id(semillero_id: int) -> Semillero | None:
+    return db.session.get(Semillero, semillero_id)
 
 
 def list_semilleros(
@@ -38,11 +40,12 @@ def list_semilleros(
     return list(db.session.scalars(stmt).all())
 
 
-def add(semillero: Semillero) -> Semillero:
-    db.session.add(semillero)
-    return semillero
+def add(entity):
+    db.session.add(entity)
+    return entity
 
 
+# --- Membresías ---
 def get_member(semillero_id: int, user_id: int) -> SemilleroMember | None:
     return db.session.scalar(
         select(SemilleroMember).where(
@@ -61,13 +64,52 @@ def delete_member(member: SemilleroMember) -> None:
     db.session.delete(member)
 
 
-def memberships_for_user(user_id: int) -> list[SemilleroMember]:
+def memberships_for_user(user_id: int, active_only: bool = True) -> list[SemilleroMember]:
     stmt = (
         select(SemilleroMember)
         .where(SemilleroMember.user_id == user_id)
-        .order_by(SemilleroMember.joined_at)
+        .order_by(SemilleroMember.joined_at, SemilleroMember.id)
     )
+    if active_only:
+        stmt = stmt.where(SemilleroMember.status == MEMBERSHIP_ACTIVE)
     return list(db.session.scalars(stmt).all())
+
+
+# --- Seguimiento ---
+def get_follow(semillero_id: int, user_id: int) -> SemilleroFollow | None:
+    return db.session.scalar(
+        select(SemilleroFollow).where(
+            SemilleroFollow.semillero_id == semillero_id,
+            SemilleroFollow.user_id == user_id,
+        )
+    )
+
+
+def add_follow(follow: SemilleroFollow) -> SemilleroFollow:
+    db.session.add(follow)
+    return follow
+
+
+def delete_follow(follow: SemilleroFollow) -> None:
+    db.session.delete(follow)
+
+
+def followed_ids(user_id: int) -> set[int]:
+    rows = db.session.scalars(
+        select(SemilleroFollow.semillero_id).where(SemilleroFollow.user_id == user_id)
+    )
+    return set(rows.all())
+
+
+def count_followers(semillero_id: int) -> int:
+    return int(
+        db.session.scalar(
+            select(func.count())
+            .select_from(SemilleroFollow)
+            .where(SemilleroFollow.semillero_id == semillero_id)
+        )
+        or 0
+    )
 
 
 def count_activities_since(semillero_id: int, since) -> int:

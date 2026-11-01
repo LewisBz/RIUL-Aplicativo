@@ -201,7 +201,39 @@ detail.activities.forEach((activity) => {
   activitiesList.appendChild(li);
 });
 
-document.getElementById('followBtn').hidden = true;
+const base = `/api/semilleros/${encodeURIComponent(sem.id)}`;
+
+document.getElementById('semProgress').textContent =
+  `Nivel ${sem.progress.level} · ${sem.progress.xp} XP · ${sem.followerCount} ` +
+  `${sem.followerCount === 1 ? 'seguidor' : 'seguidores'}`;
+
+const followBtn = document.getElementById('followBtn');
+const followIcon = document.getElementById('followIcon');
+const followLabel = document.getElementById('followLabel');
+
+function renderFollow() {
+  followIcon.textContent = sem.following ? 'favorite' : 'favorite_border';
+  followLabel.textContent = sem.following ? 'Siguiendo' : 'Seguir';
+  followBtn.setAttribute('aria-pressed', String(sem.following));
+}
+renderFollow();
+
+followBtn.addEventListener('click', async () => {
+  followBtn.disabled = true;
+  try {
+    await api(`${base}/follow`, { method: sem.following ? 'DELETE' : 'POST' });
+    sem.following = !sem.following;
+    sem.followerCount += sem.following ? 1 : -1;
+    document.getElementById('semProgress').textContent =
+      `Nivel ${sem.progress.level} · ${sem.progress.xp} XP · ${sem.followerCount} ` +
+      `${sem.followerCount === 1 ? 'seguidor' : 'seguidores'}`;
+    renderFollow();
+  } catch (error) {
+    linkNote.textContent = error.message;
+  } finally {
+    followBtn.disabled = false;
+  }
+});
 
 const linkForm = document.getElementById('linkForm');
 const motivationInput = document.getElementById('motivationInput');
@@ -209,18 +241,53 @@ const submitLinkBtn = document.getElementById('submitLinkBtn');
 const linkStateTag = document.getElementById('linkStateTag');
 const linkNote = document.getElementById('linkNote');
 
+// Estados de vinculación: sin solicitud | pending | active | rejected (el líder es active).
+const MEMBERSHIP_VIEW = {
+  none: {
+    tag: 'Estado: No vinculado',
+    pill: 'pill-pending',
+    button: 'Solicitar Vinculación',
+    note: 'Tu solicitud será revisada por el líder del semillero.',
+  },
+  pending: {
+    tag: 'Estado: Solicitud pendiente',
+    pill: 'pill-review',
+    button: 'Cancelar Solicitud',
+    note: 'El líder del semillero revisará tu solicitud.',
+  },
+  rejected: {
+    tag: 'Estado: Solicitud rechazada',
+    pill: 'pill-closed',
+    button: 'Volver a Solicitar',
+    note: 'Tu solicitud anterior fue rechazada. Puedes intentarlo nuevamente.',
+  },
+  active: {
+    tag: 'Estado: Vinculado',
+    pill: 'pill-active',
+    button: 'Abandonar Semillero',
+    note: 'Eres parte de este semillero. Puedes salir cuando quieras.',
+  },
+};
+const MEMBERSHIP_PILLS = ['pill-pending', 'pill-review', 'pill-closed', 'pill-active'];
+
+const isLeader = sem.myRole === 'leader';
+
+function membershipKey() {
+  return sem.myStatus ?? 'none';
+}
+
 function renderMembership() {
-  const member = Boolean(sem.myRole);
-  linkStateTag.textContent = member ? 'Estado: Vinculado' : 'Estado: No vinculado';
-  linkStateTag.classList.toggle('pill-pending', !member);
-  linkStateTag.classList.toggle('pill-active', member);
-  motivationInput.hidden = member;
-  motivationInput.required = !member;
-  submitLinkBtn.disabled = false;
-  submitLinkBtn.textContent = member ? 'Abandonar Semillero' : 'Solicitar Vinculación';
-  linkNote.textContent = member
-    ? 'Eres parte de este semillero. Puedes salir cuando quieras.'
-    : 'Tu vinculación quedará registrada y el líder del semillero será notificado.';
+  const key = membershipKey();
+  const view = MEMBERSHIP_VIEW[key];
+  linkStateTag.textContent = view.tag;
+  linkStateTag.classList.remove(...MEMBERSHIP_PILLS);
+  linkStateTag.classList.add(view.pill);
+  const needsMotivation = key === 'none' || key === 'rejected';
+  motivationInput.hidden = !needsMotivation;
+  motivationInput.required = false;
+  submitLinkBtn.disabled = isLeader;
+  submitLinkBtn.textContent = isLeader ? 'Eres el líder de este semillero' : view.button;
+  linkNote.textContent = isLeader ? 'El líder no puede abandonar su propio semillero.' : view.note;
 }
 renderMembership();
 
@@ -228,10 +295,11 @@ linkForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   submitLinkBtn.disabled = true;
   try {
-    if (sem.myRole) {
-      await api(`/api/semilleros/${encodeURIComponent(sem.id)}/members/me`, { method: 'DELETE' });
+    const key = membershipKey();
+    if (key === 'pending' || key === 'active') {
+      await api(`${base}/members/me`, { method: 'DELETE' });
     } else {
-      await api(`/api/semilleros/${encodeURIComponent(sem.id)}/members`, { method: 'POST' });
+      await api(`${base}/members`, { method: 'POST' });
     }
     window.location.reload();
   } catch (error) {
@@ -239,3 +307,59 @@ linkForm.addEventListener('submit', async (event) => {
     submitLinkBtn.disabled = false;
   }
 });
+
+// Gestión de solicitudes (líder, co-líder o administrador).
+const pendingBox = document.getElementById('pendingBox');
+const pendingList = document.getElementById('pendingList');
+const pendingNote = document.getElementById('pendingNote');
+
+function renderPending() {
+  pendingList.innerHTML = '';
+  pendingBox.hidden = detail.pendingMembers.length === 0;
+  detail.pendingMembers.forEach((request) => {
+    const row = document.createElement('div');
+    row.style.cssText =
+      'display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);flex-wrap:wrap;' +
+      'background-color:var(--surface);border:1px solid var(--outline-variant);' +
+      'border-radius:var(--radius-sm);padding:var(--space-2);';
+    const name = document.createElement('span');
+    name.className = 'body-md';
+    name.style.fontWeight = '600';
+    name.textContent = request.name;
+
+    const actions = document.createElement('div');
+    actions.style.cssText = 'display:flex;gap:var(--space-2);';
+    [
+      ['active', 'Aprobar', 'btn btn-primary label-caps'],
+      ['rejected', 'Rechazar', 'btn btn-outline label-caps'],
+    ].forEach(([status, label, cls]) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = cls;
+      button.textContent = label;
+      button.setAttribute('aria-label', `${label} solicitud de ${request.name}`);
+      button.addEventListener('click', () => reviewRequest(request, status, actions));
+      actions.appendChild(button);
+    });
+    row.append(name, actions);
+    pendingList.appendChild(row);
+  });
+}
+
+async function reviewRequest(request, status, actions) {
+  actions.querySelectorAll('button').forEach((button) => (button.disabled = true));
+  try {
+    await api(`${base}/members/${request.id}`, { method: 'PATCH', body: { status } });
+    sem = await fetchSemillero();
+    detail.pendingMembers = sem.detail.pendingMembers;
+    detail.members = sem.detail.members;
+    pendingNote.textContent =
+      status === 'active' ? `${request.name} fue vinculado al semillero.` : 'Solicitud rechazada.';
+    renderMembers();
+    renderPending();
+  } catch (error) {
+    pendingNote.textContent = error.message;
+    actions.querySelectorAll('button').forEach((button) => (button.disabled = false));
+  }
+}
+renderPending();

@@ -104,8 +104,23 @@ Authorization: Bearer {{token}}
 GET {{host}}/api/semilleros/datalab-riul
 Authorization: Bearer {{token}}
 
-###
+### Solicitar vinculación (queda pending hasta que el líder la apruebe)
 POST {{host}}/api/semilleros/semillero-de-inteligencia-artificial-sia/members
+Authorization: Bearer {{token}}
+
+### Aprobar o rechazar una solicitud (líder, co-líder o administrador)
+PATCH {{host}}/api/semilleros/datalab-riul/members/7
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "status": "active" }
+
+### Seguir / dejar de seguir un semillero
+POST {{host}}/api/semilleros/datalab-riul/follow
+Authorization: Bearer {{token}}
+
+###
+DELETE {{host}}/api/semilleros/datalab-riul/follow
 Authorization: Bearer {{token}}
 
 ### 11. Proyectos
@@ -119,12 +134,52 @@ Content-Type: application/json
 
 { "title": "Proyecto de prueba", "type": "Prototipo", "milestones": ["Diseño", "Pruebas"] }
 
+### Agregar un producto (article | presentation | patent | report)
+POST {{host}}/api/projects/proyecto-de-prueba/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "type": "article", "name": "Informe de avance" }
+
 ### 12. Eventos y convocatorias
 GET {{host}}/api/events?kind=event&status=open
 Authorization: Bearer {{token}}
 
 ###
 POST {{host}}/api/events/taller-de-datos-abiertos-para-investigadores/registrations
+Authorization: Bearer {{token}}
+
+### Postular a un semillero a una convocatoria (líder del semillero)
+POST {{host}}/api/events/convocatoria-de-fortalecimiento-a-semilleros-2027/registrations
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "semillero": "datalab-riul" }
+
+### Postulaciones de una convocatoria (administrador)
+GET {{host}}/api/events/convocatoria-de-fortalecimiento-a-semilleros-2027/applications
+Authorization: Bearer {{token}}
+
+###
+PATCH {{host}}/api/events/convocatoria-de-fortalecimiento-a-semilleros-2027/applications/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "status": "accepted" }
+
+### Feed: comentarios y compartidos
+GET {{host}}/api/posts/1/comments
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/posts/1/comments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "body": "Excelente avance, ¿publicarán los datos?" }
+
+###
+POST {{host}}/api/posts/1/shares
 Authorization: Bearer {{token}}
 
 ### 13. Notificaciones y gamificación
@@ -148,8 +203,47 @@ POST {{host}}/api/gamification/achievements
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{ "title": "Ponencia en congreso nacional", "description": "Presentación de resultados" }
+# Exactamente un origen: event | post | project | product | semillero
+{ "semillero": "datalab-riul", "title": "Ponencia en congreso nacional", "description": "Presentación de resultados" }
+
+### Tipos de logro y XP base
+GET {{host}}/api/gamification/types
+Authorization: Bearer {{token}}
+
+### Adjuntar evidencia (reemplaza el id y el archivo)
+POST {{host}}/api/gamification/achievements/1/evidences
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=riul
+
+--riul
+Content-Disposition: form-data; name="file"; filename="evidencia.pdf"
+Content-Type: application/pdf
+
+< ./evidencia.pdf
+--riul--
 
 ### 14. Administración (token de administrador)
-GET {{host}}/api/admin/achievements?status=in_review
+GET {{host}}/api/admin/achievements?status=pending
+Authorization: Bearer {{token}}
+
+### Aprobar un logro (approved | rejected); xp es opcional
+PATCH {{host}}/api/admin/achievements/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "status": "approved" }
+
+### 15. Reportes (administrador genera y publica; todos leen los publicados)
+POST {{host}}/api/admin/reports
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "kind": "report", "period_start": "2026-01-01", "period_end": "2026-06-30" }
+
+###
+POST {{host}}/api/admin/reports/1/publication
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/reports
 Authorization: Bearer {{token}}

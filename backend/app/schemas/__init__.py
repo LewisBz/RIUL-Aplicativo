@@ -1,6 +1,7 @@
 from app.schemas.auth import (
     AdminUsersQuerySchema,
     AttachmentSchema,
+    CommentCreateSchema,
     FacultyCatalogSchema,
     LoginSchema,
     PostCreateSchema,
@@ -12,6 +13,7 @@ from app.schemas.auth import (
     TokenUserSchema,
     UserSchema,
     UserStatusSchema,
+    serialize_comment,
     serialize_post,
     serialize_posts,
 )
@@ -22,13 +24,18 @@ from app.schemas.engagement import (
     NotificationListQuerySchema,
     NotificationUpdateSchema,
     serialize_achievement,
+    serialize_achievement_type,
+    serialize_evidence,
     serialize_gamification,
     serialize_notification,
     serialize_ranking,
 )
 from app.schemas.events import (
+    ApplicationReviewSchema,
     EventCreateSchema,
     EventListQuerySchema,
+    RegistrationSchema,
+    serialize_application,
     serialize_event,
 )
 from app.schemas.profile import (
@@ -49,7 +56,13 @@ from app.schemas.projects import (
     serialize_project_summary,
     serialize_publication,
 )
+from app.schemas.reports import (
+    ReportCreateSchema,
+    ReportListQuerySchema,
+    serialize_report,
+)
 from app.schemas.semilleros import (
+    MemberReviewSchema,
     SemilleroActivitySchema,
     SemilleroCreateSchema,
     SemilleroListQuerySchema,
@@ -58,6 +71,10 @@ from app.schemas.semilleros import (
 )
 
 __all__ = [
+    "ApplicationReviewSchema", "CommentCreateSchema", "MemberReviewSchema",
+    "RegistrationSchema", "ReportCreateSchema", "ReportListQuerySchema",
+    "serialize_achievement_type", "serialize_application", "serialize_comment",
+    "serialize_evidence", "serialize_report",
     "AchievementCreateSchema", "AchievementListQuerySchema",
     "AchievementReviewSchema", "AdminUsersQuerySchema", "AttachmentSchema",
     "ChangePasswordSchema", "EventCreateSchema", "EventListQuerySchema",

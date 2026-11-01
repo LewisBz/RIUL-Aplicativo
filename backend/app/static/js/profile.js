@@ -6,6 +6,7 @@ import {
   toGamification,
   projectStatusLabel,
   publicationStatusLabel,
+  productTypeLabel,
   isoDate,
 } from './adapters.js';
 
@@ -50,6 +51,8 @@ try {
 document.getElementById('infoEmail').textContent = profile.user.email;
 document.getElementById('infoFaculty').textContent = profile.faculty?.name ?? '—';
 document.getElementById('infoProgram').textContent = profile.program?.name ?? '—';
+document.getElementById('infoOrcid').textContent = profile.orcid || '—';
+document.getElementById('infoBio').textContent = profile.bio || 'Aún no has agregado una biografía.';
 
 const GAMIFICATION = toGamification(profile.gamification);
 document.getElementById('gamLevel').textContent = `Nivel ${GAMIFICATION.level}`;
@@ -134,7 +137,7 @@ fillTable(
   'productsTable',
   profile.products.map((product) => {
     const approved = product.status === 'approved';
-    return [product.type, product.name, text('span', PRODUCT_STATUS[product.status], `status-chip ${approved ? 'chip-approved' : 'chip-review'}`)];
+    return [productTypeLabel(product.type), product.name, text('span', PRODUCT_STATUS[product.status], `status-chip ${approved ? 'chip-approved' : 'chip-review'}`)];
   }),
   'Sin productos registrados.',
   3,
@@ -182,6 +185,8 @@ document.getElementById('editProfileBtn').addEventListener('click', async () => 
         ],
         value: profile.user.program_id ?? '',
       },
+      { name: 'orcid', label: 'ORCID', placeholder: '0000-0000-0000-0000', value: profile.orcid ?? '' },
+      { name: 'bio', label: 'Biografía', type: 'textarea', value: profile.bio ?? '' },
     ],
     onSubmit: (values) =>
       api('/api/profile', {
@@ -190,6 +195,8 @@ document.getElementById('editProfileBtn').addEventListener('click', async () => 
           full_name: values.full_name,
           faculty_id: values.faculty_id ? Number(values.faculty_id) : null,
           program_id: values.program_id ? Number(values.program_id) : null,
+          orcid: values.orcid.trim() || null,
+          bio: values.bio.trim() || null,
         },
       }),
   });

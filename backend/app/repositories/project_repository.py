@@ -2,11 +2,11 @@ from sqlalchemy import func, or_, select
 
 from app.extensions import db
 from app.models import (
+    PRODUCT_ARTICLE,
+    Product,
     Project,
     ProjectMember,
     ProjectMilestone,
-    ProjectProduct,
-    Publication,
     Semillero,
 )
 
@@ -49,11 +49,6 @@ def add(project: Project) -> Project:
     return project
 
 
-def add_product(product: ProjectProduct) -> ProjectProduct:
-    db.session.add(product)
-    return product
-
-
 def get_milestone(project_id: int, milestone_id: int) -> ProjectMilestone | None:
     return db.session.scalar(
         select(ProjectMilestone).where(
@@ -75,19 +70,52 @@ def count_projects() -> int:
     return int(db.session.scalar(select(func.count()).select_from(Project)) or 0)
 
 
-def add_publication(publication: Publication) -> Publication:
-    db.session.add(publication)
-    return publication
+# --- Productos ---
+def add_product(product: Product) -> Product:
+    db.session.add(product)
+    return product
 
 
-def list_publications(author_id: int, limit: int | None = None) -> list[Publication]:
+def get_product(product_id: int) -> Product | None:
+    return db.session.get(Product, product_id)
+
+
+def list_user_products(user_id: int, limit: int | None = None) -> list[Product]:
     stmt = (
-        select(Publication)
-        .where(Publication.author_id == author_id)
-        .order_by(Publication.published_on.desc(), Publication.id.desc())
+        select(Product)
+        .where(Product.user_id == user_id)
+        .order_by(Product.published_on.desc(), Product.id.desc())
     )
     if limit:
         stmt = stmt.limit(limit)
+    return list(db.session.scalars(stmt).all())
+
+
+def list_user_publications(user_id: int, limit: int | None = None) -> list[Product]:
+    """Producción académica del usuario: artículos (antes `publications`)."""
+    stmt = (
+        select(Product)
+        .where(Product.user_id == user_id, Product.type == PRODUCT_ARTICLE)
+        .order_by(Product.published_on.desc(), Product.id.desc())
+    )
+    if limit:
+        stmt = stmt.limit(limit)
+    return list(db.session.scalars(stmt).all())
+
+
+def list_semillero_products(semillero_id: int) -> list[Product]:
+    stmt = (
+        select(Product)
+        .where(
+            or_(
+                Product.semillero_id == semillero_id,
+                Product.project_id.in_(
+                    select(Project.id).where(Project.semillero_id == semillero_id)
+                ),
+            )
+        )
+        .order_by(Product.published_on.desc(), Product.id.desc())
+    )
     return list(db.session.scalars(stmt).all())
 
 
@@ -101,12 +129,3 @@ def commit() -> None:
 
 def flush() -> None:
     db.session.flush()
-
-
-def list_semillero_publications(semillero_id: int) -> list[Publication]:
-    stmt = (
-        select(Publication)
-        .where(Publication.semillero_id == semillero_id)
-        .order_by(Publication.published_on.desc(), Publication.id.desc())
-    )
-    return list(db.session.scalars(stmt).all())

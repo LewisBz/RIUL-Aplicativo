@@ -10,8 +10,13 @@ def notify(
     text: str,
     href: str | None = None,
     priority: str = PRIORITY_NORMAL,
+    entity: tuple[str, int] | None = None,
 ) -> Notification:
-    """Registra una notificación. El commit lo realiza el servicio llamador."""
+    """Registra una notificación. El commit lo realiza el servicio llamador.
+
+    `entity` es la pareja ``(entity_kind, entity_id)`` del recurso al que se refiere.
+    """
+    entity_kind, entity_id = entity if entity else (None, None)
     return engagement_repository.add_notification(
         Notification(
             user_id=user_id,
@@ -20,6 +25,8 @@ def notify(
             text=text[:500],
             href=href,
             priority=priority,
+            entity_kind=entity_kind,
+            entity_id=entity_id,
         )
     )
 

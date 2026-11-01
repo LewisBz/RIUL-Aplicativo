@@ -18,13 +18,14 @@ export function queryString(params) {
 /** Cliente JSON de la API REST de RIUL. Lanza Error con el mensaje del backend. */
 export async function api(path, { method = 'GET', body } = {}) {
   const headers = { Authorization: `Bearer ${getToken()}` };
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
+  if (body !== undefined && !isForm) headers['Content-Type'] = 'application/json';
   let response;
   try {
     response = await fetch(API_BASE + path, {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     });
   } catch {
     throw new Error('No hay conexión con el servidor.');

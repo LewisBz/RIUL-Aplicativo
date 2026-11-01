@@ -2,16 +2,30 @@ from datetime import date, timedelta
 
 from app.extensions import db
 from app.models import (
-    ACHIEVEMENT_VALIDATED,
-    Achievement,
-    Faculty,
-    Project,
-    Publication,
+    ACHIEVEMENT_APPROVED,
+    MEMBER_PRINCIPAL,
+    MEMBERSHIP_ACTIVE,
+    PRODUCT_ARTICLE,
     ROLE_ADMINISTRATOR,
     ROLE_RESEARCHER,
+    TYPE_SEMILLERO,
+    Achievement,
+    AchievementType,
+    Faculty,
+    Product,
+    Project,
+    ProjectMember,
     Semillero,
     SemilleroMember,
 )
+from app.services import gamification_service
+
+
+def _project(slug: str, title: str, leader, **fields) -> Project:
+    project = Project(slug=slug, title=title, **fields)
+    project.members.append(ProjectMember(user_id=leader.id, role=MEMBER_PRINCIPAL))
+    db.session.add(project)
+    return project
 
 
 def test_analytics_requires_admin(client, make_role_user):
@@ -34,22 +48,28 @@ def test_analytics_aggregates_real_data(client, make_role_user):
     user, _ = make_role_user(ROLE_RESEARCHER)
     _, headers = make_role_user(ROLE_ADMINISTRATOR)
     faculty = Faculty.query.first()
-    semillero = Semillero(slug="sem-a", name="Semillero A", faculty_id=faculty.id)
+    semillero = Semillero(
+        slug="sem-a", name="Semillero A", faculty_id=faculty.id, leader_id=user.id
+    )
+    semillero.members.append(
+        SemilleroMember(user_id=user.id, role="leader", status=MEMBERSHIP_ACTIVE)
+    )
     db.session.add(semillero)
     db.session.flush()
-    db.session.add(SemilleroMember(semillero_id=semillero.id, user_id=user.id))
-    db.session.add(Publication(author_id=user.id, title="Paper"))
-    db.session.add(Project(slug="p-1", title="Proyecto", leader_id=user.id, status="in_progress"))
-    db.session.add(Project(slug="p-2", title="Cerrado", leader_id=user.id, status="completed"))
-    db.session.add(
-        Achievement(
-            user_id=user.id,
-            title="Logro",
-            status=ACHIEVEMENT_VALIDATED,
-            xp=120,
-            achieved_on=date.today(),
-        )
+    gamification_service.ensure_semillero_progress(semillero.id)
+    db.session.add(Product(user_id=user.id, type=PRODUCT_ARTICLE, title="Paper"))
+    _project("p-1", "Proyecto", user, status="in_progress")
+    _project("p-2", "Cerrado", user, status="closed")
+    achievement = Achievement(
+        user_id=user.id,
+        type_id=AchievementType.query.filter_by(code=TYPE_SEMILLERO).one().id,
+        semillero_id=semillero.id,
+        status=ACHIEVEMENT_APPROVED,
+        achieved_on=date.today(),
     )
+    db.session.add(achievement)
+    db.session.flush()
+    gamification_service.apply_approval(achievement, 120)
     db.session.commit()
 
     body = client.get("/api/admin/analytics", headers=headers).get_json()
@@ -71,13 +91,15 @@ def test_production_uses_business_dates_not_registration_dates(client, make_role
     _, headers = make_role_user(ROLE_ADMINISTRATOR)
     three_months_ago = date.today().replace(day=1) - timedelta(days=75)
     long_ago = date.today() - timedelta(days=900)
+    _project("p-old", "Antiguo", user, start_date=three_months_ago)
     db.session.add(
-        Project(slug="p-old", title="Antiguo", leader_id=user.id, start_date=three_months_ago)
+        Product(
+            user_id=user.id, type=PRODUCT_ARTICLE, title="Dentro", published_on=three_months_ago
+        )
     )
     db.session.add(
-        Publication(author_id=user.id, title="Dentro", published_on=three_months_ago)
+        Product(user_id=user.id, type=PRODUCT_ARTICLE, title="Fuera", published_on=long_ago)
     )
-    db.session.add(Publication(author_id=user.id, title="Fuera", published_on=long_ago))
     db.session.commit()
 
     body = client.get("/api/admin/analytics", headers=headers).get_json()

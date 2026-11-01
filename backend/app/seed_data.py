@@ -370,12 +370,69 @@ SEED_DEMO_REACTIONS = [
 ]
 
 # ---------------------------------------------------------------------------
-# Dominio de investigación: semilleros, proyectos, publicaciones, eventos,
-# logros y notificaciones. Los usuarios se referencian por el prefijo de su
-# correo institucional (ver SEED_DEMO_USERS).
+# Perfiles extendidos (`user_profiles`): prefijo de correo -> (bio, ORCID, foto)
+# ---------------------------------------------------------------------------
+SEED_USER_PROFILES = {
+    "laura.mendoza": (
+        "Docente investigadora en estadística aplicada. Lidera DataLab y el Semillero de IA.",
+        "0000-0002-0000-0001",
+        None,
+    ),
+    "maria.antonieta.perez": (
+        "Ph.D. en Ciencias de la Computación. Dirige el semillero ITA.",
+        "0000-0002-0000-0002",
+        None,
+    ),
+    "mateo.silva": (
+        "Ingeniero industrial enfocado en eficiencia energética.",
+        "0000-0002-0000-0003",
+        None,
+    ),
+    "javier.torres": (
+        "Microbiólogo. Biorremediación de suelos del Atlántico.",
+        "0000-0002-0000-0004",
+        None,
+    ),
+    "camila.rojas": (
+        "Investigadora en analítica educativa y modelos predictivos.",
+        "0000-0003-0000-0005",
+        None,
+    ),
+    "luis.grandett": (
+        "Estudiante investigador en IoT y ciberseguridad de redes académicas.",
+        None,
+        None,
+    ),
+}
+
+# Comentarios: (índice de publicación en SEED_DEMO_POSTS, correo, texto, fecha)
+SEED_DEMO_COMMENTS = [
+    (0, "camila.rojas@unilibre.edu.co", "¡Excelente! Ya me inscribí en el simposio.", datetime(2026, 9, 12, 12, 5)),
+    (0, "andres.perez@unilibre.edu.co", "¿Habrá certificado de asistencia?", datetime(2026, 9, 12, 13, 40)),
+    (0, "laura.mendoza@unilibre.edu.co", "Sí, se entregará certificado a todos los asistentes.", datetime(2026, 9, 12, 14, 10)),
+    (1, "javier.torres@unilibre.edu.co", "Muy buen resultado, felicitaciones al equipo.", datetime(2026, 9, 11, 11, 0)),
+    (3, "ana.restrepo@unilibre.edu.co", "Gran aporte para la visibilidad de RIUL.", datetime(2026, 9, 9, 16, 30)),
+    (7, "maria.antonieta.perez@unilibre.edu.co", "Cuéntanos más sobre la metodología en la próxima reunión.", datetime(2026, 9, 5, 10, 15)),
+    (12, "sofia.diaz@unilibre.edu.co", "¡Orgullosa de formar parte del semillero!", datetime(2026, 8, 31, 9, 45)),
+]
+
+# Compartidos: lista alineada por índice con SEED_DEMO_POSTS (solo algunas).
+SEED_DEMO_SHARES = {
+    0: ["camila.rojas@unilibre.edu.co", "luis.grandett@unilibre.edu.co"],
+    3: ["laura.mendoza@unilibre.edu.co"],
+    6: ["carolina.martinez@unilibre.edu.co", "mateo.silva@unilibre.edu.co"],
+    12: ["camila.rojas@unilibre.edu.co"],
+}
+
+# ---------------------------------------------------------------------------
+# Dominio de investigación: semilleros, proyectos, productos, eventos,
+# convocatorias, logros y notificaciones. Los usuarios se referencian por el
+# prefijo de su correo institucional (ver SEED_DEMO_USERS).
 # ---------------------------------------------------------------------------
 from datetime import date  # noqa: E402
 
+# Cada semillero: el líder se registra como miembro con rol `leader`. Los
+# miembros son (usuario, rol) o (usuario, rol, estado); por defecto `active`.
 SEED_SEMILLEROS = [
     {
         "name": "Innovación Tecnológica Aplicada (ITA)",
@@ -397,6 +454,7 @@ SEED_SEMILLEROS = [
             ("carolina.martinez", "member"),
             ("andres.perez", "member"),
             ("diego.gutierrez", "co_leader"),
+            ("paula.fernandez", "member", "pending"),
         ],
         "lines": [
             ("memory", "IoT para Agricultura de Precisión", "Diego Gutiérrez"),
@@ -492,21 +550,34 @@ SEED_SEMILLEROS = [
         "icon": "share",
         "faculty": "Ciencias Sociales",
         "program": "Comunicación Social",
-        "leader": None,
-        "leader_name": "Dr. Luis Grandett",
-        "leader_title": "Ph.D. en Comunicación Política",
+        "leader": "mateo.silva",
+        "leader_title": "Docente investigador en Comunicación Digital",
         "description": "Investigación sobre el impacto de las redes digitales en el comportamiento político local.",
         "affiliation": "Facultad de Ciencias Sociales - Unidad Académica de Comunicación",
         "about": "Analiza conversaciones digitales y dinámicas de opinión pública en redes sociales durante periodos electorales locales.",
         "mission": "Comprender críticamente el papel de las plataformas digitales en la democracia local.",
         "vision": "Convertirse en observatorio regional de opinión digital.",
         "interest_areas": ["Opinión Pública", "Comunicación Digital", "Análisis de Redes"],
-        "members": [],
+        "members": [("luis.grandett", "member", "rejected")],
         "lines": [("forum", "Observatorio de Opinión Digital", None)],
         "activities": [(date(2026, 6, 2), "Panel: Elecciones y Redes", "Universidad Libre")],
     },
 ]
 
+# (usuario, semillero) — seguimiento sin vinculación
+SEED_SEMILLERO_FOLLOWS = [
+    ("camila.rojas", "Innovación Tecnológica Aplicada (ITA)"),
+    ("camila.rojas", "Semillero de Inteligencia Artificial (SIA)"),
+    ("sofia.diaz", "DataLab - RIUL"),
+    ("paula.fernandez", "Innovación Tecnológica Aplicada (ITA)"),
+    ("luis.grandett", "DataLab - RIUL"),
+    ("carolina.martinez", "DataLab - RIUL"),
+    ("diego.gutierrez", "Biotecnología Aplicada"),
+    ("andres.perez", "Grupo de Energías Renovables"),
+]
+
+# Proyectos: el líder es el integrante con rol `principal`. Los productos son
+# (tipo, título, estado) con tipo en article | presentation | patent | report.
 SEED_PROJECTS = [
     {
         "title": "Análisis predictivo del rendimiento académico",
@@ -521,7 +592,7 @@ SEED_PROJECTS = [
         "role_required": "Científico de Datos (Python/R)",
         "start_date": date(2025, 2, 10),
         "end_date": date(2026, 11, 30),
-        "products": [("Artículo", "Modelo de predicción académica", "in_review"), ("Informe", "Base anonimizada de resultados", "approved")],
+        "products": [("article", "Modelo de predicción académica", "in_review"), ("report", "Base anonimizada de resultados", "approved")],
         "milestones": [("Definición de variables", True), ("Entrenamiento del modelo", True), ("Validación con la comunidad", False)],
     },
     {
@@ -537,7 +608,7 @@ SEED_PROJECTS = [
         "role_required": "Desarrollador Python / TensorFlow",
         "start_date": date(2025, 8, 1),
         "end_date": date(2027, 3, 15),
-        "products": [("Ponencia", "Redes interpretables en educación", "in_review")],
+        "products": [("presentation", "Redes interpretables en educación", "in_review")],
         "milestones": [("Revisión bibliográfica", True), ("Prototipo inicial", False)],
     },
     {
@@ -569,7 +640,7 @@ SEED_PROJECTS = [
         "role_required": "Desarrollador C++ / Hardware",
         "start_date": date(2026, 1, 15),
         "end_date": date(2026, 12, 15),
-        "products": [("Prototipo", "Nodo sensor ESP32", "in_review")],
+        "products": [("report", "Informe técnico del nodo sensor ESP32", "in_review")],
         "milestones": [("Selección de sensores", True), ("Pruebas de campo", False)],
     },
     {
@@ -604,73 +675,120 @@ SEED_PROJECTS = [
         "products": [],
         "milestones": [("Diseño CAD", True), ("Simulación CFD", False)],
     },
+    {
+        "title": "Observatorio de calidad del aire universitario",
+        "type": "Investigación aplicada",
+        "status": "closed",
+        "semillero": "Biotecnología Aplicada",
+        "leader": "javier.torres",
+        "members": ["sofia.diaz"],
+        "description": "Monitoreo de material particulado en el campus durante dos años; proyecto finalizado y entregado.",
+        "progress": 100,
+        "line": "Química Ambiental",
+        "role_required": "Química / Estadística",
+        "start_date": date(2024, 2, 1),
+        "end_date": date(2025, 12, 15),
+        "products": [("report", "Informe final del observatorio", "approved")],
+        "milestones": [("Instalación de estaciones", True), ("Informe final", True)],
+    },
 ]
 
-SEED_PUBLICATIONS = [
-    {"author": "camila.rojas", "semillero": "DataLab - RIUL", "title": "Optimización de Modelos Predictivos", "venue": "Nature", "published_on": date(2025, 3, 12), "status": "published"},
-    {"author": "camila.rojas", "semillero": "Innovación Tecnológica Aplicada (ITA)", "title": "Redes Neuronales en Educación", "venue": "IEEE Access", "published_on": date(2024, 11, 2), "status": "published"},
-    {"author": "luis.grandett", "semillero": "Innovación Tecnológica Aplicada (ITA)", "title": "Low-cost IoT Sensors for Tomato Crops", "venue": "IEEE Latin America Transactions", "published_on": date(2023, 10, 1), "status": "published"},
-    {"author": "laura.mendoza", "semillero": "DataLab - RIUL", "title": "Early Dropout Prediction with Ensemble Models", "venue": "Revista Ibérica de Sistemas", "published_on": date(2024, 3, 1), "status": "published"},
-    {"author": "diego.gutierrez", "semillero": "Grupo de Energías Renovables", "title": "Low-cost Vertical Axis Wind Turbines", "venue": "Journal of Renewable Energy", "published_on": date(2024, 2, 1), "status": "in_review"},
+# Productos propios sin proyecto (antes `publications`): artículos académicos.
+SEED_PRODUCTS = [
+    {"author": "camila.rojas", "semillero": "DataLab - RIUL", "type": "article", "title": "Optimización de Modelos Predictivos", "venue": "Nature", "published_on": date(2025, 3, 12), "status": "approved"},
+    {"author": "camila.rojas", "semillero": "Innovación Tecnológica Aplicada (ITA)", "type": "article", "title": "Redes Neuronales en Educación", "venue": "IEEE Access", "published_on": date(2024, 11, 2), "status": "approved"},
+    {"author": "luis.grandett", "semillero": "Innovación Tecnológica Aplicada (ITA)", "type": "article", "title": "Low-cost IoT Sensors for Tomato Crops", "venue": "IEEE Latin America Transactions", "published_on": date(2023, 10, 1), "status": "approved"},
+    {"author": "laura.mendoza", "semillero": "DataLab - RIUL", "type": "article", "title": "Early Dropout Prediction with Ensemble Models", "venue": "Revista Ibérica de Sistemas", "published_on": date(2024, 3, 1), "status": "approved"},
+    {"author": "diego.gutierrez", "semillero": "Grupo de Energías Renovables", "type": "article", "title": "Low-cost Vertical Axis Wind Turbines", "venue": "Journal of Renewable Energy", "published_on": date(2024, 2, 1), "status": "in_review"},
+    {"author": "javier.torres", "semillero": "Biotecnología Aplicada", "type": "patent", "title": "Consorcio microbiano para degradación de hidrocarburos", "venue": "SIC Colombia", "published_on": date(2025, 6, 20), "status": "in_review"},
 ]
 
+# Eventos. `registered`: usuario o (usuario, rol) con rol attendee | speaker | organizer.
 SEED_EVENTS = [
     {
         "title": "V Simposio Internacional de Investigación",
-        "kind": "event", "type": "Simposio", "status": "open",
+        "type": "Simposio", "status": "open",
         "description": "Encuentro para compartir resultados, metodologías y nuevas alianzas de investigación.",
         "starts_at": datetime(2026, 11, 13, 18, 0), "ends_at": datetime(2026, 11, 14, 18, 0),
         "location": "Auditorio A", "capacity": 180, "organizer": "Dirección de Investigación",
         "requirements": ["Registro previo", "Documento de identidad institucional"],
-        "registered": ["laura.mendoza", "camila.rojas", "andres.perez", "luis.grandett"],
+        "created_by": "ana.restrepo",
+        "registered": [
+            ("laura.mendoza", "organizer"), "camila.rojas", "andres.perez", "luis.grandett",
+        ],
     },
     {
         "title": "Taller de datos abiertos para investigadores",
-        "kind": "event", "type": "Taller", "status": "open",
+        "type": "Taller", "status": "open",
         "description": "Sesión práctica sobre documentación, publicación y reutilización responsable de datos.",
         "starts_at": datetime(2026, 12, 4, 9, 0), "ends_at": datetime(2026, 12, 4, 12, 0),
         "location": "Sala B", "capacity": 40, "organizer": "DataLab - RIUL",
         "requirements": ["Llevar computador portátil"],
+        "semillero": "DataLab - RIUL",
+        "created_by": "laura.mendoza",
         "registered": ["paula.fernandez"],
     },
     {
-        "title": "Convocatoria de fortalecimiento a semilleros 2027",
-        "kind": "call", "type": "Convocatoria", "status": "open",
-        "description": "Presenta una propuesta para fortalecer las capacidades y productos de tu semillero.",
-        "starts_at": datetime(2026, 11, 1, 0, 0), "ends_at": datetime(2027, 1, 30, 23, 59),
-        "location": "Virtual", "capacity": None, "organizer": "Vicerrectoría de Investigación",
-        "requirements": ["Propuesta de trabajo", "Presupuesto estimado", "Aval del semillero"],
-        "registered": [],
-    },
-    {
         "title": "Encuentro de innovación y transferencia",
-        "kind": "event", "type": "Encuentro", "status": "closed",
+        "type": "Encuentro", "status": "closed",
         "description": "Jornada de presentación de prototipos y productos de investigación universitaria.",
         "starts_at": datetime(2025, 10, 18, 8, 0), "ends_at": datetime(2025, 10, 18, 17, 0),
         "location": "Auditorio A", "capacity": 100, "organizer": "Centro de Innovación",
         "requirements": [],
-        "registered": ["laura.mendoza"],
+        "created_by": "ana.restrepo",
+        "registered": ["laura.mendoza", ("javier.torres", "speaker")],
     },
 ]
 
-# (usuario, icono, título, descripción, estado, xp, fecha)
+# Convocatorias publicadas por la administración. Cada postulación es
+# ("user", usuario, estado) o ("semillero", nombre, estado).
+SEED_CALLS = [
+    {
+        "title": "Convocatoria de fortalecimiento a semilleros 2027",
+        "type": "Convocatoria", "status": "open",
+        "description": "Presenta una propuesta para fortalecer las capacidades y productos de tu semillero.",
+        "starts_at": datetime(2026, 11, 1, 0, 0), "ends_at": datetime(2027, 1, 30, 23, 59),
+        "location": "Virtual", "organizer": "Vicerrectoría de Investigación",
+        "requirements": ["Propuesta de trabajo", "Presupuesto estimado", "Aval del semillero"],
+        "published_by": "ana.restrepo",
+        "applications": [
+            ("semillero", "DataLab - RIUL", "accepted"),
+            ("semillero", "Biotecnología Aplicada", "pending"),
+            ("user", "camila.rojas", "pending"),
+        ],
+    },
+]
+
+# Logros. `origin` = (tipo de origen, referencia):
+#   ("event", título) · ("semillero", nombre) · ("product", (autor, título))
+#   · ("project", título) · ("post", índice en SEED_DEMO_POSTS)
+# `xp` es el asiento del libro mayor al aprobar (None = valor del tipo).
 SEED_ACHIEVEMENTS = [
-    ("camila.rojas", "event", "Participante destacado", "Participación en el V Simposio Internacional", "validated", 50, date(2026, 6, 14)),
-    ("camila.rojas", "article", "Publicador académico", "Artículo publicado en una revista indexada", "in_review", 120, date(2026, 5, 20)),
-    ("camila.rojas", "groups", "Líder de semillero", "Acompañamiento a un semillero de investigación", "validated", 80, date(2026, 3, 10)),
-    ("laura.mendoza", "workspace_premium", "Publicador Destacado", "Producción científica sobresaliente", "validated", 600, date(2026, 4, 2)),
-    ("laura.mendoza", "groups", "Líder de semillero", "Dirección de dos semilleros", "validated", 450, date(2026, 2, 12)),
-    ("javier.torres", "military_tech", "Participante Evento", "Ponencia en el Encuentro de innovación", "validated", 380, date(2025, 10, 18)),
-    ("mateo.silva", "groups", "Líder de semillero", "Dirección del Grupo de Energías Renovables", "validated", 260, date(2026, 1, 20)),
-    ("andres.perez", "event", "Participante destacado", "Hackathon de Datos Abiertos", "validated", 140, date(2026, 6, 10)),
-    ("luis.grandett", "article", "Publicador académico", "Artículo IEEE Latin America", "validated", 210, date(2023, 10, 1)),
+    {"user": "camila.rojas", "origin": ("event", "V Simposio Internacional de Investigación"), "title": "Participante destacado", "description": "Participación en el V Simposio Internacional", "status": "approved", "xp": 50, "achieved_on": date(2026, 6, 14)},
+    {"user": "camila.rojas", "origin": ("product", ("camila.rojas", "Optimización de Modelos Predictivos")), "title": "Publicador académico", "description": "Artículo publicado en una revista indexada", "status": "pending", "xp": None, "achieved_on": date(2026, 5, 20)},
+    {"user": "camila.rojas", "origin": ("semillero", "DataLab - RIUL"), "title": "Líder de semillero", "description": "Acompañamiento a un semillero de investigación", "status": "approved", "xp": 80, "achieved_on": date(2026, 3, 10)},
+    {"user": "laura.mendoza", "origin": ("product", ("laura.mendoza", "Early Dropout Prediction with Ensemble Models")), "title": "Publicador Destacado", "description": "Producción científica sobresaliente", "status": "approved", "xp": 600, "achieved_on": date(2026, 4, 2)},
+    {"user": "laura.mendoza", "origin": ("semillero", "DataLab - RIUL"), "title": "Líder de semillero", "description": "Dirección de dos semilleros", "status": "approved", "xp": 450, "achieved_on": date(2026, 2, 12)},
+    {"user": "javier.torres", "origin": ("event", "Encuentro de innovación y transferencia"), "title": "Participante Evento", "description": "Ponencia en el Encuentro de innovación", "status": "approved", "xp": 380, "achieved_on": date(2025, 10, 18)},
+    {"user": "mateo.silva", "origin": ("semillero", "Grupo de Energías Renovables"), "title": "Líder de semillero", "description": "Dirección del Grupo de Energías Renovables", "status": "approved", "xp": 260, "achieved_on": date(2026, 1, 20)},
+    {"user": "andres.perez", "origin": ("semillero", "DataLab - RIUL"), "title": "Participante destacado", "description": "Hackathon de Datos Abiertos", "status": "approved", "xp": 140, "achieved_on": date(2026, 6, 10)},
+    {"user": "luis.grandett", "origin": ("product", ("luis.grandett", "Low-cost IoT Sensors for Tomato Crops")), "title": "Publicador académico", "description": "Artículo IEEE Latin America", "status": "approved", "xp": 210, "achieved_on": date(2023, 10, 1)},
+    {"user": "javier.torres", "origin": ("project", "Observatorio de calidad del aire universitario"), "title": "Proyecto finalizado", "description": "Cierre exitoso del observatorio de calidad del aire", "status": "rejected", "xp": None, "achieved_on": date(2025, 12, 20)},
 ]
 
 # (usuario, tipo, título, texto, prioridad, enlace, leída, fecha)
 SEED_NOTIFICATIONS = [
-    ("camila.rojas", "achievement", "Logro validado", "Tu participación en el V Simposio fue validada.", "high", "/gamification", False, datetime(2026, 8, 20, 10, 30)),
+    ("camila.rojas", "achievement", "Logro aprobado", "Tu participación en el V Simposio fue aprobada.", "high", "/gamification", False, datetime(2026, 8, 20, 10, 30)),
     ("camila.rojas", "event", "Próximo evento", "El Taller de datos abiertos comienza pronto.", "normal", "/event-detail?id=taller-de-datos-abiertos-para-investigadores", False, datetime(2026, 8, 18, 14, 0)),
     ("camila.rojas", "semillero", "Actividad de semillero", "DataLab registró una nueva actividad.", "normal", "/semilleros", True, datetime(2026, 8, 15, 9, 15)),
     ("camila.rojas", "project", "Avance de proyecto", "Se registró una actualización en tu proyecto.", "low", "/projects", True, datetime(2026, 8, 12, 16, 45)),
     ("laura.mendoza", "event", "Inscripción confirmada", "Quedaste inscrito en el V Simposio Internacional de Investigación.", "normal", "/events", False, datetime(2026, 10, 20, 8, 0)),
+    ("maria.antonieta.perez", "semillero", "Nueva solicitud de vinculación", "Paula Fernández solicitó unirse a Innovación Tecnológica Aplicada (ITA).", "high", "/semilleros", False, datetime(2026, 10, 25, 9, 0)),
+]
+
+# Reportes generados por la administración al sembrar (`report_snapshots`):
+# (tipo, inicio, fin, publicado). Los publicados se ven en /api/reports.
+SEED_REPORTS = [
+    ("ranking", date(2026, 1, 1), date(2026, 6, 30), True),
+    ("report", date(2026, 7, 1), date(2026, 9, 30), False),
 ]

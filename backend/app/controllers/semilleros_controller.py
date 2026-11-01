@@ -3,6 +3,7 @@ from flask import jsonify, request
 from app.controllers.guards import active_user_required, items_response
 from app.controllers.http import json_error, load_schema, query_args
 from app.schemas import (
+    MemberReviewSchema,
     SemilleroActivitySchema,
     SemilleroCreateSchema,
     SemilleroListQuerySchema,
@@ -19,7 +20,10 @@ def _detail(user, semillero) -> dict:
         semillero,
         semillero_service.viewer_membership(semillero, user.id),
         project_service.list_projects(semillero_slug=semillero.slug),
-        project_repository.list_semillero_publications(semillero.id),
+        project_repository.list_semillero_products(semillero.id),
+        can_manage=semillero_service.can_manage(user, semillero),
+        following=semillero.id in semillero_service.followed_ids(user.id),
+        follower_count=semillero_service.follower_count(semillero),
     )
 
 
@@ -67,6 +71,25 @@ def add_activity(user, slug: str):
     data = load_schema(SemilleroActivitySchema(), request.get_json(silent=True) or {})
     semillero_service.add_activity(user, slug, data)
     return jsonify(semillero=_detail(user, semillero_service.get_or_404(slug))), 201
+
+
+@active_user_required
+def review_member(user, slug: str, user_id: int):
+    data = load_schema(MemberReviewSchema(), request.get_json(silent=True) or {})
+    semillero_service.review_member(user, slug, user_id, data['status'], data['role'])
+    return jsonify(semillero=_detail(user, semillero_service.get_or_404(slug))), 200
+
+
+@active_user_required
+def follow_semillero(user, slug: str):
+    semillero = semillero_service.follow(user, slug)
+    return jsonify(semillero=_detail(user, semillero)), 201
+
+
+@active_user_required
+def unfollow_semillero(user, slug: str):
+    semillero = semillero_service.unfollow(user, slug)
+    return jsonify(semillero=_detail(user, semillero)), 200
 
 
 def handle_service_error(error: ServiceError):

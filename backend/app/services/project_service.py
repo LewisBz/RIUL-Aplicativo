@@ -1,13 +1,18 @@
 from app.models import (
+    MEMBER_PRINCIPAL,
+    MEMBERSHIP_ACTIVE,
     NOTIFICATION_PROJECT,
+    PRODUCT_IN_REVIEW,
+    PRODUCT_TYPES,
     PROJECT_PLANNED,
     PROJECT_STATUSES,
     ROLE_ADMINISTRATOR,
+    Product,
     Project,
     ProjectMember,
     ProjectMilestone,
-    ProjectProduct,
     User,
+    normalize_product_type,
 )
 from app.repositories import project_repository, semillero_repository
 from app.services import notification_service
@@ -26,7 +31,7 @@ def _validate_status(status: str) -> str:
 
 
 def _is_member(project: Project, user: User) -> bool:
-    return project.leader_id == user.id or any(m.user_id == user.id for m in project.members)
+    return any(m.user_id == user.id for m in project.members)
 
 
 def _ensure_member(project: Project, user: User) -> None:
@@ -64,9 +69,8 @@ def create(user: User, data: dict) -> Project:
         semillero = semillero_repository.get_by_slug(data["semillero"])
         if semillero is None:
             raise ServiceError("Semillero no encontrado.", 404)
-        is_part = semillero.leader_id == user.id or (
-            semillero_repository.get_member(semillero.id, user.id) is not None
-        )
+        member = semillero_repository.get_member(semillero.id, user.id)
+        is_part = member is not None and member.status == MEMBERSHIP_ACTIVE
         if not is_part and user.role != ROLE_ADMINISTRATOR:
             raise ServiceError("Debes pertenecer al semillero para crear su proyecto.", 403)
         semillero_id = semillero.id
@@ -86,9 +90,8 @@ def create(user: User, data: dict) -> Project:
         start_date=start,
         end_date=end,
         semillero_id=semillero_id,
-        leader_id=user.id,
     )
-    project.members.append(ProjectMember(user_id=user.id))
+    project.members.append(ProjectMember(user_id=user.id, role=MEMBER_PRINCIPAL))
     for position, text in enumerate(data.get("milestones") or []):
         project.milestones.append(ProjectMilestone(text=text, position=position))
     project_repository.add(project)
@@ -119,19 +122,32 @@ def update(user: User, slug: str, data: dict) -> Project:
                     "Avance de proyecto",
                     f"«{project.title}» cambió de estado.",
                     href=f"/project-detail?id={project.slug}",
+                    entity=("project", project.id),
                 )
     project_repository.commit()
     return project
 
 
-def add_product(user: User, slug: str, data: dict) -> ProjectProduct:
+def add_product(user: User, slug: str, data: dict) -> Product:
     project = get_or_404(slug)
     _ensure_member(project, user)
-    type_, name = _clean(data.get("type")), _clean(data.get("name"))
-    if not type_ or not name:
+    type_ = normalize_product_type(data.get("type"))
+    name = _clean(data.get("name"))
+    if not name:
         raise ServiceError("Tipo y nombre del producto son obligatorios.", 400)
-    product = ProjectProduct(type=type_, name=name)
-    project.products.append(product)
+    if type_ is None:
+        raise ServiceError(
+            "Tipo de producto inválido. Usa: " + ", ".join(PRODUCT_TYPES) + ".", 400
+        )
+    product = Product(
+        user_id=user.id,
+        project_id=project.id,
+        semillero_id=project.semillero_id,
+        type=type_,
+        title=name,
+        status=PRODUCT_IN_REVIEW,
+    )
+    project_repository.add_product(product)
     project_repository.commit()
     return product
 

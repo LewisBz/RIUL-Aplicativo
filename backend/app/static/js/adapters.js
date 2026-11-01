@@ -1,10 +1,13 @@
 /** Adaptadores API (snake_case) -> modelos de vista que consumen las páginas. */
 
-const PROJECT_STATUS = { planned: 'Planeado', in_progress: 'En curso', review: 'Revisión', completed: 'Completado' };
+const PROJECT_STATUS = { planned: 'Planeado', in_progress: 'En curso', review: 'Revisión', closed: 'Cerrado' };
 const PRODUCT_STATUS = { in_review: 'En revisión', approved: 'Aprobado' };
-const PUBLICATION_STATUS = { published: 'Publicado', in_review: 'En Revisión' };
-const ACHIEVEMENT_STATUS = { validated: 'Validado', in_review: 'En revisión', rejected: 'Rechazado' };
-const MEMBER_ROLE = { member: 'Estudiante Investigador', co_leader: 'Co-líder Estudiantil' };
+const PUBLICATION_STATUS = { approved: 'Publicado', published: 'Publicado', in_review: 'En Revisión' };
+const PRODUCT_TYPE = { article: 'Artículo', presentation: 'Ponencia', patent: 'Patente', report: 'Informe' };
+const MEMBERSHIP_STATUS = { pending: 'Solicitud pendiente', active: 'Vinculado', rejected: 'Solicitud rechazada' };
+const ORIGIN_KIND = { event: 'Evento', post: 'Publicación', project: 'Proyecto', product: 'Producto', semillero: 'Semillero' };
+const ACHIEVEMENT_STATUS = { approved: 'Validado', pending: 'En revisión', rejected: 'Rechazado' };
+const MEMBER_ROLE = { leader: 'Docente Líder', member: 'Estudiante Investigador', co_leader: 'Co-líder Estudiantil' };
 const NOTIFICATION_ICON = {
   achievement: 'check_circle', event: 'event', project: 'folder', semillero: 'account_tree', account: 'verified_user',
 };
@@ -25,6 +28,8 @@ export function memberTone(tone) {
 export const roleLabel = (role) => ROLE_LABEL[role] ?? role;
 export const projectStatusLabel = (status) => PROJECT_STATUS[status] ?? status;
 export const publicationStatusLabel = (status) => PUBLICATION_STATUS[status] ?? status;
+export const productTypeLabel = (type) => PRODUCT_TYPE[type] ?? type;
+export const membershipStatusLabel = (status) => MEMBERSHIP_STATUS[status] ?? status;
 
 const parseDate = (iso) => new Date(`${iso}T00:00:00`);
 const dayMonth = (iso) => (iso ? parseDate(iso).toLocaleDateString('es-CO', { day: '2-digit', month: 'long' }) : '');
@@ -44,6 +49,7 @@ export function toSemillero(api) {
     icon: api.icon,
     topBadge: api.top_badge,
     myRole: api.my_role,
+    myStatus: api.my_status ?? null,
   };
 }
 
@@ -51,6 +57,9 @@ export function toSemilleroDetail(api) {
   const base = toSemillero(api);
   return {
     ...base,
+    following: Boolean(api.following),
+    followerCount: api.follower_count ?? 0,
+    progress: api.progress ?? { xp: 0, level: 1 },
     detail: {
       affiliation: api.affiliation,
       about: api.about ?? '',
@@ -64,6 +73,11 @@ export function toSemilleroDetail(api) {
         role: MEMBER_ROLE[member.role] ?? member.role,
         tone: TONES[index % TONES.length],
       })),
+      pendingMembers: (api.pending_members ?? []).map((member) => ({
+        id: member.id,
+        initials: member.initials,
+        name: member.full_name ?? 'Sin nombre',
+      })),
       lines: api.lines.map((line) => ({ ...line, coordinator: line.coordinator ?? 'Por asignar' })),
       projects: api.projects.map((project) => ({
         title: project.title,
@@ -74,7 +88,7 @@ export function toSemilleroDetail(api) {
       })),
       publications: api.publications.map((pub) => ({
         title: pub.title,
-        venue: pub.venue ?? '',
+        venue: pub.venue || PRODUCT_TYPE[pub.type] || '',
         date: monthYear(pub.published_on),
         status: PUBLICATION_STATUS[pub.status] ?? pub.status,
       })),
@@ -103,7 +117,7 @@ export function toProject(api) {
     endDate: api.end_date ? isoDate(api.end_date) : '—',
     line: api.line ?? '—',
     myRole: api.my_role,
-    products: (api.products ?? []).map((p) => ({ type: p.type, name: p.name, status: PRODUCT_STATUS[p.status] ?? p.status })),
+    products: (api.products ?? []).map((p) => ({ type: PRODUCT_TYPE[p.type] ?? p.type, name: p.name, status: PRODUCT_STATUS[p.status] ?? p.status })),
     members: (api.members ?? []).map((m) => m.full_name ?? 'Sin nombre'),
     milestones: (api.milestones ?? []).map((m) => ({ id: m.id, text: m.text, done: m.done })),
   };
@@ -129,6 +143,7 @@ export function toEvent(api) {
     requirements: api.requirements,
     participation: api.participation,
     participationStatus: api.participation === 'registered' ? 'registered' : closed ? 'closed' : 'available',
+    semillero: api.semillero ?? null,
     members: [api.organizer ?? '—'],
     timeline: [
       { text: isCall ? 'Convocatoria publicada' : 'Inscripciones abiertas', done: true },
@@ -157,6 +172,10 @@ export function toAchievement(api) {
     title: api.title,
     description: api.description ?? '',
     status: ACHIEVEMENT_STATUS[api.status] ?? api.status,
+    statusCode: api.status,
+    type: api.type,
+    origin: api.origin ? { ...api.origin, kindLabel: ORIGIN_KIND[api.origin.kind] ?? api.origin.kind } : null,
+    evidenceCount: api.evidence_count ?? 0,
     xp: api.xp,
     date: api.achieved_on,
   };

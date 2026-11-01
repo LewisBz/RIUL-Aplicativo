@@ -15,4 +15,7 @@ gamification_bp.errorhandler(ServiceError)(c.handle_service_error)
 
 gamification_bp.get("/me")(c.get_my_gamification)
 gamification_bp.get("/ranking")(c.get_ranking)
+gamification_bp.get("/types")(c.list_achievement_types)
 gamification_bp.post("/achievements")(c.create_achievement)
+gamification_bp.post("/achievements/<int:achievement_id>/evidences")(c.upload_evidence)
+gamification_bp.get("/evidences/<path:name>")(c.serve_evidence)

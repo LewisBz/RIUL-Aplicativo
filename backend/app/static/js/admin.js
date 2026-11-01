@@ -25,12 +25,12 @@ function renderAchievements(items) {
   if (!table) return;
   document.getElementById('achievementsCount').textContent = `${items.length} pendientes`;
   table.innerHTML = items.length
-    ? items.map((item) => `<tr><td>${escapeHtml(item.user.full_name || 'Sin nombre')}</td><td>${escapeHtml(item.title)}</td><td><div class="admin-user-actions"><button class="btn btn-teal label-caps" type="button" data-achievement-id="${item.id}" data-achievement-status="validated">Validar</button><button class="btn btn-secondary label-caps" type="button" data-achievement-id="${item.id}" data-achievement-status="rejected">Rechazar</button></div></td></tr>`).join('')
+    ? items.map((item) => `<tr><td>${escapeHtml(item.user.full_name || 'Sin nombre')}</td><td>${escapeHtml(item.title)}${item.origin ? `<br><small>${escapeHtml(item.origin.kind)}: ${escapeHtml(item.origin.label ?? '')} · ${item.xp} XP · ${item.evidence_count} evid.</small>` : ''}</td><td><div class="admin-user-actions"><button class="btn btn-teal label-caps" type="button" data-achievement-id="${item.id}" data-achievement-status="approved">Validar</button><button class="btn btn-secondary label-caps" type="button" data-achievement-id="${item.id}" data-achievement-status="rejected">Rechazar</button></div></td></tr>`).join('')
     : '<tr><td colspan="3">No hay logros pendientes.</td></tr>';
 }
 
 async function loadAchievements() {
-  renderAchievements((await request('/api/admin/achievements?status=in_review')).items);
+  renderAchievements((await request('/api/admin/achievements?status=pending')).items);
 }
 
 function renderUsers(users) {

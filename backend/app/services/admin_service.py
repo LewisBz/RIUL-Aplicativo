@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from app.models import (
-    ACHIEVEMENT_IN_REVIEW,
+    ACHIEVEMENT_PENDING,
     NOTIFICATION_ACCOUNT,
     PRIORITY_HIGH,
     ROLE_ADMINISTRATOR,
@@ -14,8 +14,8 @@ from app.models import (
 )
 from app.repositories import (
     analytics_repository,
-    engagement_repository,
     event_repository,
+    gamification_repository,
     post_repository,
     project_repository,
     semillero_repository,
@@ -38,8 +38,8 @@ def overview() -> dict:
         "projects": project_repository.count_projects(),
         "events": event_repository.count_events(),
         "achievements": {
-            "total": engagement_repository.count_achievements(),
-            "pending": engagement_repository.count_achievements(ACHIEVEMENT_IN_REVIEW),
+            "total": gamification_repository.count_achievements(),
+            "pending": gamification_repository.count_achievements(ACHIEVEMENT_PENDING),
         },
         "unavailable": [],
     }

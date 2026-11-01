@@ -1,26 +1,54 @@
-FROM python:3.12-slim
+# syntax=docker/dockerfile:1
+# Contexto de build: raíz del repositorio (ver compose.yml).
+
+# ---------- Etapa 1: dependencias ----------
+FROM python:3.12-slim AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    UV_PYTHON_DOWNLOADS=never
 
 WORKDIR /app
 
 COPY backend/pyproject.toml backend/uv.lock ./
-RUN uv sync --frozen --no-install-project --no-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
 
 COPY backend/alembic.ini backend/wsgi.py backend/run.py ./
 COPY backend/migrations ./migrations
 COPY backend/app ./app
 
-RUN uv sync --frozen --no-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
 
-ENV PATH="/app/.venv/bin:$PATH" \
-    FLASK_APP=run.py
+# ---------- Etapa 2: imagen de ejecución ----------
+FROM python:3.12-slim AS runtime
 
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH" \
+    FLASK_APP=run.py \
+    PORT=5000
+
+# Usuario sin privilegios; el entrypoint arranca como root solo para ajustar
+# permisos del volumen de subidas y luego baja privilegios con setpriv.
+RUN groupadd --system riul && useradd --system --gid riul --home-dir /app riul
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+COPY backend/docker/entrypoint.sh /usr/local/bin/riul-entrypoint
+RUN sed -i 's/\r$//' /usr/local/bin/riul-entrypoint \
+    && chmod +x /usr/local/bin/riul-entrypoint \
+    && mkdir -p /app/uploads/posts /app/uploads/evidences \
+    && chown -R riul:riul /app/uploads
+
+VOLUME ["/app/uploads"]
 EXPOSE 5000
 
-CMD ["sh", "-c", "flask db upgrade && flask seed-demo && gunicorn --bind 0.0.0.0:5000 run:app"]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=5 \
+    CMD python -c "import os,urllib.request;urllib.request.urlopen('http://127.0.0.1:%s/' % os.environ.get('PORT','5000'),timeout=4)" || exit 1
+
+ENTRYPOINT ["riul-entrypoint"]

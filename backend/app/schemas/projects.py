@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, validate
 
-from app.models import PROJECT_STATUSES, PUBLICATION_STATUSES
+from app.models import PRODUCT_STATUSES, PROJECT_STATUSES
 
 
 def iso(value):
@@ -48,7 +48,7 @@ class PublicationCreateSchema(Schema):
     title = fields.Str(required=True)
     venue = fields.Str(load_default="")
     published_on = fields.Date(load_default=None, allow_none=True)
-    status = fields.Str(load_default="in_review", validate=validate.OneOf(PUBLICATION_STATUSES, error="Estado de publicación inválido."))
+    status = fields.Str(load_default="in_review", validate=validate.OneOf(PRODUCT_STATUSES, error="Estado de publicación inválido."))
     semillero = fields.Str(load_default=None, allow_none=True)
 
 
@@ -56,6 +56,7 @@ def serialize_publication(p) -> dict:
     return {
         "id": p.id,
         "title": p.title,
+        "type": p.type,
         "venue": p.venue,
         "published_on": iso(p.published_on),
         "status": p.status,
@@ -91,7 +92,8 @@ def serialize_project_summary(project, viewer_role: str | None = None) -> dict:
 def serialize_project_detail(project, viewer_role: str | None = None) -> dict:
     payload = serialize_project_summary(project, viewer_role)
     payload["members"] = [
-        {"id": m.user.id, "full_name": m.user.full_name} for m in project.members
+        {"id": m.user.id, "full_name": m.user.full_name, "role": m.role}
+        for m in project.members
     ]
     payload["products"] = [serialize_product(p) for p in project.products]
     payload["milestones"] = [
