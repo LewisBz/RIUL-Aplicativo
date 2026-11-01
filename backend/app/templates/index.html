@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RIUL - Red Institucional de Semilleros e Investigación</title>
   <link rel="stylesheet" href="/static/css/design-system.css">
+  <meta name="theme-color" content="#8c1230">
+  <script type="module" src="/static/js/icons.js"></script>
+  <script type="module" src="/static/js/motion.js"></script>
 </head>
 <body style="min-height:100vh;display:flex;flex-direction:column;">
 
@@ -12,13 +15,13 @@
   <header class="topnav">
     <div class="container-main" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
       <div style="display:flex;align-items:center;">
-        <span class="topnav-brand">RIUL</span>
+        <a class="topnav-brand" href="/">RIUL</a>
         <span class="topnav-brand-sub">(Research Institution University Link)</span>
       </div>
       <nav class="only-desktop">
-        <a class="nav-link label-caps" href="#">Semilleros</a>
-        <a class="nav-link label-caps" href="#">Proyectos</a>
-        <a class="nav-link label-caps" href="#">Eventos</a>
+        <a class="nav-link label-caps" href="/semilleros">Semilleros</a>
+        <a class="nav-link label-caps" href="/projects">Proyectos</a>
+        <a class="nav-link label-caps" href="/events">Eventos</a>
       </nav>
       <div style="display:flex;align-items:center;gap:16px;">
         <div class="nav-guest-actions" data-auth="guest" style="display:flex;align-items:center;gap:16px;">
@@ -36,7 +39,7 @@
           </button>
           <div class="nav-dropdown hidden" id="userPanel">
             <a class="nav-dropdown-item label-caps" href="/dashboard">Dashboard</a>
-            <span class="nav-dropdown-item is-disabled label-caps" title="Próximamente">Mi perfil</span>
+            <a class="nav-dropdown-item label-caps" href="/profile">Mi perfil</a>
             <button class="nav-dropdown-item as-button label-caps" type="button" data-action="logout">Cerrar sesión</button>
           </div>
         </div>
@@ -47,9 +50,9 @@
     </div>
   </header>
   <nav class="topnav-menu-panel" id="menuPanel">
-    <a class="nav-link label-caps" href="#">Semilleros</a>
-    <a class="nav-link label-caps" href="#">Proyectos</a>
-    <a class="nav-link label-caps" href="#">Eventos</a>
+    <a class="nav-link label-caps" href="/semilleros">Semilleros</a>
+    <a class="nav-link label-caps" href="/projects">Proyectos</a>
+    <a class="nav-link label-caps" href="/events">Eventos</a>
     <a class="nav-link label-caps" href="/login" data-auth="guest">Iniciar sesión</a>
     <div class="hidden" data-auth="user">
       <div class="mobile-user-head">
@@ -64,36 +67,65 @@
 
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBxJlorBfvExOaiIahd9QRU8OfvPE0kN2ZbmQQAWXo0q4H2sAYGzBoi3EVP6T2GFF5m1EqYA6OMZjidKlY8g875sLfK5ZIlTq89zEunf4nxKyNMTEL2EzbO4a-gmUcNdSkMpVLHVU9LLhQWx96hqwZnCdo6ZA5BNNkmAz_uCZxv_HzACcK_G7DN4DT5cJirBBL-VWvPr2nay1ErXszia0LC8H7D5FpcfqBHuoqZW61tRLt-F5EcSKVd');"></div>
+      <canvas class="hero-network" aria-hidden="true"></canvas>
       <div class="hero-content">
-        <h1 class="display-lg" style="color:var(--primary);max-width:896px;margin-inline:auto;">Red Institucional de Semilleros e Investigación - RIUL</h1>
-        <p class="headline-md" style="color:var(--on-surface-variant);max-width:672px;margin-inline:auto;">Potenciamos tu investigación.</p>
+        <h1 class="display-lg hero-title" data-split>Red Institucional de Semilleros e Investigación</h1>
+        <p class="hero-lede">RIUL potencia tu investigación: conecta semilleros, proyectos y eventos de la Universidad Libre.</p>
+        <div class="hero-actions" data-auth="guest">
+          <a class="btn btn-primary" href="/register">Crear cuenta</a>
+          <a class="btn btn-outline" href="/login">Iniciar sesión</a>
+        </div>
       </div>
     </section>
+    <!-- Cifras -->
+    <div class="container-main" data-reveal>
+      <div class="landing-stats">
+        <div class="stat-card"><strong>+20</strong><span>Semilleros activos</span></div>
+        <div class="stat-card"><strong>+150</strong><span>Proyectos de investigación</span></div>
+        <div class="stat-card"><strong>+500</strong><span>Investigadores y estudiantes</span></div>
+        <div class="stat-card"><strong>+40</strong><span>Eventos y convocatorias al año</span></div>
+      </div>
+    </div>
 
+    <!-- Qué ofrece RIUL -->
+    <section class="container-main landing-section" data-reveal>
+      <div class="landing-heading">
+        <span class="label-caps eyebrow-text">Plataforma</span>
+        <h2 class="headline-md">Todo lo que necesita tu investigación, en un solo lugar</h2>
+        <p class="body-md">Una red pensada para que semilleros, docentes y estudiantes colaboren, visibiliten su trabajo y crezcan juntos.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card card-hover"><span class="feature-icon"><span class="material-symbols-outlined">account_tree</span></span><h3 class="title-lg">Semilleros</h3><p class="body-md">Explora grupos por facultad, programa y área, y solicita tu vinculación en pocos pasos.</p></article>
+        <article class="feature-card card-hover"><span class="feature-icon"><span class="material-symbols-outlined">folder_open</span></span><h3 class="title-lg">Proyectos y productos</h3><p class="body-md">Gestiona hitos, avances y publicaciones con seguimiento claro del estado de cada proyecto.</p></article>
+        <article class="feature-card card-hover"><span class="feature-icon"><span class="material-symbols-outlined">event</span></span><h3 class="title-lg">Eventos y convocatorias</h3><p class="body-md">Inscríbete a encuentros, ponencias y convocatorias institucionales sin perder fechas.</p></article>
+        <article class="feature-card card-hover"><span class="feature-icon"><span class="material-symbols-outlined">forum</span></span><h3 class="title-lg">Comunidad</h3><p class="body-md">Comparte avances, artículos y logros con toda la red investigativa de la universidad.</p></article>
+        <article class="feature-card card-hover"><span class="feature-icon"><span class="material-symbols-outlined">military_tech</span></span><h3 class="title-lg">Gamificación</h3><p class="body-md">Gana XP, insignias y escala en el ranking institucional al validar tus logros.</p></article>
+        <article class="feature-card card-hover"><span class="feature-icon"><span class="material-symbols-outlined">notifications_active</span></span><h3 class="title-lg">Notificaciones</h3><p class="body-md">Mantente al día con novedades de tus semilleros, proyectos y eventos.</p></article>
+      </div>
+    </section>
     <!-- Bento Grid: Semilleros & Proyectos -->
-    <section class="container-main grid-12" style="padding-block:var(--space-12);">
+    <section class="container-main grid-12" data-reveal style="padding-block:var(--space-12);">
       <div class="col-span-8 stack-6">
         <div class="section-header">
-          <h2 class="headline-md" style="margin:0;">Semilleros Destacados</h2>
-          <a class="label-caps" href="#" style="color:var(--primary);display:inline-flex;align-items:center;gap:4px;text-decoration:none;">Ver todos <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span></a>
+          <h2 class="headline-md">Semilleros destacados</h2>
+          <a class="link-arrow" href="/semilleros">Ver todos <span class="material-symbols-outlined">arrow_forward</span></a>
         </div>
         <div class="grid-12" style="gap:var(--space-4);">
-          <article class="card-research card-hover col-span-4" style="padding:0;overflow:hidden;">
+          <article class="card-research card-hover" style="padding:0;overflow:hidden;">
             <div class="card-media"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGefc8HDH-QxR6vTauUGqgtPR-xeJepVznXdHEG_ZTVN9an8YDTa89JMin_7aN67LMfOTeccaQNzHcUA_Y5pTgN31tF8GJ4JyU4aUJbsZnnIqdj33RzK7xVSnkmpvzBoHRNLUKL8K1EDi27qxpnZpGU9VHjR20Z3lmB7GB9wx0qpxn3U75WikVQYINZE3uNmni5CTUZ-JJCxng-YmgjLUa5JO6sHzGnTFtO2DP7zzL3mlzKmS69fT1" alt="Semillero de desarrollo tecnológico sustentable"></div>
             <div style="padding:var(--space-4);">
-              <h3 class="title-lg" style="color:var(--primary);">Semillero 1</h3>
+              <h3 class="title-lg">Semillero 1</h3>
               <p class="body-md line-clamp-3" style="color:var(--on-surface-variant);margin:0;">Red Institucional de Semilleros e Investigación enfocada en el desarrollo tecnológico sustentable.</p>
             </div>
           </article>
-          <article class="card-research card-hover col-span-4" style="padding:0;overflow:hidden;">
+          <article class="card-research card-hover" style="padding:0;overflow:hidden;">
             <div class="card-media"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNy1RN8HzoOEOE76YrQiDlbixyP78RF1_izKdb0hCxsP8MKSAyAf3_y2OdhLNPVxfmsCk3209bMbbinK-Gc7iOfVTogRViqP3E1vQRa5xPIx0Kf83meFu_pKe6KHM3OabViUKpSNmonGauqVeZFP5VCLhVZDU0jBH-1w4SlsZ4OXsXyIvHL31c5KtuehgXrwoRHVUTyZS4_J9zy_ltMECV12IBlDxR_BtpV1EDT1RMI2OV26-kPTTr" alt="Estudiantes investigando con pantalla interactiva"></div>
             <div style="padding:var(--space-4);">
-              <h3 class="title-lg" style="color:var(--primary);">Semillero 2</h3>
+              <h3 class="title-lg">Semillero 2</h3>
               <p class="body-md line-clamp-3" style="color:var(--on-surface-variant);margin:0;">Red Institucional de Semilleros e Investigación para ciencias sociales y humanidades.</p>
             </div>
           </article>
-          <article class="card-dashed card-hover col-span-4">
+          <article class="card-dashed card-hover">
             <span class="material-symbols-outlined" style="font-size:40px;color:var(--primary);margin-bottom:12px;">search_insights</span>
             <h3 class="title-lg">Explorar</h3>
             <p class="body-md" style="color:var(--on-surface-variant);margin-top:8px;margin-bottom:0;">Descubre más grupos de investigación en nuestra red.</p>
@@ -101,31 +133,31 @@
         </div>
       </div>
       <div class="col-span-4 stack-6">
-        <div class="section-header" style="justify-content:flex-start;">
-          <h2 class="headline-md" style="margin:0;">Proyectos Recientes</h2>
+        <div class="section-header">
+          <h2 class="headline-md">Proyectos recientes</h2>
         </div>
         <div class="stack-4">
           <article class="list-row card-hover">
             <img class="list-row-thumb" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKXjvbf6SS9msPuSTyZC0WMJLgxjr5QhRlPuWY8nFsJye5JcbGL9gFkQ9tM9ggII-8amUQvlmE6gnpxkcqcrVwMZJOeuM_mwoBrvgrBqEcnmL59kJmxCNB0e-p-Gl803vxffy6qMXRsTpu_zJU9Ieq7L-9ukVRWCLib5U4tBVedc9ND0f1zAKHIx8oN2EEX67QZV1Ux6KiO_hdpPT7Kku6wT9Iww-v8BR5rha450ozn_vJ0QM3R4fq" alt="Visualización de red neuronal">
             <div>
-              <h4 class="title-lg" style="line-height:1.25;margin:0;">Proyecto 1</h4>
-              <p class="label-caps" style="color:var(--secondary);margin:4px 0 0;">Fase de desarrollo</p>
+              <h4 class="title-lg row-title">Proyecto 1</h4>
+              <p class="pill pill-pending">Fase de desarrollo</p>
             </div>
             <button class="icon-btn" aria-label="Ver Proyecto 1"><span class="material-symbols-outlined">arrow_forward_ios</span></button>
           </article>
           <article class="list-row card-hover">
             <img class="list-row-thumb" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk0JqLhdm8z_p6C66tBI5ZooNXJ6dI0a2VwRcCozgps2Y2mk83cMDz3vKG14l0RnfRQXTafRg1ll7utfyivfxBvKwyUYsr7-NeRJk2aB6ChcVzC63tz6cQlIsg9p1YqQwdbFlSFIWzmC32_o4FQBB5csp9iurF4y75DcWIjNIFImUcUSjuTVwEgbht6thpNBaXh2B-YawhliUhGYLG4FGdzxEqpa97nfe7ZrNaT3rB1FWa9RLExDc8" alt="Blueprint arquitectónico del campus">
             <div>
-              <h4 class="title-lg" style="line-height:1.25;margin:0;">Proyecto 2</h4>
-              <p class="label-caps" style="color:var(--secondary);margin:4px 0 0;">Publicado</p>
+              <h4 class="title-lg row-title">Proyecto 2</h4>
+              <p class="pill pill-published">Publicado</p>
             </div>
             <button class="icon-btn" aria-label="Ver Proyecto 2"><span class="material-symbols-outlined">arrow_forward_ios</span></button>
           </article>
           <article class="list-row card-hover">
             <img class="list-row-thumb" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBq896pY2qSwXX1VcDvEg8GxqILxcM0QbxmmEK_ixm3Y-0ddhmbdkcsD1ArN3OAeUy3InsTWEc4ssWSV4c3B-LcGEV5lMhawT4H6y4ggc4oGsEUl8_ldAKIz4x40BPEE8JHSP96d-MeUcn0cyd3FYlytOBtW6Jw9dkA3ePti3_iCPry9xy2NeMT7x324UqQyEiU4GTOXbrOsNpzZq74g5gqb7icXXMOeZQvgo86zbMPQpw3e-JfWbl9" alt="Laboratorio moderno">
             <div>
-              <h4 class="title-lg" style="line-height:1.25;margin:0;">Proyecto 3</h4>
-              <p class="label-caps" style="color:var(--secondary);margin:4px 0 0;">En revisión</p>
+              <h4 class="title-lg row-title">Proyecto 3</h4>
+              <p class="pill pill-review">En revisión</p>
             </div>
             <button class="icon-btn" aria-label="Ver Proyecto 3"><span class="material-symbols-outlined">arrow_forward_ios</span></button>
           </article>
@@ -134,16 +166,16 @@
     </section>
 
     <!-- Próximos Eventos -->
-    <section style="background-color:var(--surface-container-lowest);border-block:1px solid var(--surface-container-highest);padding-block:var(--space-12);">
+    <section class="landing-section landing-section-alt" data-reveal>
       <div class="container-main">
-        <h2 class="headline-md">Próximos Eventos</h2>
+        <h2 class="headline-md section-title">Próximos eventos</h2>
         <div style="position:relative;">
           <button class="carousel-arrow arrow-prev" id="eventsPrev" aria-label="Eventos anteriores"><span class="material-symbols-outlined">chevron_left</span></button>
           <div class="carousel-track hide-scrollbar" id="eventsTrack">
             <article class="card-research carousel-card card-hover" style="display:flex;gap:var(--space-4);">
               <div class="card-media-lg"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQDiKYQ33EXyVkxZ5qMIrZRQary9zOTADjjWz_5aYWOtwj-yl0Bb9k85ll3iy47a55HvWkKosDBYZifgeKMbgxT5XvLlRNb-05v5Fp6FB4xlfBiZL7NInxyodDbGlgXhpMKJrUi4tMNXipLhWqxmqmjuJC-qOmNBKsHtVBIOMGmIGYdUEAsS-7k_InGU4NMYQsv7CaoIMPtFiymd6EBVZMbDnBnGhUnEDg4KgvJ4HR4zzhaceGBVQn" alt="Auditorio universitario"></div>
               <div style="display:flex;flex-direction:column;justify-content:center;">
-                <h4 class="title-lg" style="color:var(--primary);line-height:1.25;margin-bottom:4px;">Evento 1</h4>
+                <h4 class="title-lg row-title">Evento 1</h4>
                 <p class="body-md" style="color:var(--on-surface-variant);margin-bottom:8px;">15 Octubre, 2026</p>
                 <div class="progress-mini"><div class="progress-fill fill-gold" style="width:75%;"></div></div>
               </div>
@@ -151,7 +183,7 @@
             <article class="card-research carousel-card card-hover" style="display:flex;gap:var(--space-4);">
               <div class="card-media-lg"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwiSV42f0OEXil973fnvGFVvtwmw7GtWkYdkQMA6reI9PPPB_FDvAOZiieCsuXHbGeh7Y5UekvJ6SIRck3Ih3hQVVYkBU1Ef5f29UE1qezWPVOWg6Z05ql5XnGry0eOP_ZYG4og7s9p_LMzsuo1UUVlvtf056Vz7zMSP2uVsjcC_uh-ODH5n3lETJTHak98aP8213BrWxYvedsSX-YxBuAmhZHz81c5lrXe7BVBuvgKfCBNQM20h0X" alt="Evento de networking en atrio"></div>
               <div style="display:flex;flex-direction:column;justify-content:center;">
-                <h4 class="title-lg" style="color:var(--primary);line-height:1.25;margin-bottom:4px;">Evento 2</h4>
+                <h4 class="title-lg row-title">Evento 2</h4>
                 <p class="body-md" style="color:var(--on-surface-variant);margin-bottom:8px;">22 Noviembre, 2026</p>
                 <div class="progress-mini"><div class="progress-fill fill-primary" style="width:50%;"></div></div>
               </div>
@@ -162,23 +194,85 @@
       </div>
     </section>
 
-    <!-- Descubrir Más -->
-    <section class="container-main grid-12" style="padding-block:var(--space-12);align-items:center;">
-      <div class="col-span-6">
-        <div class="stack-4">
-          <h2 class="display-lg" style="color:var(--primary);line-height:1.15;">Descubrir Más</h2>
-          <ul class="check-list">
-            <li><span class="material-symbols-outlined">check_circle</span>Red Institucional de Semilleros e Investigación</li>
-            <li><span class="material-symbols-outlined">check_circle</span><strong>RIUL.</strong>&nbsp;Potenciamos tu investigación.</li>
-          </ul>
-          <button class="btn btn-primary label-caps" style="margin-top:var(--space-6);padding:12px var(--space-6);align-self:flex-start;">Conoce nuestra historia</button>
+    <!-- Cómo funciona -->
+    <section class="landing-section" data-reveal>
+      <div class="container-main">
+        <div class="landing-heading is-center">
+          <span class="label-caps eyebrow-text">Cómo funciona</span>
+          <h2 class="headline-md">Empieza a investigar en cuatro pasos</h2>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card"><h3 class="title-lg">Crea tu cuenta</h3><p class="body-md">Regístrate con tu correo institucional y completa tu perfil de investigador.</p></article>
+          <article class="step-card"><h3 class="title-lg">Únete a un semillero</h3><p class="body-md">Busca por área o facultad y solicita tu vinculación al grupo que te interese.</p></article>
+          <article class="step-card"><h3 class="title-lg">Participa y publica</h3><p class="body-md">Registra proyectos, avances y publicaciones, e inscríbete a eventos.</p></article>
+          <article class="step-card"><h3 class="title-lg">Gana reconocimiento</h3><p class="body-md">Acumula XP e insignias y destaca en el ranking de la red.</p></article>
         </div>
       </div>
-      <div class="col-span-6">
-        <figure style="position:relative;height:256px;margin:0;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--surface-container-highest);box-shadow:var(--shadow-card);">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCm_yEUFm1H2L8dx--dNTMxtZhWKl14NByiTXKF0FFI0hDFHZzrlPGr21Pczdko2Gz5IhcNBvspc_afynvFyV-PfNETmPIr_W97YDunaXl9jygzfU7hvlRDZLF0BITd7p8ekLeY5QnxJ4eS__bpi1fAdLDek2FOW-xo0LVRVlGYx6HXhvHKmGJ-yYiXVO6lPMcmhIYaSxXlwvSGfH5VLRNSPFHfG_TzGFh-sOgeJrGGrl7vDyFPgasg" alt="Campus de innovación" style="width:100%;height:100%;object-fit:cover;">
-          <figcaption class="media-overlay"><span class="media-overlay-caption">Campus de Innovación</span></figcaption>
-        </figure>
+    </section>
+
+    <!-- Para quién -->
+    <section class="landing-section landing-section-alt" data-reveal>
+      <div class="container-main">
+        <div class="landing-heading is-center">
+          <span class="label-caps eyebrow-text">Para quién</span>
+          <h2 class="headline-md">Una experiencia para cada rol</h2>
+        </div>
+        <div class="role-grid">
+          <article class="role-card"><span class="feature-icon"><span class="material-symbols-outlined">school</span></span><h3 class="title-lg">Estudiantes</h3><ul class="body-md"><li>Descubre semilleros afines</li><li>Construye tu trayectoria investigativa</li><li>Obtén insignias y reconocimiento</li></ul></article>
+          <article class="role-card"><span class="feature-icon"><span class="material-symbols-outlined">groups</span></span><h3 class="title-lg">Líderes de semillero</h3><ul class="body-md"><li>Gestiona miembros y proyectos</li><li>Publica actividades y convocatorias</li><li>Da visibilidad a tu grupo</li></ul></article>
+          <article class="role-card"><span class="feature-icon"><span class="material-symbols-outlined">admin_panel_settings</span></span><h3 class="title-lg">Administración</h3><ul class="body-md"><li>Analítica institucional</li><li>Validación de logros y registros</li><li>Soporte y control de la red</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Descubrir Más -->
+    <section class="container-main landing-section landing-split" data-reveal>
+      <div class="stack-4">
+        <h2 class="display-lg" style="font-size:clamp(2rem,1.2rem + 2.6vw,3rem);">Descubrir más</h2>
+        <ul class="check-list">
+          <li><span class="material-symbols-outlined">check_circle</span>Red Institucional de Semilleros e Investigación</li>
+          <li><span class="material-symbols-outlined">check_circle</span><strong>RIUL.</strong>&nbsp;Potenciamos tu investigación.</li>
+          <li><span class="material-symbols-outlined">check_circle</span>Colaboración entre facultades y programas</li>
+          <li><span class="material-symbols-outlined">check_circle</span>Visibilidad para tus proyectos y publicaciones</li>
+        </ul>
+        <a class="btn btn-primary cta-story" href="/semilleros">Conoce nuestra historia<span class="material-symbols-outlined">arrow_forward</span></a>
+      </div>
+      <figure class="landing-figure">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCm_yEUFm1H2L8dx--dNTMxtZhWKl14NByiTXKF0FFI0hDFHZzrlPGr21Pczdko2Gz5IhcNBvspc_afynvFyV-PfNETmPIr_W97YDunaXl9jygzfU7hvlRDZLF0BITd7p8ekLeY5QnxJ4eS__bpi1fAdLDek2FOW-xo0LVRVlGYx6HXhvHKmGJ-yYiXVO6lPMcmhIYaSxXlwvSGfH5VLRNSPFHfG_TzGFh-sOgeJrGGrl7vDyFPgasg" alt="Campus de innovación" loading="lazy">
+        <figcaption class="media-overlay"><span class="media-overlay-caption">Campus de Innovación</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- FAQ -->
+    <section class="landing-section landing-section-alt" data-reveal>
+      <div class="container-main">
+        <div class="landing-heading is-center">
+          <span class="label-caps eyebrow-text">Preguntas frecuentes</span>
+          <h2 class="headline-md">Resolvemos tus dudas</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item"><summary>¿Quién puede usar RIUL?</summary><p class="body-md">Estudiantes, docentes e investigadores de la Universidad Libre, además del equipo administrativo de la red.</p></details>
+          <details class="faq-item"><summary>¿Cómo me vinculo a un semillero?</summary><p class="body-md">Entra a Semilleros, elige el grupo y usa el botón de solicitar vinculación. El líder revisará tu solicitud.</p></details>
+          <details class="faq-item"><summary>¿Puedo registrar mis propios proyectos?</summary><p class="body-md">Sí. Los miembros de un semillero pueden crear proyectos, registrar hitos y asociar publicaciones.</p></details>
+          <details class="faq-item"><summary>¿Cómo funcionan los puntos y las insignias?</summary><p class="body-md">Cada logro validado suma XP. Con la XP subes de nivel, desbloqueas insignias y avanzas en el ranking.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="container-main landing-section" data-reveal>
+      <div class="cta-band">
+        <div>
+          <h2 class="headline-md">Haz parte de la red de investigación</h2>
+          <p class="body-md">Crea tu cuenta gratis y conecta con semilleros, proyectos y eventos de la Universidad Libre.</p>
+        </div>
+        <div class="cta-actions" data-auth="guest">
+          <a class="btn btn-light" href="/register">Crear cuenta</a>
+          <a class="btn btn-ghost-light" href="/login">Iniciar sesión</a>
+        </div>
+        <div class="cta-actions hidden" data-auth="user">
+          <a class="btn btn-light" href="/dashboard">Ir a mi dashboard</a>
+        </div>
       </div>
     </section>
   </main>
@@ -188,14 +282,16 @@
     <div class="footer-landing-inner">
       <p class="body-md" style="margin:0;color:var(--on-surface-variant);text-align:center;">© 2026 RIUL - Luis, Hector, Javier. Barranquilla, Atlántico</p>
       <nav class="footer-links">
-        <a class="nav-link" href="#">Privacidad</a>
-        <a class="nav-link" href="#">Términos</a>
-        <a class="nav-link" href="#">Contacto</a>
-        <a class="nav-link" href="#">Universidad Libre</a>
+        <a class="nav-link" href="/privacidad">Privacidad</a>
+        <a class="nav-link" href="/terminos">Términos</a>
+        <a class="nav-link" href="/contacto">Contacto</a>
+        <a class="nav-link" href="https://www.unilibre.edu.co" rel="noopener" target="_blank">Universidad Libre</a>
       </nav>
     </div>
   </footer>
 
+  <script type="module" src="/static/js/network.js"></script>
   <script type="module" src="/static/js/main.js"></script>
 </body>
 </html>
+

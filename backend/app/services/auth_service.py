@@ -39,7 +39,7 @@ def _ensure_unique_email(email: str) -> None:
         raise ServiceError("Este correo ya está registrado.", 409)
 
 
-def _resolve_faculty_program(data: dict) -> tuple[int | None, int | None]:
+def resolve_faculty_program(data: dict) -> tuple[int | None, int | None]:
     faculty_id = data.get("faculty_id")
     program_id = data.get("program_id")
     if not faculty_id and not program_id:
@@ -83,7 +83,7 @@ def register_institutional(data: dict) -> User:
     _ensure_unique_email(email)
 
     full_name = _clean(data.get("full_name")) or None
-    faculty_id, program_id = _resolve_faculty_program(data)
+    faculty_id, program_id = resolve_faculty_program(data)
 
     user = User(
         full_name=full_name,
@@ -115,7 +115,7 @@ def request_account(data: dict) -> User:
         )
     _ensure_unique_email(email)
 
-    faculty_id, program_id = _resolve_faculty_program(data)
+    faculty_id, program_id = resolve_faculty_program(data)
     if faculty_id is None or program_id is None:
         raise ServiceError("Debe seleccionar facultad y programa.", 400)
 
@@ -163,3 +163,4 @@ def catalog() -> dict:
         "faculties": faculties,
         "programs": programs,
     }
+

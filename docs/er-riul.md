@@ -1,8 +1,8 @@
 # RIUL — esquema entidad-relación por dominio
 
-Fuente de verdad de las tablas **implementadas**: [`backend/migrations/versions/0001_initial_mysql_tables.py`](../backend/migrations/versions/0001_initial_mysql_tables.py). Motor: MySQL 8.4.
+Fuente de verdad de las tablas **implementadas**: [`0001_initial_mysql_tables.py`](../backend/migrations/versions/0001_initial_mysql_tables.py) (identidad, catálogo, feed) y [`0002_research_domain.py`](../backend/migrations/versions/0002_research_domain.py) (semilleros, proyectos, eventos, notificaciones y logros). Motor: MySQL 8.4.
 
-Las entidades **planificadas** salen de `unavailable` en el overview de admin (`semilleros`, `projects`, `events`, `achievements`, `reports`). No existen en MySQL: solo `id` + `nombre`, sin FKs reales.
+Solo el dominio de **reportes** sigue sin implementar (`unavailable: ["reports"]` en el overview de admin).
 
 Diagrama principal en Draw.io: [`docs/er-riul.drawio`](er-riul.drawio). Abrir en [app.diagrams.net](https://app.diagrams.net/) o en VS Code / Cursor con la extensión Draw.io. Cada dominio es un recuadro **transparente** con título (`Dominio 1 — Identidad y acceso (auth)`, etc.); el color de dominio va en el encabezado de cada tabla.
 
@@ -19,10 +19,12 @@ Relaciones **cruzadas** (autor, reacciones, FKs académicas) se dibujan en gris 
 | 1 Identidad y acceso (auth) | carmesí RIUL `#7B001F` | implementado | `users` |
 | 2 Catálogo académico | azul `#2563EB` | implementado | `faculties`, `programs` |
 | 3 Feed / publicaciones | verde azulado `#0F766E` | implementado | `posts`, `post_attachments`, `post_reactions` |
-| 4 Semilleros | morado `#7C3AED` | planificado | `semilleros` (stub) |
-| 5 Proyectos | verde `#15803D` | planificado | `projects` (stub) |
-| 6 Eventos | ámbar `#D97706` | planificado | `events` (stub) |
-| 7 Gamificación | naranja `#EA580C` | planificado | `achievements` (stub) |
+| 4 Semilleros | morado `#7C3AED` | implementado | `semilleros`, `semillero_members`, `research_lines`, `semillero_activities` |
+| 5 Proyectos | verde `#15803D` | implementado | `projects`, `project_members`, `project_products`, `project_milestones`, `publications` |
+| 6 Eventos | ámbar `#D97706` | implementado | `events`, `event_registrations` |
+| 7 Gamificación y notificaciones | naranja `#EA580C` | implementado | `achievements`, `notifications` |
+
+> El diagrama `.drawio` aún dibuja los dominios 4-7 como stubs; las tablas reales están descritas en [`tablas-y-datos.md`](tablas-y-datos.md) §1.9.
 | 8 Reportes | gris `#64748B` | planificado | `reports` (stub) |
 
 ## Diagrama Mermaid

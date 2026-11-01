@@ -82,3 +82,74 @@ Content-Type: application/json
   "email": "externo@gmail.com",
   "password": "lo-que-sea-123"
 }
+
+
+### ============ Módulos de investigación (requieren token) ============
+# Pega aquí el access_token de la petición 7b.
+@token = PEGA_AQUI_EL_TOKEN
+
+### 9. Dashboard y perfil
+GET {{host}}/api/dashboard
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/profile
+Authorization: Bearer {{token}}
+
+### 10. Semilleros
+GET {{host}}/api/semilleros?q=datos
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/semilleros/datalab-riul
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/semilleros/semillero-de-inteligencia-artificial-sia/members
+Authorization: Bearer {{token}}
+
+### 11. Proyectos
+GET {{host}}/api/projects?mine=1
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/projects
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "title": "Proyecto de prueba", "type": "Prototipo", "milestones": ["Diseño", "Pruebas"] }
+
+### 12. Eventos y convocatorias
+GET {{host}}/api/events?kind=event&status=open
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/events/taller-de-datos-abiertos-para-investigadores/registrations
+Authorization: Bearer {{token}}
+
+### 13. Notificaciones y gamificación
+GET {{host}}/api/notifications?unread=1
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/notifications/read-all
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/gamification/me
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/gamification/ranking
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/gamification/achievements
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "title": "Ponencia en congreso nacional", "description": "Presentación de resultados" }
+
+### 14. Administración (token de administrador)
+GET {{host}}/api/admin/achievements?status=in_review
+Authorization: Bearer {{token}}

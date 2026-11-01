@@ -125,9 +125,9 @@ def _remove_file(path: Path) -> None:
             time.sleep(0.3)
 
 
-def delete_post(user_id: int, post_id: int) -> None:
+def delete_post(user_id: int, post_id: int, is_admin: bool = False) -> None:
     post = get_post_or_404(post_id)
-    if post.author_id != user_id:
+    if post.author_id != user_id and not is_admin:
         raise ServiceError("Solo el autor puede eliminar esta publicación.", 403)
     storage_names = [a.storage_name for a in post.attachments]
     post_repository.delete_post(post)

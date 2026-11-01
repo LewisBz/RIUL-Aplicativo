@@ -31,15 +31,32 @@ class Config:
         "INSTITUTIONAL_EMAIL_DOMAIN", "unilibre.edu.co"
     )
     UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER", str(_BACKEND_ROOT / "uploads"))
+    JWT_TOKEN_LOCATION = ["headers", "query_string"]
+    JWT_QUERY_STRING_NAME = "token"
+    CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "*")
+    RATELIMIT_ENABLED = True
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024
-
 
 class DevConfig(Config):
     DEBUG = True
 
 
+class ProdConfig(Config):
+    """Producción: exige secretos reales y orígenes CORS explícitos."""
+
+    DEBUG = False
+
+    @classmethod
+    def validate(cls) -> None:
+        if cls.SECRET_KEY.startswith("dev-only") or cls.JWT_SECRET_KEY.startswith("dev-only"):
+            raise RuntimeError("SECRET_KEY y JWT_SECRET_KEY deben definirse en producción.")
+        if cls.CORS_ORIGINS == "*":
+            raise RuntimeError("CORS_ORIGINS debe listar orígenes explícitos en producción.")
+
+
 class TestConfig(Config):
     TESTING = True
+    RATELIMIT_ENABLED = False
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "TEST_DATABASE_URL",
         "mysql+pymysql://riul:riul@localhost:3307/riul_test",
@@ -49,4 +66,6 @@ class TestConfig(Config):
 config_by_name = {
     "dev": DevConfig,
     "test": TestConfig,
+    "prod": ProdConfig,
 }
+

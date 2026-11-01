@@ -11,8 +11,10 @@ from app.schemas import (
 )
 from app.services import auth_service
 from app.utils.errors import ServiceError
+from app.utils.rate_limit import rate_limit
 
 
+@rate_limit(10, 3600)
 def register():
     data = load_schema(RegisterSchema(), request.get_json(silent=True) or {})
     user = auth_service.register_institutional(data)
@@ -23,6 +25,7 @@ def register():
     )
 
 
+@rate_limit(10, 3600)
 def request_account():
     data = load_schema(RequestAccountSchema(), request.get_json(silent=True) or {})
     auth_service.request_account(data)
@@ -34,6 +37,7 @@ def request_account():
     )
 
 
+@rate_limit(10, 300)
 def login():
     data = load_schema(LoginSchema(), request.get_json(silent=True) or {})
     user = auth_service.authenticate(data.get("email"), data.get("password"))
@@ -72,3 +76,4 @@ def catalog():
 
 def handle_service_error(error: ServiceError):
     return json_error(error.message, error.status)
+

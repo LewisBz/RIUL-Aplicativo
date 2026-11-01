@@ -122,3 +122,4 @@ class UserStatusSchema(Schema):
 class AdminUsersQuerySchema(Schema):
     status = fields.Str(load_default=None, allow_none=True)
     role = fields.Str(load_default=None, allow_none=True)
+    q = fields.Str(load_default=None, allow_none=True)

@@ -129,3 +129,25 @@ def make_headers():
         return {"Authorization": f"Bearer {token}"}
 
     return _headers
+
+
+@pytest.fixture()
+def make_role_user(app):
+    """Crea un usuario activo con rol dado y devuelve (user, headers)."""
+    from app.models import STATUS_ACTIVE, User
+    from app.services.auth_service import create_access_token_for
+
+    def _make(role: str, name: str | None = None):
+        user = User(
+            full_name=name or f"{role.title()} Demo",
+            email=unique_email(),
+            role=role,
+            status=STATUS_ACTIVE,
+        )
+        user.set_password("secreto123")
+        _db.session.add(user)
+        _db.session.commit()
+        token = create_access_token_for(user)
+        return user, {"Authorization": f"Bearer {token}"}
+
+    return _make

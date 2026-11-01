@@ -10,7 +10,7 @@ EXPECTED_REACTIONS = 47
 EXPECTED_ROLES = {"administrator": 2, "leader": 4, "researcher": 9}
 EXPECTED_STATUSES = {"active": 13, "pending": 1, "rejected": 1}
 
-FACULTY_PROGRAMS = {"Ingeniería": 2, "Ciencias Básicas": 1}
+FACULTY_PROGRAMS = {"Ingeniería": 4, "Ciencias Básicas": 1, "Ciencias Sociales": 1}
 
 TEAMS = {
     "laura.mendoza@unilibre.edu.co": {

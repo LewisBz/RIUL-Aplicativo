@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RIUL - Perfil del Investigador</title>
   <link rel="stylesheet" href="/static/css/design-system.css">
+  <meta name="theme-color" content="#8c1230">
+  <script type="module" src="/static/js/icons.js"></script>
+  <script type="module" src="/static/js/motion.js"></script>
 </head>
 <body data-nav-active="profile" style="min-height:100vh;display:flex;flex-direction:column;">
 
@@ -24,7 +27,7 @@
           <h1 class="headline-md" style="margin:0 0 var(--space-1);" data-slot="name"></h1>
           <p class="body-lg" style="margin:0;color:var(--on-surface-variant);"><span data-slot="role"></span> · Nivel 5</p>
         </div>
-        <button class="btn btn-outline label-caps only-desktop" type="button" disabled style="position:absolute;top:var(--space-4);right:var(--space-4);">Editar Perfil</button>
+        <button class="btn btn-outline label-caps only-desktop" type="button" id="editProfileBtn" style="position:absolute;top:var(--space-4);right:var(--space-4);">Editar Perfil</button>
       </section>
 
       <div class="profile-grid">

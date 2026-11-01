@@ -6,8 +6,15 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.controllers.http import json_error, load_schema
 from app.models import ROLE_ADMINISTRATOR, STATUS_ACTIVE
 from app.repositories import user_repository
-from app.schemas import AdminUsersQuerySchema, UserSchema, UserStatusSchema
-from app.services import admin_service
+from app.schemas import (
+    AchievementListQuerySchema,
+    AchievementReviewSchema,
+    AdminUsersQuerySchema,
+    UserSchema,
+    UserStatusSchema,
+    serialize_achievement,
+)
+from app.services import admin_service, gamification_service
 from app.utils.errors import ServiceError
 
 
@@ -38,11 +45,11 @@ def get_overview():
 def get_users():
     query = load_schema(
         AdminUsersQuerySchema(),
-        {"status": request.args.get("status"), "role": request.args.get("role")},
+        {k: request.args[k] for k in ("status", "role", "q") if request.args.get(k)},
     )
     try:
         users = admin_service.list_users(
-            status=query.get("status"), role=query.get("role")
+            status=query.get("status"), role=query.get("role"), q=query.get("q")
         )
     except ValueError as error:
         return json_error(str(error), 400)
@@ -66,3 +73,24 @@ def patch_user(user_id: int):
 
 def handle_service_error(error: ServiceError):
     return json_error(error.message, error.status)
+
+
+@require_administrator
+def get_achievements():
+    query = load_schema(
+        AchievementListQuerySchema(),
+        {"status": request.args["status"]} if request.args.get("status") else {},
+    )
+    achievements = gamification_service.list_for_review(query.get("status"))
+    items = [serialize_achievement(a, with_user=True) for a in achievements]
+    return jsonify(items=items, total=len(items)), 200
+
+
+@require_administrator
+def patch_achievement(achievement_id: int):
+    data = load_schema(AchievementReviewSchema(), request.get_json(silent=True) or {})
+    actor = user_repository.get_user_by_id(int(get_jwt_identity()))
+    achievement = gamification_service.review(
+        actor, achievement_id, data["status"], data.get("xp")
+    )
+    return jsonify(achievement=serialize_achievement(achievement, with_user=True)), 200

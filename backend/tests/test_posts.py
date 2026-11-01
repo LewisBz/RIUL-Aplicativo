@@ -83,9 +83,12 @@ class TestCreatePost:
         assert attachment["file_name"] == "captura.png"
         assert attachment["url"].startswith("/api/posts/files/")
 
-        served = client.get(attachment["url"])
+        assert client.get(attachment["url"]).status_code == 401
+        served = client.get(attachment["url"], headers=make_headers(auth["access_token"]))
         assert served.status_code == 200
         assert served.data == _png().getvalue()
+        via_query = client.get(f"{attachment['url']}?token={auth['access_token']}")
+        assert via_query.status_code == 200
 
     def test_create_with_document_upload(self, client, make_user, make_headers):
         _, auth = make_user()

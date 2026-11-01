@@ -1,0 +1,118 @@
+from datetime import date
+
+from app.models import Publication, User
+from app.repositories import (
+    engagement_repository,
+    project_repository,
+    semillero_repository,
+)
+from app.services import gamification_service
+from app.services.auth_service import resolve_faculty_program
+from app.utils.errors import ServiceError
+
+MIN_PASSWORD_LENGTH = 8
+DASHBOARD_ITEMS = 5
+
+
+def _clean(value) -> str:
+    return (value or "").strip()
+
+
+def _projects_of(user: User):
+    return project_repository.list_projects(member_id=user.id)
+
+
+def get_profile(user: User) -> dict:
+    projects = _projects_of(user)
+    return {
+        "user": user,
+        "semilleros": [
+            {"semillero": m.semillero, "role": m.role}
+            for m in semillero_repository.memberships_for_user(user.id)
+        ],
+        "projects": [
+            {"project": p, "role": "leader" if p.leader_id == user.id else "member"}
+            for p in projects
+        ],
+        "publications": project_repository.list_publications(user.id),
+        "products": [
+            {"project": p, "product": product} for p in projects for product in p.products
+        ],
+        "gamification": gamification_service.summary(user.id),
+    }
+
+
+def update_profile(user: User, data: dict) -> User:
+    if "full_name" in data:
+        name = _clean(data["full_name"])
+        if not name:
+            raise ServiceError("El nombre no puede estar vacío.", 400)
+        user.full_name = name
+    if "faculty_id" in data or "program_id" in data:
+        faculty_id, program_id = resolve_faculty_program(
+            {
+                "faculty_id": data.get("faculty_id", user.faculty_id),
+                "program_id": data.get("program_id"),
+            }
+        )
+        user.faculty_id, user.program_id = faculty_id, program_id
+    project_repository.commit()
+    return user
+
+
+def change_password(user: User, current: str, new: str) -> None:
+    if not user.check_password(current or ""):
+        raise ServiceError("La contraseña actual es incorrecta.", 400)
+    if not new or len(new) < MIN_PASSWORD_LENGTH:
+        raise ServiceError(
+            f"La contraseña debe tener al menos {MIN_PASSWORD_LENGTH} caracteres.", 400
+        )
+    user.set_password(new)
+    project_repository.commit()
+
+
+def add_publication(user: User, data: dict) -> Publication:
+    title = _clean(data.get("title"))
+    if not title:
+        raise ServiceError("El título de la publicación es obligatorio.", 400)
+    semillero_id = None
+    if data.get("semillero"):
+        semillero = semillero_repository.get_by_slug(data["semillero"])
+        if semillero is None:
+            raise ServiceError("Semillero no encontrado.", 404)
+        semillero_id = semillero.id
+    publication = project_repository.add_publication(
+        Publication(
+            author_id=user.id,
+            semillero_id=semillero_id,
+            title=title,
+            venue=_clean(data.get("venue")) or None,
+            published_on=data.get("published_on"),
+            status=data.get("status") or "in_review",
+        )
+    )
+    project_repository.commit()
+    return publication
+
+
+def get_dashboard(user: User) -> dict:
+    memberships = semillero_repository.memberships_for_user(user.id)
+    semillero = memberships[0].semillero if memberships else None
+    if semillero is None:
+        led = semillero_repository.list_semilleros()
+        semillero = next((s for s in led if s.leader_id == user.id), None)
+    activities = (
+        semillero_repository.count_activities_since(semillero.id, date.today().replace(day=1))
+        if semillero
+        else 0
+    )
+    notifications = engagement_repository.list_notifications(user.id, limit=DASHBOARD_ITEMS)
+    return {
+        "projects": _projects_of(user)[:DASHBOARD_ITEMS],
+        "publications": project_repository.list_publications(user.id, DASHBOARD_ITEMS),
+        "semillero": semillero,
+        "semillero_activities_this_month": activities,
+        "notifications": notifications,
+        "unread_notifications": engagement_repository.count_unread(user.id),
+        "gamification": gamification_service.summary(user.id),
+    }

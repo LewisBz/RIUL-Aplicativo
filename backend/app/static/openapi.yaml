@@ -1,11 +1,11 @@
 openapi: 3.0.3
 info:
-  title: RIUL API — Autenticación
+  title: RIUL API
   description: >
     API del módulo de autenticación de RIUL (Red de Investigación Universidad
     Libre). Registro institucional con acceso inmediato, solicitud de cuenta
     externa pendiente de aprobación y login con JWT stateless (Flask-JWT-Extended).
-  version: 0.3.0
+  version: 1.0.0
 
 servers:
   - url: http://localhost:5000
@@ -15,6 +15,22 @@ tags:
     description: Registro, solicitud de cuenta, login e identidad
   - name: Catálogo
     description: Datos maestros públicos para formularios
+  - name: Perfil
+    description: Perfil, dashboard y publicaciones propias
+  - name: Feed
+    description: Publicaciones de la comunidad
+  - name: Semilleros
+    description: Semilleros de investigación y su membresía
+  - name: Proyectos
+    description: Proyectos, productos e hitos
+  - name: Eventos
+    description: Eventos, convocatorias e inscripciones
+  - name: Notificaciones
+    description: Centro de actividad del usuario
+  - name: Gamificación
+    description: Nivel, logros e insignias y ranking
+  - name: Admin
+    description: Administración (solo rol administrator)
 
 paths:
   /api/auth/register:
@@ -164,6 +180,497 @@ paths:
                     items:
                       $ref: "#/components/schemas/Faculty"
 
+  /api/profile:
+    get:
+      tags: [Perfil]
+      summary: "Perfil completo del usuario (semilleros, proyectos, publicaciones, productos, gamificación)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+    patch:
+      tags: [Perfil]
+      summary: "Editar nombre, facultad y programa"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProfileUpdate" }
+      responses:
+        "200": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/profile/password:
+    post:
+      tags: [Perfil]
+      summary: "Cambiar contraseña (limitado por IP)"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ChangePassword" }
+      responses:
+        "204": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/publications:
+    post:
+      tags: [Perfil]
+      summary: "Registrar una publicación propia"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PublicationInput" }
+      responses:
+        "201": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/dashboard:
+    get:
+      tags: [Perfil]
+      summary: "Resumen del dashboard del investigador"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+
+  /api/posts:
+    get:
+      tags: [Feed]
+      summary: "Listar publicaciones (`category`, `page`)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+    post:
+      tags: [Feed]
+      summary: "Crear publicación (multipart: category, content, link_url, file)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "201": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/posts/{post_id}:
+    delete:
+      tags: [Feed]
+      summary: "Eliminar publicación (autor o administrador)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: post_id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/posts/{post_id}/reactions:
+    post:
+      tags: [Feed]
+      summary: "Alternar reacción"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: post_id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/posts/files/{name}:
+    get:
+      tags: [Feed]
+      summary: "Descargar adjunto (JWT por cabecera o `?token=`)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: name, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/semilleros:
+    get:
+      tags: [Semilleros]
+      summary: "Listar semilleros (`q`, `faculty_id`, `area`)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+    post:
+      tags: [Semilleros]
+      summary: "Crear semillero (líder o administrador)"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SemilleroInput" }
+      responses:
+        "201": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/semilleros/{slug}:
+    get:
+      tags: [Semilleros]
+      summary: "Detalle: equipo, líneas, proyectos, publicaciones, actividades"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/semilleros/{slug}/members:
+    post:
+      tags: [Semilleros]
+      summary: "Vincularse al semillero (notifica al líder)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        "201": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/semilleros/{slug}/members/me:
+    delete:
+      tags: [Semilleros]
+      summary: "Abandonar el semillero"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/semilleros/{slug}/activities:
+    post:
+      tags: [Semilleros]
+      summary: "Registrar actividad (líder del semillero)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ActivityInput" }
+      responses:
+        "201": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/projects:
+    get:
+      tags: [Proyectos]
+      summary: "Listar proyectos (`q`, `status`, `semillero`, `mine`)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+    post:
+      tags: [Proyectos]
+      summary: "Crear proyecto (quien crea queda como líder)"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProjectInput" }
+      responses:
+        "201": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/projects/{slug}:
+    get:
+      tags: [Proyectos]
+      summary: "Detalle de proyecto"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "404": { $ref: "#/components/responses/Error404" }
+    patch:
+      tags: [Proyectos]
+      summary: "Actualizar estado, avance o descripción (líder)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProjectUpdate" }
+      responses:
+        "200": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/projects/{slug}/products:
+    post:
+      tags: [Proyectos]
+      summary: "Agregar producto o evidencia (integrantes)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductInput" }
+      responses:
+        "201": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/projects/{slug}/milestones/{milestone_id}:
+    patch:
+      tags: [Proyectos]
+      summary: "Completar o reabrir un hito (recalcula el avance)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+        - { name: milestone_id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MilestoneInput" }
+      responses:
+        "200": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/events:
+    get:
+      tags: [Eventos]
+      summary: "Listar eventos y convocatorias (`kind`, `status`, `q`)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+    post:
+      tags: [Eventos]
+      summary: "Publicar evento o convocatoria (líder o administrador)"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EventInput" }
+      responses:
+        "201": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/events/{slug}:
+    get:
+      tags: [Eventos]
+      summary: "Detalle con estado de participación del usuario"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/events/{slug}/registrations:
+    post:
+      tags: [Eventos]
+      summary: "Inscribirse o postularse (valida cupo y cierre)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        "201": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/events/{slug}/registrations/me:
+    delete:
+      tags: [Eventos]
+      summary: "Cancelar inscripción o postulación"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/notifications:
+    get:
+      tags: [Notificaciones]
+      summary: "Listar notificaciones (`unread`) con `unread_count`"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+
+  /api/notifications/read-all:
+    post:
+      tags: [Notificaciones]
+      summary: "Marcar todas como leídas"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/notifications/{notification_id}:
+    patch:
+      tags: [Notificaciones]
+      summary: "Marcar una notificación como leída o no leída"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: notification_id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NotificationInput" }
+      responses:
+        "200": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/gamification/me:
+    get:
+      tags: [Gamificación]
+      summary: "Nivel, XP, estrellas, insignias y logros propios"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+
+  /api/gamification/ranking:
+    get:
+      tags: [Gamificación]
+      summary: "Ranking de investigadores por XP validada (`limit`)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+
+  /api/gamification/achievements:
+    post:
+      tags: [Gamificación]
+      summary: "Registrar un logro (queda en revisión)"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AchievementInput" }
+      responses:
+        "201": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/admin/overview:
+    get:
+      tags: [Admin]
+      summary: "Métricas globales"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/admin/users:
+    get:
+      tags: [Admin]
+      summary: "Listar usuarios (`status`, `role`, `q`)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/admin/users/{user_id}:
+    patch:
+      tags: [Admin]
+      summary: "Aprobar o rechazar un usuario (notifica la aprobación)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: user_id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UserStatusInput" }
+      responses:
+        "200": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
+  /api/admin/achievements:
+    get:
+      tags: [Admin]
+      summary: "Logros por validar (`status`)"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Operación exitosa }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+
+  /api/admin/achievements/{achievement_id}:
+    patch:
+      tags: [Admin]
+      summary: "Validar o rechazar un logro y asignar XP"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: achievement_id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AchievementReviewInput" }
+      responses:
+        "200": { description: Operación exitosa }
+        "400": { $ref: "#/components/responses/Error400" }
+        "401": { $ref: "#/components/responses/Error401" }
+        "403": { $ref: "#/components/responses/Error403" }
+        "404": { $ref: "#/components/responses/Error404" }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -270,7 +777,24 @@ components:
               faculty_id:
                 type: integer
 
+    ProfileUpdate: { type: object, properties: { full_name: { type: string }, faculty_id: { type: integer, nullable: true }, program_id: { type: integer, nullable: true } } }
+    ChangePassword: { type: object, required: [current_password, new_password], properties: { current_password: { type: string }, new_password: { type: string, minLength: 8 } } }
+    PublicationInput: { type: object, required: [title], properties: { title: { type: string }, venue: { type: string }, published_on: { type: string, format: date }, status: { type: string, enum: [published, in_review] }, semillero: { type: string, description: slug } } }
+    SemilleroInput: { type: object, required: [name], properties: { name: { type: string }, area: { type: string }, description: { type: string }, icon: { type: string }, faculty_id: { type: integer }, program_id: { type: integer }, about: { type: string }, mission: { type: string }, vision: { type: string }, interest_areas: { type: array, items: { type: string } }, lines: { type: array, items: { type: object, required: [name], properties: { name: { type: string }, icon: { type: string }, coordinator: { type: string } } } } } }
+    ActivityInput: { type: object, required: [title, occurred_on], properties: { title: { type: string }, place: { type: string }, occurred_on: { type: string, format: date } } }
+    ProjectInput: { type: object, required: [title], properties: { title: { type: string }, type: { type: string }, status: { type: string, enum: [planned, in_progress, review, completed] }, description: { type: string }, line: { type: string }, role_required: { type: string }, semillero: { type: string, description: slug }, start_date: { type: string, format: date }, end_date: { type: string, format: date }, milestones: { type: array, items: { type: string } } } }
+    ProjectUpdate: { type: object, properties: { status: { type: string, enum: [planned, in_progress, review, completed] }, progress: { type: integer, minimum: 0, maximum: 100 }, description: { type: string }, line: { type: string }, end_date: { type: string, format: date, nullable: true } } }
+    ProductInput: { type: object, required: [type, name], properties: { type: { type: string }, name: { type: string } } }
+    MilestoneInput: { type: object, required: [done], properties: { done: { type: boolean } } }
+    EventInput: { type: object, required: [title, starts_at, ends_at], properties: { title: { type: string }, kind: { type: string, enum: [event, call] }, type: { type: string }, description: { type: string }, starts_at: { type: string, format: date-time }, ends_at: { type: string, format: date-time }, location: { type: string }, capacity: { type: integer, minimum: 1, nullable: true }, organizer: { type: string }, requirements: { type: array, items: { type: string } } } }
+    NotificationInput: { type: object, required: [read], properties: { read: { type: boolean } } }
+    AchievementInput: { type: object, required: [title], properties: { title: { type: string }, description: { type: string }, icon: { type: string }, achieved_on: { type: string, format: date } } }
+    AchievementReviewInput: { type: object, required: [status], properties: { status: { type: string, enum: [validated, rejected] }, xp: { type: integer, minimum: 0, maximum: 1000 } } }
+    UserStatusInput: { type: object, required: [status], properties: { status: { type: string, enum: [active, pending, rejected] } } }
   responses:
+    Error401: { description: "Token ausente, inválido o cuenta no disponible", content: { application/json: { schema: { $ref: "#/components/schemas/Message" } } } }
+    Error403: { description: Permisos insuficientes, content: { application/json: { schema: { $ref: "#/components/schemas/Message" } } } }
+    Error404: { description: Recurso no encontrado, content: { application/json: { schema: { $ref: "#/components/schemas/Message" } } } }
     Error400:
       description: Validación fallida (dominio, contraseña corta, datos faltantes)
       content:

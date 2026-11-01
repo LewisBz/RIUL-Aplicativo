@@ -1,6 +1,9 @@
 import { requireAuth } from './session.js';
 import { initLayout } from './layout.js';
-import { SEMILLEROS, memberTone } from './demo-data.js';
+import { api } from './api.js';
+import { toSemillero } from './adapters.js';
+import { openFormDialog } from './forms.js';
+import { showSkeleton } from './skeleton.js';
 
 await initLayout();
 const user = await requireAuth();
@@ -17,6 +20,8 @@ const filterProgram = document.getElementById('filterProgram');
 const filterArea = document.getElementById('filterArea');
 const clearFiltersBtn = document.getElementById('clearFilters');
 const searchBtn = document.getElementById('searchBtn');
+
+let SEMILLEROS = [];
 
 function normalize(text) {
   return text
@@ -39,9 +44,11 @@ function fillSelect(select, values) {
   });
 }
 
-fillSelect(filterFaculty, SEMILLEROS.map((s) => s.faculty));
-fillSelect(filterProgram, SEMILLEROS.map((s) => s.program));
-fillSelect(filterArea, SEMILLEROS.map((s) => s.area));
+function fillFilters() {
+  fillSelect(filterFaculty, SEMILLEROS.map((s) => s.faculty));
+  fillSelect(filterProgram, SEMILLEROS.map((s) => s.program));
+  fillSelect(filterArea, SEMILLEROS.map((s) => s.area));
+}
 
 function filteredSemilleros() {
   const query = normalize(state.query.trim());
@@ -75,7 +82,11 @@ function buildCard(sem) {
   logo.style.cssText =
     'width:64px;height:64px;flex-shrink:0;border-radius:var(--radius-md);background-color:var(--surface-container-low);' +
     'border:1px solid var(--outline-variant);display:inline-flex;align-items:center;justify-content:center;';
-  logo.innerHTML = `<span class="material-symbols-outlined" style="font-size:32px;color:var(--primary);">${sem.icon}</span>`;
+  const logoIcon = document.createElement('span');
+  logoIcon.className = 'material-symbols-outlined';
+  logoIcon.style.cssText = 'font-size:32px;color:var(--primary);';
+  logoIcon.textContent = sem.icon;
+  logo.appendChild(logoIcon);
 
   const headText = document.createElement('div');
   headText.style.minWidth = '0';
@@ -118,10 +129,20 @@ function buildCard(sem) {
   metaBox.style.cssText =
     'display:flex;justify-content:space-between;align-items:center;gap:var(--space-3);' +
     'background-color:var(--surface-container-low);border-radius:var(--radius-md);padding:var(--space-3);';
-  metaBox.innerHTML =
-    `<span class="body-md" style="min-width:0;"><strong style="color:var(--secondary);">Líder:</strong> ${sem.leader}</span>` +
-    `<span class="body-md" style="display:inline-flex;align-items:center;gap:var(--space-1);flex-shrink:0;">` +
-    `<span class="material-symbols-outlined" style="font-size:16px;color:var(--secondary);">group</span>${sem.memberCount}</span>`;
+  const leaderLabel = document.createElement('span');
+  leaderLabel.className = 'body-md';
+  leaderLabel.style.minWidth = '0';
+  const leaderStrong = document.createElement('strong');
+  leaderStrong.style.color = 'var(--secondary)';
+  leaderStrong.textContent = 'Líder:';
+  leaderLabel.append(leaderStrong, ` ${sem.leader}`);
+  const countLabel = document.createElement('span');
+  countLabel.className = 'body-md';
+  countLabel.style.cssText = 'display:inline-flex;align-items:center;gap:var(--space-1);flex-shrink:0;';
+  countLabel.innerHTML =
+    '<span class="material-symbols-outlined" style="font-size:16px;color:var(--secondary);">group</span>';
+  countLabel.append(String(sem.memberCount));
+  metaBox.append(leaderLabel, countLabel);
 
   const actionsRow = document.createElement('div');
   actionsRow.style.cssText = 'display:flex;gap:var(--space-2);margin-top:auto;';
@@ -137,8 +158,10 @@ function buildCard(sem) {
   joinButton.type = 'button';
   joinButton.className = 'btn btn-primary label-caps';
   joinButton.style.flex = '1';
-  joinButton.textContent = 'Solicitar Vinculación';
-  joinButton.addEventListener('click', () => { location.href = detailHref(sem.id, 'vinculacion'); });
+  joinButton.textContent = sem.myRole ? 'Mi semillero' : 'Solicitar Vinculación';
+  joinButton.addEventListener('click', () => {
+    location.href = detailHref(sem.id, sem.myRole ? '' : 'vinculacion');
+  });
 
   actionsRow.append(viewButton, joinButton);
   card.append(headRow, description, metaBox, actionsRow);
@@ -183,4 +206,34 @@ clearFiltersBtn.addEventListener('click', () => {
   render();
 });
 
+showSkeleton(grid, 'card', 6);
+try {
+  SEMILLEROS = (await api('/api/semilleros')).items.map(toSemillero);
+} catch (error) {
+  emptyState.textContent = error.message;
+}
+fillFilters();
 render();
+
+if (['leader', 'administrator'].includes(user.role)) {
+  const heading = document.querySelector('h1').parentElement;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'btn btn-primary label-caps';
+  button.textContent = 'Nuevo semillero';
+  heading.appendChild(button);
+  button.addEventListener('click', async () => {
+    const created = await openFormDialog({
+      title: 'Nuevo semillero',
+      submitLabel: 'Crear semillero',
+      fields: [
+        { name: 'name', label: 'Nombre', required: true },
+        { name: 'area', label: 'Área de investigación' },
+        { name: 'description', label: 'Descripción', type: 'textarea' },
+      ],
+      onSubmit: async (values) =>
+        (await api('/api/semilleros', { method: 'POST', body: values })).semillero,
+    });
+    if (created) location.href = detailHref(created.slug);
+  });
+}

@@ -20,6 +20,19 @@ async function request(path, options = {}) {
 
 function metric(label, value, icon, tone = '') { return `<article class="admin-metric ${tone}"><span class="admin-metric-icon material-symbols-outlined">${icon}</span><div><strong>${value}</strong><span>${label}</span></div></article>`; }
 function unavailable(label, icon) { return `<article class="admin-unavailable"><span class="material-symbols-outlined">${icon}</span><div><strong>${label}</strong><span>Disponible cuando exista su módulo de datos.</span></div></article>`; }
+function renderAchievements(items) {
+  const table = document.getElementById('adminAchievementsTable');
+  if (!table) return;
+  document.getElementById('achievementsCount').textContent = `${items.length} pendientes`;
+  table.innerHTML = items.length
+    ? items.map((item) => `<tr><td>${escapeHtml(item.user.full_name || 'Sin nombre')}</td><td>${escapeHtml(item.title)}</td><td><div class="admin-user-actions"><button class="btn btn-teal label-caps" type="button" data-achievement-id="${item.id}" data-achievement-status="validated">Validar</button><button class="btn btn-secondary label-caps" type="button" data-achievement-id="${item.id}" data-achievement-status="rejected">Rechazar</button></div></td></tr>`).join('')
+    : '<tr><td colspan="3">No hay logros pendientes.</td></tr>';
+}
+
+async function loadAchievements() {
+  renderAchievements((await request('/api/admin/achievements?status=in_review')).items);
+}
+
 function renderUsers(users) {
   const table = document.getElementById('adminUsersTable');
   if (!table) return;
@@ -34,8 +47,18 @@ async function init() {
     if (identity.user?.role !== 'administrator') { showMessage('Acceso restringido', 'Esta ruta está reservada para administradores activos.', '/dashboard'); return; }
     const overview = await request('/api/admin/overview');
     const pending = overview.users.pending;
-    content.innerHTML = `<div class="admin-heading"><div><p class="eyebrow">Control institucional</p><h1 class="headline-lg">Dashboard administrativo</h1><p class="body-lg page-subtitle">Supervisa la actividad de RIUL desde un solo lugar.</p></div><span class="admin-role"><span class="material-symbols-outlined">verified_user</span>Administrador</span></div><section class="admin-metrics">${metric('Usuarios totales', overview.users.total, 'group')}${metric('Usuarios activos', overview.users.active, 'check_circle', 'teal')}${metric('Pendientes de revisión', pending, 'pending_actions', pending ? 'warning' : '')}${metric('Publicaciones', overview.posts, 'forum')}</section><div class="admin-columns"><section class="glass-card admin-panel" id="users"><div class="section-heading"><h2 class="headline-md">Usuarios</h2><span class="status-pill">${pending} pendientes</span></div><div class="table-scroll"><table class="table-data"><thead><tr><th>Nombre</th><th>Correo</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div></section><section class="glass-card admin-panel"><div class="section-heading"><h2 class="headline-md">Actividad disponible</h2><span class="body-md">Fuentes reales</span></div><div class="admin-unavailable-list">${unavailable('Facultades', 'account_balance')}${unavailable('Programas', 'school')}${unavailable('Semilleros', 'psychology')}</div></section></div><section class="admin-section" id="overview"><div class="section-heading"><h2 class="headline-md">Catálogos institucionales</h2><span class="body-md">Resumen actual</span></div><div class="admin-metrics admin-metrics-small">${metric('Facultades', overview.faculties, 'account_balance')}${metric('Programas', overview.programs, 'school')}</div></section>`;
+    content.innerHTML = `<div class="admin-heading"><div><p class="eyebrow">Control institucional</p><h1 class="headline-lg">Dashboard administrativo</h1><p class="body-lg page-subtitle">Supervisa la actividad de RIUL desde un solo lugar.</p></div><span class="admin-role"><span class="material-symbols-outlined">verified_user</span>Administrador</span></div><section class="admin-metrics">${metric('Usuarios totales', overview.users.total, 'group')}${metric('Usuarios activos', overview.users.active, 'check_circle', 'teal')}${metric('Pendientes de revisión', pending, 'pending_actions', pending ? 'warning' : '')}${metric('Publicaciones', overview.posts, 'forum')}${metric('Semilleros', overview.semilleros, 'psychology')}${metric('Proyectos', overview.projects, 'folder')}${metric('Eventos y convocatorias', overview.events, 'event')}${metric('Logros por validar', overview.achievements.pending, 'military_tech', overview.achievements.pending ? 'warning' : '')}</section><div class="admin-columns"><section class="glass-card admin-panel" id="users"><div class="section-heading"><h2 class="headline-md">Usuarios</h2><span class="status-pill">${pending} pendientes</span></div><div class="table-scroll"><table class="table-data"><thead><tr><th>Nombre</th><th>Correo</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div></section><section class="glass-card admin-panel"><div class="section-heading"><h2 class="headline-md">Logros por validar</h2><span class="body-md" id="achievementsCount"></span></div><div class="table-scroll"><table class="table-data"><thead><tr><th>Investigador</th><th>Logro</th><th>Acciones</th></tr></thead><tbody id="adminAchievementsTable"></tbody></table></div></section></div><section class="admin-section" id="overview"><div class="section-heading"><h2 class="headline-md">Catálogos institucionales</h2><span class="body-md">Resumen actual</span></div><div class="admin-metrics admin-metrics-small">${metric('Facultades', overview.faculties, 'account_balance')}${metric('Programas', overview.programs, 'school')}</div></section>`;
     renderUsers((await request('/api/admin/users')).items);
+    await loadAchievements();
+    document.getElementById('adminAchievementsTable').addEventListener('click', async (event) => {
+      const button = event.target.closest('[data-achievement-status]');
+      if (!button) return;
+      button.disabled = true;
+      try {
+        await request(`/api/admin/achievements/${button.dataset.achievementId}`, { method: 'PATCH', body: JSON.stringify({ status: button.dataset.achievementStatus }), headers: { 'Content-Type': 'application/json' } });
+        await loadAchievements();
+      } catch (error) { showMessage('No se pudo actualizar el logro', error.message); }
+    });
     document.getElementById('adminUsersTable').addEventListener('click', async (event) => {
       const button = event.target.closest('[data-user-status]');
       if (!button) return;

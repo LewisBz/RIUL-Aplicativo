@@ -1,18 +1,21 @@
 import { requireAuth, API_BASE } from './session.js';
 import { initLayout } from './layout.js';
+import { api } from './api.js';
+import { openFormDialog } from './forms.js';
 import {
-  GAMIFICATION,
-  BADGES,
-  MY_SEMILLEROS,
-  PROFILE_PROJECTS,
-  PROFILE_PUBLICATIONS,
-  PRODUCTS,
-  ACHIEVEMENTS,
-} from './demo-data.js';
+  toGamification,
+  projectStatusLabel,
+  publicationStatusLabel,
+  isoDate,
+} from './adapters.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
+
+const ROLE_IN_SEMILLERO = { leader: 'Líder', co_leader: 'Co-líder', member: 'Miembro' };
+const ROLE_IN_PROJECT = { leader: 'Investigador Principal', member: 'Integrante' };
+const PRODUCT_STATUS = { in_review: 'En revisión', approved: 'Aprobado' };
 
 function starRow(container, total, filled) {
   for (let i = 0; i < total; i++) {
@@ -24,98 +27,171 @@ function starRow(container, total, filled) {
   }
 }
 
-try {
-  const response = await fetch(`${API_BASE}/api/auth/catalog`);
-  const catalog = await response.json();
-  const faculty = catalog.faculties.find((f) => f.id === user.faculty_id);
-  const program = faculty?.programs?.find((p) => p.id === user.program_id);
-  document.getElementById('infoFaculty').textContent = faculty?.name ?? '—';
-  document.getElementById('infoProgram').textContent = program?.name ?? '—';
-} catch {
-  document.getElementById('infoFaculty').textContent = '—';
-  document.getElementById('infoProgram').textContent = '—';
+function text(tag, value, className) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  element.textContent = value;
+  return element;
 }
-document.getElementById('infoEmail').textContent = user.email;
 
+async function loadProfile() {
+  return (await api('/api/profile')).profile;
+}
+
+let profile;
+try {
+  profile = await loadProfile();
+} catch (error) {
+  document.querySelector('main').innerHTML = '<div class="detail-empty"><strong></strong></div>';
+  document.querySelector('main strong').textContent = error.message;
+  throw error;
+}
+
+document.getElementById('infoEmail').textContent = profile.user.email;
+document.getElementById('infoFaculty').textContent = profile.faculty?.name ?? '—';
+document.getElementById('infoProgram').textContent = profile.program?.name ?? '—';
+
+const GAMIFICATION = toGamification(profile.gamification);
 document.getElementById('gamLevel').textContent = `Nivel ${GAMIFICATION.level}`;
 document.getElementById('gamXp').textContent = `${GAMIFICATION.xp} / ${GAMIFICATION.nextLevelXp} XP`;
-const percent = Math.round((GAMIFICATION.xp / GAMIFICATION.nextLevelXp) * 100);
-document.getElementById('xpFill').style.width = `${percent}%`;
-
+document.getElementById('xpFill').style.width = `${Math.round((GAMIFICATION.xp / GAMIFICATION.nextLevelXp) * 100)}%`;
 starRow(document.getElementById('profileStars'), GAMIFICATION.totalStars, GAMIFICATION.stars);
 
 const badgeRow = document.getElementById('badgeRow');
-BADGES.forEach((badge) => {
+GAMIFICATION.badges.forEach((badge) => {
   const circle = document.createElement('span');
   circle.className = `badge-circle${badge.highlighted ? ' is-highlighted' : ''}`;
   circle.title = badge.title;
-  circle.innerHTML = `<span class="material-symbols-outlined">${badge.icon}</span>`;
+  circle.appendChild(text('span', badge.icon, 'material-symbols-outlined'));
   badgeRow.appendChild(circle);
 });
 
-function fillList(id, items, nameKey, metaKey) {
+function fillList(id, items, icon, emptyMessage) {
   const list = document.getElementById(id);
-  items.forEach((item) => {
+  if (!items.length) {
+    list.appendChild(text('li', emptyMessage, 'body-md'));
+    return;
+  }
+  items.forEach(({ name, meta }) => {
     const li = document.createElement('li');
     li.className = 'list-row';
-    const icon = document.createElement('span');
-    icon.className = 'material-symbols-outlined';
-    icon.style.color = 'var(--primary)';
-    icon.textContent = id === 'mySemilleros' ? 'account_tree' : 'folder';
-    const text = document.createElement('div');
-    const title = document.createElement('p');
-    title.className = 'list-row-title';
+    const iconEl = text('span', icon, 'material-symbols-outlined');
+    iconEl.style.color = 'var(--primary)';
+    const wrapper = document.createElement('div');
+    const title = text('p', name, 'list-row-title');
     title.style.margin = '0';
-    title.textContent = item[nameKey];
-    const meta = document.createElement('span');
-    meta.className = 'list-row-meta';
-    meta.textContent = item[metaKey];
-    text.append(title, meta);
-    li.append(icon, text);
+    wrapper.append(title, text('span', meta, 'list-row-meta'));
+    li.append(iconEl, wrapper);
     list.appendChild(li);
   });
 }
 
-fillList('mySemilleros', MY_SEMILLEROS, 'name', 'role');
-fillList('profileProjects', PROFILE_PROJECTS, 'name', 'meta');
+fillList(
+  'mySemilleros',
+  profile.semilleros.map((s) => ({ name: s.name, meta: `Rol: ${ROLE_IN_SEMILLERO[s.my_role] ?? s.my_role}` })),
+  'account_tree',
+  'Aún no perteneces a ningún semillero.',
+);
+fillList(
+  'profileProjects',
+  profile.projects.map((p) => ({
+    name: p.title,
+    meta: `Rol: ${ROLE_IN_PROJECT[p.my_role] ?? p.my_role} - Estado: ${projectStatusLabel(p.status)}`,
+  })),
+  'folder',
+  'Aún no participas en proyectos.',
+);
 
-const pubsTable = document.getElementById('pubsTable');
-PROFILE_PUBLICATIONS.forEach((pub) => {
-  const tr = document.createElement('tr');
-  [pub.title, pub.venue, pub.date].forEach((value) => {
-    const td = document.createElement('td');
-    td.textContent = value;
+function fillTable(id, rows, emptyMessage, columns) {
+  const body = document.getElementById(id);
+  if (!rows.length) {
+    const tr = document.createElement('tr');
+    const td = text('td', emptyMessage);
+    td.colSpan = columns;
     tr.appendChild(td);
+    body.appendChild(tr);
+    return;
+  }
+  rows.forEach((cells) => {
+    const tr = document.createElement('tr');
+    cells.forEach((cell) => {
+      const td = document.createElement('td');
+      if (cell instanceof Node) td.appendChild(cell);
+      else td.textContent = cell;
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
   });
-  pubsTable.appendChild(tr);
-});
+}
 
-const productsTable = document.getElementById('productsTable');
-PRODUCTS.forEach((product) => {
-  const tr = document.createElement('tr');
-  const typeTd = document.createElement('td');
-  typeTd.textContent = product.type;
-  const nameTd = document.createElement('td');
-  nameTd.textContent = product.name;
-  const statusTd = document.createElement('td');
-  const chip = document.createElement('span');
-  chip.className = `status-chip ${product.status === 'Aprobado' ? 'chip-approved' : 'chip-review'}`;
-  chip.textContent = product.status;
-  statusTd.appendChild(chip);
-  tr.append(typeTd, nameTd, statusTd);
-  productsTable.appendChild(tr);
-});
+fillTable(
+  'pubsTable',
+  profile.publications.map((p) => [p.title, p.venue ?? publicationStatusLabel(p.status), isoDate(p.published_on)]),
+  'Sin publicaciones registradas.',
+  3,
+);
+fillTable(
+  'productsTable',
+  profile.products.map((product) => {
+    const approved = product.status === 'approved';
+    return [product.type, product.name, text('span', PRODUCT_STATUS[product.status], `status-chip ${approved ? 'chip-approved' : 'chip-review'}`)];
+  }),
+  'Sin productos registrados.',
+  3,
+);
 
 const timeline = document.getElementById('achievementsTimeline');
-ACHIEVEMENTS.forEach((item) => {
+if (!GAMIFICATION.achievements.length) {
+  timeline.appendChild(text('li', 'Aún no registras logros.', 'body-md'));
+}
+GAMIFICATION.achievements.forEach((item) => {
+  const done = item.status === 'Validado';
   const li = document.createElement('li');
   const node = document.createElement('span');
-  node.className = `timeline-node${item.done ? '' : ' is-pending'}`;
-  const text = document.createElement('span');
-  text.textContent = item.text;
-  const meta = document.createElement('small');
-  meta.className = 'timeline-meta';
-  meta.textContent = item.done ? 'Validado' : 'En proceso de validación';
-  li.append(node, text, meta);
+  node.className = `timeline-node${done ? '' : ' is-pending'}`;
+  li.append(
+    node,
+    text('span', item.title),
+    text('small', done ? 'Validado' : item.status === 'Rechazado' ? 'Rechazado' : 'En proceso de validación', 'timeline-meta'),
+  );
   timeline.appendChild(li);
+});
+
+document.getElementById('editProfileBtn').addEventListener('click', async () => {
+  const catalog = await (await fetch(`${API_BASE}/api/auth/catalog`)).json();
+  const faculties = catalog.faculties;
+  const current = faculties.find((f) => f.id === profile.user.faculty_id);
+  const updated = await openFormDialog({
+    title: 'Editar perfil',
+    fields: [
+      { name: 'full_name', label: 'Nombre completo', required: true, value: profile.user.full_name ?? '' },
+      {
+        name: 'faculty_id',
+        label: 'Facultad',
+        type: 'select',
+        options: faculties.map((f) => ({ value: f.id, label: f.name })),
+        value: profile.user.faculty_id ?? '',
+      },
+      {
+        name: 'program_id',
+        label: 'Programa',
+        type: 'select',
+        options: [
+          { value: '', label: 'Sin programa' },
+          ...faculties.flatMap((f) => f.programs.map((p) => ({ value: p.id, label: `${f.name} — ${p.name}` }))),
+        ],
+        value: profile.user.program_id ?? '',
+      },
+    ],
+    onSubmit: (values) =>
+      api('/api/profile', {
+        method: 'PATCH',
+        body: {
+          full_name: values.full_name,
+          faculty_id: values.faculty_id ? Number(values.faculty_id) : null,
+          program_id: values.program_id ? Number(values.program_id) : null,
+        },
+      }),
+  });
+  if (updated) location.reload();
 });

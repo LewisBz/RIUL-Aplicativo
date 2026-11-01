@@ -1,5 +1,6 @@
-import { API_BASE, requireAuth, getToken, logout } from './session.js';
+﻿import { API_BASE, requireAuth, getToken, logout } from './session.js';
 import { initLayout } from './layout.js';
+import { showSkeleton } from './skeleton.js';
 
 const CATEGORY_LABELS = {
   article: 'Artículo',
@@ -73,13 +74,17 @@ function formatSize(bytes) {
   return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
+function attachmentUrl(attachment) {
+  return `${API_BASE}${attachment.url}?token=${encodeURIComponent(getToken() || '')}`;
+}
+
 function attachmentHtml(attachment) {
   if (!attachment) return '';
   if (attachment.kind === 'image') {
-    return `<img class="attachment-image" src="${escapeHtml(API_BASE + attachment.url)}" alt="Adjunto de la publicación">`;
+    return `<img class="attachment-image" src="${escapeHtml(attachmentUrl(attachment))}" alt="Adjunto de la publicación">`;
   }
   return `
-    <a class="attachment-file" href="${escapeHtml(API_BASE + attachment.url)}" target="_blank" rel="noopener">
+    <a class="attachment-file" href="${escapeHtml(attachmentUrl(attachment))}" target="_blank" rel="noopener">
       <div class="attachment-file-icon"><span class="material-symbols-outlined">description</span></div>
       <div>
         <h4>${escapeHtml(attachment.file_name)}</h4>
@@ -333,6 +338,7 @@ async function init() {
   if (composerAvatar) composerAvatar.textContent = initials(user.full_name || 'Investigador');
 
   try {
+    showSkeleton(feedGrid, 'post', 3);
     await loadFeed();
     const hashPostId = location.hash.match(/^#post-(\d+)$/);
     if (hashPostId) {
@@ -349,3 +355,4 @@ async function init() {
 }
 
 init();
+

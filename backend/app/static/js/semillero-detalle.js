@@ -1,14 +1,31 @@
 import { requireAuth } from './session.js';
 import { initLayout } from './layout.js';
-import { SEMILLEROS, memberTone } from './demo-data.js';
+import { api, escapeHtml } from './api.js';
+import { memberTone, toSemilleroDetail } from './adapters.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
 
-const params = new URLSearchParams(window.location.search);
-const requestedId = params.get('id');
-const sem = SEMILLEROS.find((s) => s.id === requestedId) ?? SEMILLEROS[0];
+const requestedId = new URLSearchParams(window.location.search).get('id');
+if (!requestedId) {
+  window.location.replace('/semilleros');
+  throw new Error('Semillero no indicado');
+}
+
+async function fetchSemillero() {
+  return toSemilleroDetail((await api(`/api/semilleros/${encodeURIComponent(requestedId)}`)).semillero);
+}
+
+let sem;
+try {
+  sem = await fetchSemillero();
+} catch (error) {
+  document.querySelector('main').innerHTML =
+    `<div class="detail-empty"><strong></strong><a href="/semilleros">Volver a semilleros</a></div>`;
+  document.querySelector('main strong').textContent = error.message;
+  throw error;
+}
 const detail = sem.detail;
 
 document.title = `${sem.name} - RIUL`;
@@ -115,9 +132,9 @@ detail.lines.forEach((line) => {
   const info = document.createElement('div');
   info.style.cssText = 'display:flex;align-items:center;gap:var(--space-3);min-width:0;';
   info.innerHTML =
-    `<span class="material-symbols-outlined" style="color:var(--primary);">${line.icon}</span>` +
-    `<div><p class="body-md" style="margin:0;font-weight:700;">${line.name}</p>` +
-    `<p class="body-md" style="margin:0;color:var(--secondary);font-size:12px;">Coordinador: ${line.coordinator}</p></div>`;
+    `<span class="material-symbols-outlined" style="color:var(--primary);">${escapeHtml(line.icon)}</span>` +
+    `<div><p class="body-md" style="margin:0;font-weight:700;">${escapeHtml(line.name)}</p>` +
+    `<p class="body-md" style="margin:0;color:var(--secondary);font-size:12px;">Coordinador: ${escapeHtml(line.coordinator)}</p></div>`;
   const status = document.createElement('span');
   status.className = statusPillClass('Activo');
   status.textContent = 'Activo';
@@ -134,8 +151,8 @@ detail.projects.forEach((project) => {
   cardEl.style.gap = 'var(--space-2)';
   cardEl.innerHTML =
     `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-3);">` +
-    `<h3 class="body-md" style="margin:0;font-size:14px;">${project.title}</h3>` +
-    `<span class="${tagPillClass(project.tag)}">${project.tag}</span></div>`;
+    `<h3 class="body-md" style="margin:0;font-size:14px;">${escapeHtml(project.title)}</h3>` +
+    `<span class="${tagPillClass(project.tag)}">${escapeHtml(project.tag)}</span></div>`;
   const description = document.createElement('p');
   description.className = 'body-md';
   description.style.cssText = 'margin:0;color:var(--secondary);';
@@ -159,8 +176,8 @@ detail.publications.forEach((pub, index) => {
   const li = document.createElement('li');
   li.style.cssText = `border-left:2px solid ${index === 0 ? 'var(--primary)' : 'var(--outline-variant)'};padding-left:var(--space-3);`;
   li.innerHTML =
-    `<p class="body-md" style="margin:0;font-weight:700;font-size:13px;">${pub.title}</p>` +
-    `<p class="body-md" style="margin:0;color:var(--secondary);font-size:12px;font-style:italic;">${pub.venue}</p>`;
+    `<p class="body-md" style="margin:0;font-weight:700;font-size:13px;">${escapeHtml(pub.title)}</p>` +
+    `<p class="body-md" style="margin:0;color:var(--secondary);font-size:12px;font-style:italic;">${escapeHtml(pub.venue)}</p>`;
   const metaRow = document.createElement('div');
   metaRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-1);';
   const date = document.createElement('span');
@@ -178,25 +195,13 @@ const activitiesList = document.getElementById('activitiesList');
 detail.activities.forEach((activity) => {
   const li = document.createElement('li');
   li.innerHTML =
-    `<p class="label-caps" style="margin:0;color:var(--primary);">${activity.date}</p>` +
-    `<p class="body-md" style="margin:0;font-weight:600;">${activity.title}</p>` +
-    `<p class="body-md" style="margin:0;color:var(--secondary);font-size:12px;">${activity.place}</p>`;
+    `<p class="label-caps" style="margin:0;color:var(--primary);">${escapeHtml(activity.date)}</p>` +
+    `<p class="body-md" style="margin:0;font-weight:600;">${escapeHtml(activity.title)}</p>` +
+    `<p class="body-md" style="margin:0;color:var(--secondary);font-size:12px;">${escapeHtml(activity.place)}</p>`;
   activitiesList.appendChild(li);
 });
 
-const followBtn = document.getElementById('followBtn');
-const followIcon = document.getElementById('followIcon');
-const followLabel = document.getElementById('followLabel');
-let following = false;
-
-followBtn.addEventListener('click', () => {
-  following = !following;
-  followIcon.textContent = following ? 'favorite' : 'favorite_border';
-  followIcon.style.fontVariationSettings = following ? "'FILL' 1" : "'FILL' 0";
-  followLabel.textContent = following ? 'Siguiendo' : 'Seguir';
-  followBtn.classList.toggle('btn-primary', following);
-  followBtn.classList.toggle('btn-outline', !following);
-});
+document.getElementById('followBtn').hidden = true;
 
 const linkForm = document.getElementById('linkForm');
 const motivationInput = document.getElementById('motivationInput');
@@ -204,18 +209,33 @@ const submitLinkBtn = document.getElementById('submitLinkBtn');
 const linkStateTag = document.getElementById('linkStateTag');
 const linkNote = document.getElementById('linkNote');
 
-linkForm.addEventListener('submit', (event) => {
+function renderMembership() {
+  const member = Boolean(sem.myRole);
+  linkStateTag.textContent = member ? 'Estado: Vinculado' : 'Estado: No vinculado';
+  linkStateTag.classList.toggle('pill-pending', !member);
+  linkStateTag.classList.toggle('pill-active', member);
+  motivationInput.hidden = member;
+  motivationInput.required = !member;
+  submitLinkBtn.disabled = false;
+  submitLinkBtn.textContent = member ? 'Abandonar Semillero' : 'Solicitar Vinculación';
+  linkNote.textContent = member
+    ? 'Eres parte de este semillero. Puedes salir cuando quieras.'
+    : 'Tu vinculación quedará registrada y el líder del semillero será notificado.';
+}
+renderMembership();
+
+linkForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  if (!motivationInput.value.trim()) {
-    motivationInput.focus();
-    return;
-  }
-  motivationInput.disabled = true;
   submitLinkBtn.disabled = true;
-  submitLinkBtn.innerHTML =
-    '<span class="material-symbols-outlined">check_circle</span>Solicitud Enviada';
-  linkStateTag.textContent = 'Estado: Solicitud enviada';
-  linkStateTag.classList.remove('pill-pending');
-  linkStateTag.classList.add('pill-active');
-  linkNote.textContent = 'Tu solicitud fue registrada y será revisada por el líder del semillero.';
+  try {
+    if (sem.myRole) {
+      await api(`/api/semilleros/${encodeURIComponent(sem.id)}/members/me`, { method: 'DELETE' });
+    } else {
+      await api(`/api/semilleros/${encodeURIComponent(sem.id)}/members`, { method: 'POST' });
+    }
+    window.location.reload();
+  } catch (error) {
+    linkNote.textContent = error.message;
+    submitLinkBtn.disabled = false;
+  }
 });

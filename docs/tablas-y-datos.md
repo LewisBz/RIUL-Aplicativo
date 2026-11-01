@@ -1,6 +1,6 @@
 # RIUL — Modelo de Datos y Conjunto de Datos Sembrado
 
-Documento de referencia del esquema (6 tablas) y del paquete de datos de
+Documento de referencia del esquema (6 tablas base + 13 del dominio de investigación) y del paquete de datos de
 demostración que carga el comando `flask seed-demo`.
 
 - Fuente única de verdad del seed: `backend/app/seed_data.py`
@@ -99,6 +99,28 @@ Migración: `backend/migrations/versions/0001_initial_mysql_tables.py`.
 
 ---
 
+### 1.9 Dominio de investigación (migración `0002_research_domain.py`)
+
+| Tabla | Propósito | Relaciones clave |
+|-------|-----------|------------------|
+| `semilleros` | Semillero (slug único, área, misión, visión, áreas de interés JSON) | `faculty_id`, `program_id`, `leader_id` → `users` |
+| `semillero_members` | Membresía (`member` / `co_leader`) | UNIQUE (`semillero_id`, `user_id`) |
+| `research_lines` | Líneas de investigación del semillero | `semillero_id` |
+| `semillero_activities` | Actividades con fecha | `semillero_id` |
+| `projects` | Proyecto (slug único, estado, avance 0-100, fechas) | `semillero_id`, `leader_id` |
+| `project_members` | Integrantes | UNIQUE (`project_id`, `user_id`) |
+| `project_products` | Productos/evidencias (`in_review` / `approved`) | `project_id` |
+| `project_milestones` | Hitos; su cumplimiento recalcula el avance | `project_id` |
+| `publications` | Publicaciones académicas del investigador | `author_id`, `semillero_id` |
+| `events` | Evento o convocatoria (`kind`: `event` / `call`), cupo opcional | `created_by` |
+| `event_registrations` | Inscripción o postulación | UNIQUE (`event_id`, `user_id`) |
+| `notifications` | Centro de actividad por usuario (`is_read`) | `user_id` |
+| `achievements` | Logros con XP (`in_review` / `validated` / `rejected`) | `user_id` |
+
+Valores permitidos: proyecto `planned|in_progress|review|completed`; publicación `published|in_review`;
+evento `open|closed` (el estado efectivo pasa a `closed` al vencer `ends_at`).
+Gamificación: 200 XP por nivel, solo cuenta XP de logros `validated`.
+
 ## 2. Conjunto de datos sembrado (`flask seed-demo`)
 
 El comando **purga** `post_reactions`, `post_attachments`, `posts` y `users`
@@ -158,6 +180,10 @@ Distribución: *role* → administrator 2, leader 4, researcher 9. *status* → 
 | 15 | Ana Sofía Restrepo | `community` | Lineamientos de publicación en la comunidad RIUL | — |
 
 Fechas escalonadas entre 2026-08-29 y 2026-09-12 (orden de feed realista).
+
+### 2.5 Dominio de investigación
+
+`seed-demo` también siembra 6 semilleros, 6 proyectos (con productos e hitos), 5 publicaciones, 4 eventos/convocatorias (6 inscripciones), 9 logros y 5 notificaciones, enlazados a los usuarios demo. Facultades añadidas: Ciencias Sociales; programas: Ingeniería Estadística, Ingeniería Mecánica y Comunicación Social.
 
 ### 2.4 Reacciones (47)
 

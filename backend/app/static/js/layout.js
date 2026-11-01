@@ -1,4 +1,5 @@
 import { initSessionUI } from './session.js';
+import { api } from './api.js';
 
 export const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '/dashboard' },
@@ -18,9 +19,9 @@ const TOPNAV_LINKS = [
 ];
 
 const FOOTER_LINKS = [
-  { label: 'Privacidad', href: '#' },
-  { label: 'Términos', href: '#' },
-  { label: 'Contacto', href: '#' },
+  { label: 'Privacidad', href: '/privacidad' },
+  { label: 'Términos', href: '/terminos' },
+  { label: 'Contacto', href: '/contacto' },
 ];
 
 function topnavHtml() {
@@ -30,12 +31,12 @@ function topnavHtml() {
   return `
     <div class="container-main" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
       <div style="display:flex;align-items:center;">
-        <a class="topnav-brand" href="index.html">RIUL</a>
+        <a class="topnav-brand" href="/">RIUL</a>
       </div>
       <nav class="only-desktop">${links}</nav>
       <div style="display:flex;align-items:center;gap:16px;">
         <a class="icon-action notification-link" href="/notifications" aria-label="Notificaciones"><span class="material-symbols-outlined">notifications</span></a>
-        <button class="icon-action only-desktop" aria-label="Configuración"><span class="material-symbols-outlined">settings</span></button>
+        <a class="icon-action only-desktop" href="/profile" aria-label="Configuración" title="Configuración del perfil"><span class="material-symbols-outlined">settings</span></a>
         <div class="nav-user">
           <button class="profile-chip only-desktop" type="button" id="userMenuToggle" aria-haspopup="true" aria-expanded="false" title="Perfil">
             <span class="avatar avatar-sm" data-slot="avatar"></span>
@@ -56,8 +57,9 @@ function topnavHtml() {
 }
 
 function menuPanelHtml() {
-  return TOPNAV_LINKS.concat({ label: 'Comunidad', href: '/feed' })
-    .map(({ label, href }) => `<a class="nav-link label-caps" href="${href}">${label}</a>`)
+  // En móvil la sidebar se oculta: el menú desplegable lleva toda la navegación.
+  return NAV_ITEMS
+    .map(({ label, href, icon }) => `<a class="nav-link label-caps" href="${href}"><span class="material-symbols-outlined">${icon}</span>${label}</a>`)
     .join('');
 }
 
@@ -74,7 +76,7 @@ function sidebarHtml(activeId) {
     </div>
     <nav class="sidebar-nav">${items}</nav>
     <div class="sidebar-footer">
-      <button class="btn btn-primary btn-block label-caps" type="button">Nuevo Proyecto</button>
+      <a class="btn btn-primary btn-block label-caps" href="/projects?new=1">Nuevo Proyecto</a>
     </div>`;
 }
 
@@ -114,6 +116,7 @@ export async function initLayout() {
   const activeId = document.body.dataset.navActive ?? '';
 
   const topnavMount = document.getElementById('topnavMount');
+  topnavMount?.classList.add('topnav');
   topnavMount?.insertAdjacentHTML('afterbegin', topnavHtml());
   topnavMount?.insertAdjacentHTML('afterend',
     `<nav class="topnav-menu-panel" id="menuPanel">${menuPanelHtml()}</nav>`);
@@ -124,5 +127,23 @@ export async function initLayout() {
   document.getElementById('footerMount')?.insertAdjacentHTML('afterbegin', footerHtml());
 
   wireMobileMenu();
-  await initSessionUI();
+  const user = await initSessionUI();
+  if (user) await showUnreadBadge();
 }
+
+async function showUnreadBadge() {
+  const link = document.querySelector('.notification-link');
+  if (!link) return;
+  try {
+    const { unread_count: unread } = await api('/api/notifications?unread=1');
+    if (!unread) return;
+    link.style.position = 'relative';
+    link.insertAdjacentHTML(
+      'beforeend',
+      `<span aria-label="${unread} sin leer" style="position:absolute;top:-4px;right:-6px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--primary);color:#fff;font-size:10px;line-height:16px;text-align:center;">${unread > 9 ? '9+' : unread}</span>`,
+    );
+  } catch {
+    /* la insignia es opcional */
+  }
+}
+

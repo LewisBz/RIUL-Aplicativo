@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RIUL - Dashboard del Investigador</title>
   <link rel="stylesheet" href="/static/css/design-system.css">
+  <meta name="theme-color" content="#8c1230">
+  <script type="module" src="/static/js/icons.js"></script>
+  <script type="module" src="/static/js/motion.js"></script>
 </head>
 <body data-nav-active="dashboard" style="min-height:100vh;display:flex;flex-direction:column;">
 
@@ -24,7 +27,7 @@
         <section class="glass-card dash-card col-4" aria-label="Perfil">
           <span class="nav-avatar" data-slot="avatar" style="width:96px;height:96px;font-size:36px;">U</span>
           <h2 class="title-lg" data-slot="name" style="margin:0;"></h2>
-          <p class="body-md" style="margin:0;color:var(--secondary);">Nivel 5 · Investigador Senior</p>
+          <p class="body-md" id="snippetLevel" style="margin:0;color:var(--secondary);"></p>
           <div class="stars-row" id="snippetStars" aria-label="Estrellas"></div>
           <a class="btn btn-outline label-caps" href="/profile" style="margin-top:auto;">Ver Todo</a>
         </section>
@@ -37,8 +40,8 @@
           </div>
           <div id="projectsList" style="display:flex;flex-direction:column;"></div>
           <div style="display:flex;gap:var(--space-3);margin-top:auto;">
-            <button class="btn btn-outline label-caps" type="button" disabled>Ver Todos</button>
-            <button class="btn btn-primary label-caps" type="button" disabled>Crear</button>
+            <a class="btn btn-outline label-caps" href="/projects">Ver Todos</a>
+            <a class="btn btn-primary label-caps" href="/projects?new=1">Crear</a>
           </div>
         </section>
 
@@ -46,7 +49,7 @@
         <section class="glass-card dash-card col-6" aria-label="Publicaciones">
           <h3 class="card-label" style="margin:0;">Publicaciones</h3>
           <ul id="pubsList" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2);"></ul>
-          <button class="btn btn-outline label-caps" type="button" disabled style="margin-top:auto;">Registrar</button>
+          <a class="btn btn-outline label-caps" href="/gamification?new=1" style="margin-top:auto;">Registrar logro</a>
         </section>
 
         <!-- Semillero + Notificaciones -->
@@ -65,7 +68,7 @@
           <section class="glass-card dash-card" aria-label="Notificaciones recientes">
             <h3 class="card-label" style="margin:0;">Notificaciones recientes</h3>
             <ul id="notifsList" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2);"></ul>
-            <button class="btn btn-outline label-caps" type="button" disabled style="margin-top:auto;">Ver Todas</button>
+            <a class="btn btn-outline label-caps" href="/notifications" style="margin-top:auto;">Ver Todas</a>
           </section>
         </div>
 

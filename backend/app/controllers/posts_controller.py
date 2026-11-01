@@ -8,6 +8,8 @@ from app.schemas import (
     serialize_post,
     serialize_posts,
 )
+from app.models import ROLE_ADMINISTRATOR
+from app.repositories import user_repository
 from app.services import post_service
 from app.utils.errors import ServiceError
 
@@ -52,7 +54,9 @@ def create_post():
 @jwt_required()
 def delete_post(post_id: int):
     user_id = int(get_jwt_identity())
-    post_service.delete_post(user_id, post_id)
+    actor = user_repository.get_user_by_id(user_id)
+    is_admin = actor is not None and actor.role == ROLE_ADMINISTRATOR
+    post_service.delete_post(user_id, post_id, is_admin=is_admin)
     return "", 204
 
 
@@ -63,6 +67,7 @@ def toggle_reaction(post_id: int):
     return jsonify(reaction_count=count, reacted_by_me=reacted), 200
 
 
+@jwt_required(locations=["headers", "query_string"])
 def serve_attachment(name: str):
     directory = current_app.config["UPLOAD_FOLDER"]
     return send_from_directory(directory, f"posts/{name}")
@@ -75,3 +80,4 @@ def handle_too_large(_error):
 
 def handle_service_error(error: ServiceError):
     return json_error(error.message, error.status)
+

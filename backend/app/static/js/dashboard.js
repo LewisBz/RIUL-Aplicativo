@@ -1,16 +1,48 @@
 import { requireAuth } from './session.js';
 import { initLayout } from './layout.js';
-import {
-  PROJECTS_SUMMARY,
-  PUBLICATIONS,
-  SEMILLERO,
-  NOTIFICATIONS,
-  GAMIFICATION,
-} from './demo-data.js';
+import { api } from './api.js';
+import { toGamification, toNotification, projectStatusLabel, publicationStatusLabel, roleLabel } from './adapters.js';
+import { skeletonFor } from './skeleton.js';
 
 await initLayout();
 const user = await requireAuth();
 if (!user) throw new Error('Sesión requerida');
+
+const clearSkeleton = skeletonFor([
+  { id: 'projectsList', variant: 'row', count: 3 },
+  { id: 'pubsList', variant: 'row', count: 3 },
+  { id: 'notifsList', variant: 'row', count: 3 },
+]);
+let dashboard;
+try {
+  dashboard = (await api('/api/dashboard')).dashboard;
+  clearSkeleton();
+} catch (error) {
+  document.querySelector('main').innerHTML = '<div class="detail-empty"><strong></strong></div>';
+  document.querySelector('main strong').textContent = error.message;
+  throw error;
+}
+const PROJECTS_SUMMARY = dashboard.projects.map((p) => ({
+  id: p.slug,
+  title: p.title,
+  status: projectStatusLabel(p.status),
+}));
+const PUBLICATIONS = dashboard.publications.map((p) => ({
+  icon: 'article',
+  title: p.title,
+  meta: [p.venue, p.published_on?.slice(0, 4)].filter(Boolean).join(' • ') || publicationStatusLabel(p.status),
+}));
+const SEMILLERO = dashboard.semillero
+  ? {
+      name: dashboard.semillero.name,
+      members: `${dashboard.semillero.member_count} Miembros activos`,
+      activities: `${dashboard.semillero.activities_this_month} Actividades este mes`,
+      slug: dashboard.semillero.slug,
+    }
+  : { name: 'Sin semillero', members: 'Únete a un semillero para colaborar', activities: '' };
+const NOTIFICATIONS = dashboard.notifications.map(toNotification);
+const GAMIFICATION = toGamification(dashboard.gamification);
+document.getElementById('snippetLevel').textContent = `Nivel ${GAMIFICATION.level} · ${roleLabel(user.role)}`;
 
 function starRow(container, total, filled) {
   for (let i = 0; i < total; i++) {
@@ -41,7 +73,10 @@ PROJECTS_SUMMARY.forEach((project) => {
   const arrow = document.createElement('button');
   arrow.className = 'icon-btn-round';
   arrow.type = 'button';
-  arrow.disabled = true;
+  arrow.setAttribute('aria-label', 'Ver proyecto');
+  arrow.addEventListener('click', () => {
+    window.location.href = `/project-detail?id=${encodeURIComponent(project.id)}`;
+  });
   arrow.innerHTML = '<span class="material-symbols-outlined">arrow_forward</span>';
   row.append(info, arrow);
   projectsList.appendChild(row);

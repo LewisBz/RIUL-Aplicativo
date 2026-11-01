@@ -25,12 +25,17 @@ def add_user(user: User) -> User:
     return user
 
 
-def list_users(status: str | None = None, role: str | None = None) -> list[User]:
+def list_users(
+    status: str | None = None, role: str | None = None, q: str | None = None
+) -> list[User]:
     stmt = select(User).order_by(User.created_at.desc(), User.id.desc())
     if status:
         stmt = stmt.where(User.status == status)
     if role:
         stmt = stmt.where(User.role == role)
+    if q:
+        like = f"%{q}%"
+        stmt = stmt.where(User.email.like(like) | User.full_name.like(like))
     return list(db.session.scalars(stmt).all())
 
 
@@ -55,3 +60,4 @@ def commit() -> None:
 
 def flush() -> None:
     db.session.flush()
+
